@@ -70,7 +70,10 @@ export const MARKET_SNAPSHOTS: Readonly<Partial<Record<RoleKey, MarketRoleSnapsh
       marketSkill('sk-docker', 'devops', 64, 'stable', 0, 5, 320),
       marketSkill('sk-cicd', 'devops', 61, 'up', 4, 7, 305),
       marketSkill('sk-prometheus', 'devops', 44, 'up', 5, 6, 221),
+      marketSkill('sk-jenkins', 'devops', 38, 'down', -9, 2, 190),
+      marketSkill('sk-grafana', 'devops', 35, 'up', 3, 4, 176),
       marketSkill('sk-argocd', 'devops', 29, 'up', 12, 8, 145),
+      marketSkill('sk-helm', 'devops', 26, 'stable', 1, 5, 131),
     ],
     salaryBySeniority: salaries({
       junior: [16000, 19500, 23000],
@@ -93,7 +96,10 @@ export const MARKET_SNAPSHOTS: Readonly<Partial<Record<RoleKey, MarketRoleSnapsh
       marketSkill('sk-go', 'backend', 47, 'up', 11, 15, 489),
       marketSkill('sk-kafka', 'backend', 38, 'up', 5, 10, 396),
       marketSkill('sk-java', 'backend', 36, 'down', -6, 4, 374),
+      marketSkill('sk-redis', 'backend', 33, 'stable', 2, 5, 344),
+      marketSkill('sk-node', 'backend', 31, 'up', 4, 5, 322),
       marketSkill('sk-graphql', 'backend', 27, 'stable', 0, 6, 281),
+      marketSkill('sk-k8s', 'backend', 24, 'up', 7, 9, 250),
     ],
     salaryBySeniority: salaries({
       junior: [15000, 18500, 22000],
@@ -117,6 +123,9 @@ export const MARKET_SNAPSHOTS: Readonly<Partial<Record<RoleKey, MarketRoleSnapsh
       marketSkill('sk-graphql', 'frontend', 31, 'stable', -1, 6, 262),
       marketSkill('sk-redux', 'frontend', 29, 'down', -8, 2, 245),
       marketSkill('sk-figma', 'frontend', 26, 'stable', 2, 3, 219),
+      marketSkill('sk-tdd', 'frontend', 23, 'up', 5, 4, 194),
+      marketSkill('sk-node', 'frontend', 21, 'stable', 0, 3, 177),
+      marketSkill('sk-js', 'frontend', 19, 'down', -12, 0, 160),
     ],
     salaryBySeniority: salaries({
       junior: [14500, 17500, 21000],
@@ -138,7 +147,10 @@ export const MARKET_SNAPSHOTS: Readonly<Partial<Record<RoleKey, MarketRoleSnapsh
       marketSkill('sk-userresearch', 'productManager', 63, 'up', 6, 8, 318),
       marketSkill('sk-roadmapping', 'productManager', 58, 'stable', 1, 5, 291),
       marketSkill('sk-sql', 'productManager', 44, 'up', 9, 13, 224),
+      marketSkill('sk-jira', 'productManager', 41, 'stable', 0, 2, 208),
       marketSkill('sk-mixpanel', 'productManager', 33, 'up', 4, 6, 168),
+      marketSkill('sk-figma', 'productManager', 29, 'up', 5, 4, 147),
+      marketSkill('sk-communication', 'productManager', 27, 'stable', 1, 3, 138),
     ],
     salaryBySeniority: salaries({
       junior: [16000, 19000, 22500],

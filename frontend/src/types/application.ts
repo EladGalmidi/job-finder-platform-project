@@ -1,4 +1,5 @@
 ﻿import type { ApplicationId, ISODateTime, JobId, UserId } from './common';
+import type { Job } from './job';
 
 /**
  * "Saved" is an application in its first status rather than a separate concept.
@@ -45,6 +46,17 @@ export interface Application {
   notes: ApplicationNote[];
   timeline: ApplicationEvent[];
   nextStep: ApplicationNextStep | null;
+}
+
+/**
+ * What `GET /applications` returns per row.
+ *
+ * The job travels with the application so the list does not issue one request
+ * per row just to render a title and a company name.
+ */
+export interface ApplicationListItem {
+  application: Application;
+  job: Job;
 }
 
 export type ApplicationSort = 'recent' | 'oldest' | 'company' | 'status';

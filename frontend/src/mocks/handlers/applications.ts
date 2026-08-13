@@ -1,6 +1,12 @@
 import { nowIso } from '@/lib/dates';
 import { ApiError, asActivityId, asApplicationId, asJobId, asUserId } from '@/types';
-import type { Activity, Application, ApplicationStatus } from '@/types';
+import type {
+  Activity,
+  Application,
+  ApplicationListItem,
+  ApplicationStatus,
+  Job,
+} from '@/types';
 
 import { JOBS } from '../data/jobs';
 import { mockDb } from '../db/mockDb';
@@ -36,7 +42,9 @@ const recordActivity = (type: Activity['type'], entityId: string, text: string):
   });
 };
 
-const listApplications = (context: HandlerContext): readonly Application[] => {
+const findJob = (jobId: string): Job | undefined => JOBS.find((job) => job.id === asJobId(jobId));
+
+const listApplications = (context: HandlerContext): ApplicationListItem[] => {
   const userId = requireUserId(context);
   const term = context.query.string('q', '').trim().toLowerCase();
   const statuses = context.query.list('statuses');
@@ -71,7 +79,12 @@ const listApplications = (context: HandlerContext): readonly Application[] => {
     }
   });
 
-  return rows;
+  // An application whose job has vanished from the catalogue is dropped rather
+  // than rendered as an empty card.
+  return rows.flatMap((application) => {
+    const job = findJob(application.jobId);
+    return job === undefined ? [] : [{ application, job }];
+  });
 };
 
 const createApplication = (context: HandlerContext): Application => {

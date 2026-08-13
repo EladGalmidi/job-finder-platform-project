@@ -1,6 +1,7 @@
 import type {
   Application,
   ApplicationId,
+  ApplicationListItem,
   ApplicationQuery,
   ApplicationStatus,
   JobId,
@@ -9,8 +10,8 @@ import type {
 import { api } from '../http/client';
 
 export const applicationsApi = {
-  list: (query: ApplicationQuery, signal?: AbortSignal): Promise<readonly Application[]> =>
-    api.get<readonly Application[]>('/applications', {
+  list: (query: ApplicationQuery, signal?: AbortSignal): Promise<readonly ApplicationListItem[]> =>
+    api.get<readonly ApplicationListItem[]>('/applications', {
       params: {
         ...(query.q === '' ? {} : { q: query.q }),
         ...(query.statuses.length === 0 ? {} : { statuses: query.statuses.join(',') }),

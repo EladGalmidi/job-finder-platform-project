@@ -200,3 +200,6 @@ export const selectDashboardMetrics = (state: InsightsSliceRoot): DashboardMetri
 
 export const selectMetricsStatus = (state: InsightsSliceRoot): RequestStatus =>
   state.insights.metricsStatus;
+
+export const selectMarketStatus = (state: InsightsSliceRoot): RequestStatus =>
+  state.insights.marketStatus;

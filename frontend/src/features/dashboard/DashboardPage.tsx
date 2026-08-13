@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -132,7 +132,7 @@ export const DashboardPage = (): React.JSX.Element => {
             <Button>{t('dashboard.ctaBrowseJobs')}</Button>
           </Link>
           {hasCv ? (
-            <Link to="/cv">
+            <Link to="/dashboard/cv">
               <Button variant="secondary">{t('dashboard.ctaViewCv')}</Button>
             </Link>
           ) : (
@@ -151,7 +151,7 @@ export const DashboardPage = (): React.JSX.Element => {
           glyph="▤"
           tone="primary"
           isLoading={metricsStatus === 'loading'}
-          to="/cv"
+          to="/dashboard/cv"
         />
         <MetricCard
           label={t('dashboard.metricMatchedJobs')}
@@ -169,7 +169,7 @@ export const DashboardPage = (): React.JSX.Element => {
           glyph="◭"
           tone="warning"
           isLoading={metricsStatus === 'loading'}
-          to="/cv"
+          to="/dashboard/cv"
         />
         <MetricCard
           label={t('dashboard.metricApplicationsSent')}
@@ -178,7 +178,7 @@ export const DashboardPage = (): React.JSX.Element => {
           glyph="▣"
           tone="info"
           isLoading={metricsStatus === 'loading'}
-          to="/applications"
+          to="/dashboard/applications"
         />
       </section>
 
@@ -270,7 +270,7 @@ export const DashboardPage = (): React.JSX.Element => {
                 {t('dashboard.cvTitle')}
               </h2>
               {analysis === null ? null : (
-                <Link to="/cv" className={styles.panelLink}>
+                <Link to="/dashboard/cv" className={styles.panelLink}>
                   {t('dashboard.cvViewFull')}
                 </Link>
               )}

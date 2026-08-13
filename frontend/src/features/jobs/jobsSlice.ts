@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { createAppAsyncThunk, toRejectValue } from '@/app/createAppAsyncThunk';
+import { fetchApplications } from '@/features/applications/applicationsSlice';
 import { jobsApi, toJobParams } from '@/services/api/jobsApi';
 import type { Job, JobId, JobMatch, JobQuery, RequestStatus, SerializedApiError } from '@/types';
 
@@ -122,6 +123,17 @@ const jobsSlice = createSlice({
       .addCase(fetchJobDetail.rejected, (state, action) => {
         state.detailStatus[action.meta.arg] = 'failed';
       });
+
+    /*
+     * Applications arrive with their job joined in. Absorbing those jobs here
+     * keeps job entities in one slice, so the applications page can render a
+     * title and company without a second round trip.
+     */
+    builder.addCase(fetchApplications.fulfilled, (state, action) => {
+      for (const { job } of action.payload) {
+        state.entities[job.id] = job;
+      }
+    });
   },
 });
 

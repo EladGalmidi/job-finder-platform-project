@@ -1,8 +1,10 @@
 import type { TranslationKey } from '@/i18n/types';
 import type {
   AnalysisStepKey,
+  ApplicationStatus,
   CVScoreSectionKey,
   JobType,
+  MarketTrend,
   RecommendationSeverity,
   RemoteMode,
   RoleKey,
@@ -65,6 +67,32 @@ export const ANALYSIS_STEP_LABEL: Record<AnalysisStepKey, TranslationKey> = {
   comparingMarket: 'onboarding.analyzing.step.comparingMarket',
   matchingJobs: 'onboarding.analyzing.step.matchingJobs',
   buildingRecommendations: 'onboarding.analyzing.step.buildingRecommendations',
+};
+
+export const APPLICATION_STATUS_LABEL: Record<ApplicationStatus, TranslationKey> = {
+  saved: 'applications.statusSaved',
+  applied: 'applications.statusApplied',
+  interview: 'applications.statusInterview',
+  offer: 'applications.statusOffer',
+  rejected: 'applications.statusRejected',
+};
+
+/** Badge tone per status, so colour and label always agree. */
+export const APPLICATION_STATUS_TONE: Record<
+  ApplicationStatus,
+  'neutral' | 'info' | 'warning' | 'success' | 'danger'
+> = {
+  saved: 'neutral',
+  applied: 'info',
+  interview: 'warning',
+  offer: 'success',
+  rejected: 'danger',
+};
+
+export const MARKET_TREND_LABEL: Record<MarketTrend, TranslationKey> = {
+  up: 'market.trendUp',
+  down: 'market.trendDown',
+  stable: 'market.trendStable',
 };
 
 export const PRIORITY_LABEL: Record<SkillPriority, TranslationKey> = {

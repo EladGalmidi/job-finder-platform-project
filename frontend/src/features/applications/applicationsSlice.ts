@@ -117,7 +117,9 @@ const applicationsSlice = createSlice({
         state.status = 'succeeded';
         state.entities = {};
         state.byJobId = {};
-        for (const application of action.payload) index(state, application);
+        // The joined job travels with each row but is absorbed by jobsSlice —
+        // entities live in exactly one place.
+        for (const { application } of action.payload) index(state, application);
       })
       .addCase(fetchApplications.rejected, (state, action) => {
         state.status = 'failed';

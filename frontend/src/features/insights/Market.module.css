@@ -1,0 +1,347 @@
+/* Breakpoints mirror src/styles/breakpoints.ts — sm 600, md 900, lg 1200. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin-block-start: var(--space-1);
+  color: var(--color-text-muted);
+}
+
+.updated {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-subtle);
+}
+
+/* Role selector */
+
+.roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.role {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-block-size: 44px;
+  padding-inline: var(--space-5);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.role:hover {
+  color: var(--color-text);
+  border-color: var(--color-text-subtle);
+}
+
+.roleActive {
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  border-color: var(--color-primary);
+}
+
+/* Summary tiles */
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.tileLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.tileValue {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Panels */
+
+.columns {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-inline-size: 0;
+}
+
+.panel {
+  padding: var(--space-6);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.panelTitle {
+  font-size: var(--font-size-lg);
+}
+
+.panelSubtitle {
+  margin-block: 2px var(--space-5);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* Skill demand bars */
+
+.skills {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.skill {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.skillHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.skillName {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.rank {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 22px;
+  block-size: 22px;
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-subtle);
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.skillDemand {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.barRow {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.bar {
+  flex: 1;
+  block-size: 12px;
+  overflow: hidden;
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-pill);
+}
+
+.barFill {
+  block-size: 100%;
+  background: linear-gradient(90deg, var(--color-primary), #8b7ff0);
+  border-radius: var(--radius-pill);
+
+  /* Grows along the inline axis, so it fills from the correct edge in RTL. */
+  transition: inline-size var(--duration-slower) var(--ease-out-expo);
+}
+
+.skillMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.trendUp {
+  color: var(--color-success);
+}
+
+.trendDown {
+  color: var(--color-danger);
+}
+
+.trendStable {
+  color: var(--color-text-subtle);
+}
+
+.haveTag {
+  color: var(--color-success);
+}
+
+/* Salary ranges */
+
+.salaries {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.salaryRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.salaryHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+}
+
+.salaryLevel {
+  font-weight: var(--font-weight-medium);
+}
+
+.salaryMedian {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Min-max band with a median marker, positioned along the inline axis. */
+.salaryTrack {
+  position: relative;
+  block-size: 14px;
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-pill);
+}
+
+.salaryBand {
+  position: absolute;
+  inset-block: 0;
+  background-color: var(--color-primary-soft);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.salaryMarker {
+  position: absolute;
+  inset-block: -3px;
+  inline-size: 3px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.salaryScale {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sources */
+
+.sources {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.source {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-4);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.sourceName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.sourceMeta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* Breakpoint: lg (1200px) — see src/styles/breakpoints.ts */
+@media (max-width: 1199px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts */
+@media (max-width: 599px) {
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    padding: var(--space-5);
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .roles {
+    inline-size: 100%;
+  }
+
+  .role {
+    flex: 1;
+    padding-inline: var(--space-3);
+  }
+}

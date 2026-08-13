@@ -184,13 +184,39 @@ export const router = createBrowserRouter([
                       },
                     ],
                   },
-                  // The jobs list moved under /dashboard; keep old links working.
+                  {
+                    path: 'dashboard/cv',
+                    lazy: async () => {
+                      const { CvPage } = await import('@/features/cv/CvPage');
+                      return { Component: CvPage };
+                    },
+                  },
+                  {
+                    path: 'dashboard/applications',
+                    lazy: async () => {
+                      const { ApplicationsPage } = await import(
+                        '@/features/applications/ApplicationsPage'
+                      );
+                      return { Component: ApplicationsPage };
+                    },
+                  },
+                  {
+                    path: 'dashboard/market',
+                    lazy: async () => {
+                      const { MarketPage } = await import('@/features/insights/MarketPage');
+                      return { Component: MarketPage };
+                    },
+                  },
+
+                  // Everything moved under /dashboard; keep old links working.
                   { path: 'jobs', element: <Navigate to="/dashboard/jobs" replace /> },
                   { path: 'jobs/:jobId', element: <LegacyJobRedirect /> },
-                  { path: 'cv', lazy: page('CvPage') },
-                  { path: 'applications', lazy: page('ApplicationsPage') },
-                  { path: 'applications/:applicationId', lazy: page('ApplicationsPage') },
-                  { path: 'market', lazy: page('MarketPage') },
+                  { path: 'cv', element: <Navigate to="/dashboard/cv" replace /> },
+                  {
+                    path: 'applications',
+                    element: <Navigate to="/dashboard/applications" replace />,
+                  },
+                  { path: 'market', element: <Navigate to="/dashboard/market" replace /> },
                   { path: 'settings', lazy: page('SettingsPage') },
                 ],
               },

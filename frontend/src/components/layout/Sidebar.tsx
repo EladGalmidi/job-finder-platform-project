@@ -39,7 +39,7 @@ export const Sidebar = (): React.JSX.Element => {
   /** Counts shown against nav rows. Zero renders nothing rather than a "0". */
   const badgeFor = (to: string): number | null => {
     if (to === '/dashboard') return unreadAlerts > 0 ? unreadAlerts : null;
-    if (to === '/applications') return activeApplications > 0 ? activeApplications : null;
+    if (to === '/dashboard/applications') return activeApplications > 0 ? activeApplications : null;
     return null;
   };
 
