@@ -1,0 +1,84 @@
+.topbar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: space-between;
+  min-block-size: var(--topbar-height);
+  padding-inline: var(--space-6);
+  background-color: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  border-block-end: 1px solid var(--color-border);
+  backdrop-filter: blur(8px);
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.mobileBrand {
+  display: none;
+  gap: var(--space-2);
+  align-items: center;
+  font-weight: var(--font-weight-semibold);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 40px;
+  min-block-size: 40px;
+  color: var(--color-text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.iconButton:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-sunken);
+}
+
+.localeButton {
+  padding-inline: var(--space-3);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  inline-size: 36px;
+  block-size: 36px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  border-radius: var(--radius-pill);
+}
+
+/* Breakpoint: md (900px) — see src/styles/breakpoints.ts */
+@media (max-width: 899px) {
+  .topbar {
+    padding-inline: var(--space-4);
+  }
+
+  .title {
+    display: none;
+  }
+
+  .mobileBrand {
+    display: flex;
+  }
+}

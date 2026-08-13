@@ -1,0 +1,42 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.svg {
+  transform: rotate(-90deg);
+}
+
+.track {
+  stroke: var(--color-surface-sunken);
+  fill: none;
+}
+
+.indicator {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--transition-slow);
+}
+
+.content {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.value {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+}
+
+.caption {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}

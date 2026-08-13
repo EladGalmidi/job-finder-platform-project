@@ -1,0 +1,28 @@
+.spinner {
+  display: inline-block;
+  border: 2px solid currentcolor;
+  border-block-start-color: transparent;
+  border-radius: var(--radius-pill);
+  animation: spin 700ms linear infinite;
+}
+
+.sm {
+  inline-size: 14px;
+  block-size: 14px;
+}
+
+.md {
+  inline-size: 20px;
+  block-size: 20px;
+}
+
+.lg {
+  inline-size: 32px;
+  block-size: 32px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

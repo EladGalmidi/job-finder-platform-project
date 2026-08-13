@@ -1,0 +1,47 @@
+.tabbar {
+  position: fixed;
+  inset-block-end: 0;
+  inset-inline: 0;
+  z-index: var(--z-sidebar);
+  display: none;
+  align-items: stretch;
+  block-size: var(--mobile-tabbar-height);
+  padding-block-end: env(safe-area-inset-bottom);
+  background-color: var(--color-surface);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.tab {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.active {
+  color: var(--color-primary);
+}
+
+.glyph {
+  font-size: var(--font-size-lg);
+  line-height: 1;
+}
+
+.label {
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Breakpoint: md (900px) — see src/styles/breakpoints.ts */
+@media (max-width: 899px) {
+  .tabbar {
+    display: flex;
+  }
+}

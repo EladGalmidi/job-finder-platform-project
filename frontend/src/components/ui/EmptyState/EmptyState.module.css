@@ -1,0 +1,41 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--space-12);
+  padding-inline: var(--space-6);
+  text-align: center;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 56px;
+  block-size: 56px;
+  margin-block-end: var(--space-2);
+  color: var(--color-text-subtle);
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-pill);
+}
+
+.title {
+  font-size: var(--font-size-lg);
+}
+
+.body {
+  max-inline-size: 46ch;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.action {
+  margin-block-start: var(--space-2);
+}
+
+.danger {
+  color: var(--color-danger);
+  background-color: var(--color-danger-soft);
+}

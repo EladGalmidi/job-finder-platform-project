@@ -1,0 +1,38 @@
+.wrapper {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.band {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.2;
+}
+
+.score {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.high {
+  color: var(--color-success);
+}
+
+.medium {
+  color: var(--color-warning);
+}
+
+.low {
+  color: var(--color-danger);
+}
+
+.glyph {
+  font-size: var(--font-size-sm);
+}

@@ -1,0 +1,99 @@
+.button {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* Sizes — min block size keeps touch targets at 44px on md and lg. */
+.sizeSm {
+  min-block-size: 34px;
+  padding-inline: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.sizeMd {
+  min-block-size: 44px;
+  padding-inline: var(--space-5);
+  font-size: var(--font-size-md);
+}
+
+.sizeLg {
+  min-block-size: 52px;
+  padding-inline: var(--space-6);
+  font-size: var(--font-size-lg);
+}
+
+.primary {
+  color: var(--color-primary-contrast);
+  background-color: var(--color-primary);
+}
+
+.primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.primary:active:not(:disabled) {
+  background-color: var(--color-primary-active);
+}
+
+.secondary {
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border-color: var(--color-border-strong);
+}
+
+.secondary:hover:not(:disabled) {
+  background-color: var(--color-surface-sunken);
+}
+
+.ghost {
+  color: var(--color-text-muted);
+  background-color: transparent;
+}
+
+.ghost:hover:not(:disabled) {
+  color: var(--color-text);
+  background-color: var(--color-surface-sunken);
+}
+
+.danger {
+  color: var(--color-primary-contrast);
+  background-color: var(--color-danger);
+}
+
+.danger:hover:not(:disabled) {
+  filter: brightness(0.93);
+}
+
+.fullWidth {
+  inline-size: 100%;
+}
+
+/* Content is hidden rather than removed so the button keeps its width. */
+.loadingContent {
+  visibility: hidden;
+}
+
+.spinner {
+  position: absolute;
+  display: inline-flex;
+}
+
+.relative {
+  position: relative;
+}

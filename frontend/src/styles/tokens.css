@@ -1,0 +1,152 @@
+/*
+ * Design tokens. Every value the UI uses comes from here.
+ *
+ * Light is defined on :root; dark redefines only what changes. Both are explicit
+ * attribute selectors driven by data-theme on <html>, set by ThemeProvider.
+ */
+
+:root {
+  /* Brand */
+  --color-primary: #5c4ee5;
+  --color-primary-hover: #4b3ed6;
+  --color-primary-active: #3f33bd;
+  --color-primary-soft: #eeecfd;
+  --color-primary-contrast: #fff;
+
+  /* Status — match bands map onto success / warning / danger */
+  --color-success: #16a34a;
+  --color-success-soft: #e7f6ec;
+  --color-warning: #d97706;
+  --color-warning-soft: #fdf1e3;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fdeaea;
+  --color-info: #2563eb;
+  --color-info-soft: #e8effd;
+
+  /* Surfaces */
+  --color-background: #f7f8fb;
+  --color-surface: #fff;
+  --color-surface-raised: #fff;
+  --color-surface-sunken: #f1f2f7;
+  --color-overlay: rgb(17 20 33 / 45%);
+
+  /* Text */
+  --color-text: #14172a;
+  --color-text-muted: #5a6076;
+  --color-text-subtle: #858ba1;
+  --color-text-inverse: #fff;
+
+  /* Lines */
+  --color-border: #e3e5ee;
+  --color-border-strong: #cbcedd;
+  --color-focus: #5c4ee5;
+
+  /* Typography */
+  --font-sans: 'Inter Variable', 'Heebo Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Roboto Mono', monospace;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.375rem;
+  --font-size-2xl: 1.75rem;
+  --font-size-3xl: 2.25rem;
+  --font-size-4xl: 3rem;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.4;
+  --line-height-normal: 1.6;
+
+  /* Spacing — 4px scale */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgb(20 23 42 / 6%);
+  --shadow-sm: 0 2px 6px rgb(20 23 42 / 8%);
+  --shadow-md: 0 6px 18px rgb(20 23 42 / 10%);
+  --shadow-lg: 0 16px 40px rgb(20 23 42 / 14%);
+
+  /* Motion */
+  --transition-fast: 120ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 320ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Layout */
+  --sidebar-width: 260px;
+  --sidebar-width-collapsed: 76px;
+  --topbar-height: 64px;
+  --mobile-tabbar-height: 62px;
+  --content-max-width: 1280px;
+
+  /* Layering */
+  --z-sticky: 100;
+  --z-sidebar: 200;
+  --z-drawer: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --color-primary: #8479f2;
+  --color-primary-hover: #9b92f5;
+  --color-primary-active: #6d61e8;
+  --color-primary-soft: #241f4d;
+  --color-primary-contrast: #10121f;
+
+  --color-success: #4ade80;
+  --color-success-soft: #14301f;
+  --color-warning: #fbbf24;
+  --color-warning-soft: #3a2a10;
+  --color-danger: #f87171;
+  --color-danger-soft: #3b1717;
+  --color-info: #60a5fa;
+  --color-info-soft: #12233f;
+
+  --color-background: #0d0f18;
+  --color-surface: #151827;
+  --color-surface-raised: #1c2033;
+  --color-surface-sunken: #101321;
+  --color-overlay: rgb(4 6 12 / 65%);
+
+  --color-text: #eef0f8;
+  --color-text-muted: #a2a8bf;
+  --color-text-subtle: #757c95;
+  --color-text-inverse: #10121f;
+
+  --color-border: #262b40;
+  --color-border-strong: #39405c;
+  --color-focus: #8479f2;
+
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-sm: 0 2px 6px rgb(0 0 0 / 45%);
+  --shadow-md: 0 6px 18px rgb(0 0 0 / 50%);
+  --shadow-lg: 0 16px 40px rgb(0 0 0 / 55%);
+
+  color-scheme: dark;
+}
