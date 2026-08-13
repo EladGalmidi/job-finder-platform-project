@@ -1,0 +1,13 @@
+# Normalise line endings for the frontend so contributors on Windows, macOS and
+# Linux do not produce whole-file diffs. Scoped to /frontend deliberately: the
+# repository root is shared with other products.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
