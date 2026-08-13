@@ -19,6 +19,14 @@ interface UiState {
   sidebarCollapsed: boolean;
   mobileNavOpen: boolean;
   toasts: Toast[];
+  /**
+   * Bumped by the topbar refresh control. Data-backed pages include it in their
+   * fetch dependencies, which makes one button re-fetch whatever is on screen
+   * without the topbar needing to know what that is.
+   */
+  refreshToken: number;
+  filtersOpen: boolean;
+  upgradeDismissed: boolean;
 }
 
 const systemTheme = (): Theme => {
@@ -42,6 +50,9 @@ const initialState: UiState = {
   sidebarCollapsed: readString(STORAGE_KEYS.sidebarCollapsed) === 'true',
   mobileNavOpen: false,
   toasts: [],
+  refreshToken: 0,
+  filtersOpen: false,
+  upgradeDismissed: false,
 };
 
 /** Direction is derived, never stored — two sources would eventually disagree. */
@@ -97,6 +108,21 @@ const uiSlice = createSlice({
     toastDismissed(state, action: PayloadAction<string>) {
       state.toasts = state.toasts.filter((toast) => toast.id !== action.payload);
     },
+    dataRefreshRequested(state) {
+      state.refreshToken += 1;
+    },
+    filtersToggled(state) {
+      state.filtersOpen = !state.filtersOpen;
+    },
+    filtersOpened(state) {
+      state.filtersOpen = true;
+    },
+    filtersClosed(state) {
+      state.filtersOpen = false;
+    },
+    upgradeDismissed(state) {
+      state.upgradeDismissed = true;
+    },
   },
 });
 
@@ -109,6 +135,11 @@ export const {
   mobileNavClosed,
   toastPushed,
   toastDismissed,
+  dataRefreshRequested,
+  filtersToggled,
+  filtersOpened,
+  filtersClosed,
+  upgradeDismissed,
 } = uiSlice.actions;
 
 export const uiReducer = uiSlice.reducer;
@@ -124,3 +155,6 @@ export const selectDirection = (state: UiSliceRoot): Direction =>
 export const selectSidebarCollapsed = (state: UiSliceRoot): boolean => state.ui.sidebarCollapsed;
 export const selectMobileNavOpen = (state: UiSliceRoot): boolean => state.ui.mobileNavOpen;
 export const selectToasts = (state: UiSliceRoot): readonly Toast[] => state.ui.toasts;
+export const selectRefreshToken = (state: UiSliceRoot): number => state.ui.refreshToken;
+export const selectFiltersOpen = (state: UiSliceRoot): boolean => state.ui.filtersOpen;
+export const selectUpgradeDismissed = (state: UiSliceRoot): boolean => state.ui.upgradeDismissed;

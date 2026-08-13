@@ -110,7 +110,16 @@ export interface JobDetailResponse {
 
 export type JobSort = 'relevance' | 'newest' | 'salaryDesc' | 'salaryAsc';
 
-export type JobTab = 'all' | 'matched' | 'saved' | 'applied';
+/**
+ * `fullMatch` is the high band (>= MATCH_THRESHOLDS.high), `new` is anything
+ * posted within NEW_JOB_WINDOW_DAYS.
+ */
+export type JobTab = 'all' | 'fullMatch' | 'new' | 'saved';
+
+export const JOB_TABS: JobTab[] = ['all', 'fullMatch', 'new', 'saved'];
+
+/** A listing counts as new for this many days after posting. */
+export const NEW_JOB_WINDOW_DAYS = 7;
 
 /** Mirrors the `/jobs` query string exactly; the URL is the source of truth. */
 export interface JobQuery {

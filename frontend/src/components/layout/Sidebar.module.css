@@ -3,10 +3,14 @@
   inset-block-start: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-5);
   block-size: 100dvb;
   padding-block: var(--space-5);
   padding-inline: var(--space-3);
+
+  /* stylelint-disable-next-line plugin/use-logical-properties-and-values --
+     overflow-block lacks Safari support; scrolling must stay block-axis only. */
+  overflow-y: auto;
   background-color: var(--color-surface);
   border-inline-end: 1px solid var(--color-border);
 }
@@ -28,8 +32,9 @@
   inline-size: 32px;
   block-size: 32px;
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
   color: var(--color-primary-contrast);
-  background-color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), #8b7ff0);
   border-radius: var(--radius-md);
 }
 
@@ -60,9 +65,9 @@
 }
 
 .active {
+  font-weight: var(--font-weight-medium);
   color: var(--color-primary);
   background-color: var(--color-primary-soft);
-  font-weight: var(--font-weight-medium);
 }
 
 .glyph {
@@ -73,26 +78,152 @@
 }
 
 .label {
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.collapsed .brand,
-.collapsed .link {
-  justify-content: center;
-  padding-inline: 0;
+/* Count badge sitting at the trailing edge of a nav row. */
+.badge {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  min-inline-size: 20px;
+  block-size: 20px;
+  padding-inline: 6px;
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-contrast);
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
 }
 
-.collapsed .label,
-.collapsed .brandText {
-  display: none;
+.badgeMuted {
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-sunken);
+}
+
+/* Upgrade panel */
+
+.upgrade {
+  position: relative;
+  padding: var(--space-4);
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(140deg, var(--color-primary), #6a5cf0);
+  border-radius: var(--radius-lg);
+}
+
+.upgradeTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.upgradeBody {
+  margin-block: var(--space-2) var(--space-3);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-snug);
+  color: rgb(255 255 255 / 85%);
+}
+
+.upgradeCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 34px;
+  padding-inline: var(--space-4);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  background-color: #fff;
+  border-radius: var(--radius-sm);
+}
+
+.upgradeDismiss {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-end: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 26px;
+  min-block-size: 26px;
+  font-size: 11px;
+  color: rgb(255 255 255 / 75%);
+  border-radius: var(--radius-sm);
+}
+
+.upgradeDismiss:hover {
+  color: #fff;
+  background-color: rgb(255 255 255 / 18%);
+}
+
+/* User area */
+
+.user {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3);
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-md);
+}
+
+.userAvatar {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  inline-size: 34px;
+  block-size: 34px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  border-radius: var(--radius-pill);
+}
+
+.userBody {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.userName {
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userMeta {
+  overflow: hidden;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userAction {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 32px;
+  min-block-size: 32px;
+  color: var(--color-text-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.userAction:hover {
+  color: var(--color-danger);
+  background-color: var(--color-danger-soft);
 }
 
 .footer {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-3);
 }
 
 .collapseButton {
@@ -109,6 +240,42 @@
 .collapseButton:hover {
   color: var(--color-text);
   background-color: var(--color-surface-sunken);
+}
+
+/* Collapsed rail */
+
+.collapsed .brand,
+.collapsed .link,
+.collapsed .collapseButton {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.collapsed .label,
+.collapsed .brandText,
+.collapsed .upgrade,
+.collapsed .userBody,
+.collapsed .userAction {
+  display: none;
+}
+
+.collapsed .user {
+  justify-content: center;
+  padding-inline: 0;
+  background: none;
+}
+
+.collapsed .badge {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-end: 10px;
+  min-inline-size: 16px;
+  block-size: 16px;
+  font-size: 10px;
+}
+
+.collapsed .link {
+  position: relative;
 }
 
 /* Breakpoint: md (900px) — see src/styles/breakpoints.ts */

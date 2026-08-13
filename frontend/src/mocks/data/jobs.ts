@@ -3,6 +3,7 @@ import { asJobId } from '@/types';
 import type { Job } from '@/types';
 
 import { findCompany } from './companies';
+import { EXTRA_JOB_SEEDS } from './jobsExtra';
 import { skillRefs } from './skills';
 
 type JobSeed = Omit<Job, 'id' | 'company'> & { readonly id: string; readonly companyId: string };
@@ -15,8 +16,8 @@ const ils = (min: number, max: number) =>
  * when the UI is English, which is what the scraper will actually produce.
  * Cards read `contentLanguage` to set `dir` per block.
  *
- * Phase 2 seeds 8 listings that cover every role, seniority, remote mode,
- * language and match band. The catalogue grows to 24 in the Jobs phase.
+ * 24 listings covering every role, seniority, remote mode, job type, language
+ * and match band. Listings 9-24 live in `jobsExtra.ts` purely for readability.
  */
 const SEEDS: readonly JobSeed[] = [
   {
@@ -321,7 +322,9 @@ const SEEDS: readonly JobSeed[] = [
   },
 ] as const;
 
-export const JOBS: readonly Job[] = SEEDS.map(({ companyId, id, ...rest }) => ({
+const ALL_SEEDS: readonly JobSeed[] = [...SEEDS, ...(EXTRA_JOB_SEEDS as readonly JobSeed[])];
+
+export const JOBS: readonly Job[] = ALL_SEEDS.map(({ companyId, id, ...rest }) => ({
   ...rest,
   id: asJobId(id),
   company: findCompany(companyId),

@@ -1,0 +1,57 @@
+.list {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+
+  /* stylelint-disable-next-line plugin/use-logical-properties-and-values --
+     overflow-inline lacks Safari support; tabs must scroll on the inline axis
+     only so the row never grows vertically. */
+  overflow-x: auto;
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-md);
+  scrollbar-width: none;
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-block-size: 38px;
+  padding-inline: var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.tab:hover {
+  color: var(--color-text);
+}
+
+.selected {
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-xs);
+}
+
+.count {
+  padding-block: 1px;
+  padding-inline: var(--space-2);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-pill);
+}
+
+.selected .count {
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+}

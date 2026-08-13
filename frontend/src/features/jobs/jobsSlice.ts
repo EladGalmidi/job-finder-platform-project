@@ -143,3 +143,6 @@ export const selectJobById = (state: JobsSliceRoot, jobId: JobId): Job | null =>
 
 export const selectMatchByJobId = (state: JobsSliceRoot, jobId: JobId): JobMatch | null =>
   state.jobs.matches[jobId] ?? null;
+
+export const selectJobDetailStatus = (state: JobsSliceRoot, jobId: JobId): RequestStatus =>
+  state.jobs.detailStatus[jobId] ?? 'idle';

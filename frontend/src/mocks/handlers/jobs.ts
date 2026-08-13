@@ -1,4 +1,5 @@
-import { ApiError, asJobId } from '@/types';
+import { MATCH_THRESHOLDS } from '@/lib/scoring';
+import { ApiError, NEW_JOB_WINDOW_DAYS, asJobId } from '@/types';
 import type {
   Job,
   JobDetailResponse,
@@ -69,8 +70,17 @@ const listJobs = (context: HandlerContext): Paginated<JobListItem> => {
   const page = Math.max(1, query.number('page') ?? 1);
   const pageSize = Math.max(1, query.number('pageSize') ?? DEFAULT_PAGE_SIZE);
 
-  const savedIds = applicationJobIds(userId, ['saved']);
-  const appliedIds = applicationJobIds(userId, ['applied', 'interview', 'offer', 'rejected']);
+  // The saved tab shows anything the user has engaged with, not only records
+  // still sitting in the `saved` status.
+  const savedIds = applicationJobIds(userId, [
+    'saved',
+    'applied',
+    'interview',
+    'offer',
+    'rejected',
+  ]);
+
+  const newCutoff = Date.now() - NEW_JOB_WINDOW_DAYS * 24 * 60 * 60 * 1000;
 
   // Score first: the "matched" tab and relevance sort both depend on it.
   let rows: JobListItem[] = JOBS.map((job) => ({ job, match: matchFor(job, userId) }));
@@ -87,12 +97,12 @@ const listJobs = (context: HandlerContext): Paginated<JobListItem> => {
     if (salaryMin !== null && (job.salary === null || job.salary.max < salaryMin)) return false;
 
     switch (tab) {
-      case 'matched':
-        return match !== null && match.score >= 55;
+      case 'fullMatch':
+        return match !== null && match.score >= MATCH_THRESHOLDS.high;
+      case 'new':
+        return new Date(job.postedAt).getTime() >= newCutoff;
       case 'saved':
         return savedIds.has(job.id);
-      case 'applied':
-        return appliedIds.has(job.id);
       default:
         return true;
     }

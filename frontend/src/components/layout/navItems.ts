@@ -11,7 +11,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: readonly NavItem[] = [
   { to: '/dashboard', labelKey: 'nav.dashboard', glyph: '◧', primary: true },
-  { to: '/jobs', labelKey: 'nav.jobs', glyph: '◆', primary: true },
+  { to: '/dashboard/jobs', labelKey: 'nav.jobs', glyph: '◆', primary: true },
   { to: '/cv', labelKey: 'nav.cv', glyph: '▤', primary: true },
   { to: '/applications', labelKey: 'nav.applications', glyph: '▣', primary: true },
   { to: '/market', labelKey: 'nav.market', glyph: '◭', primary: true },

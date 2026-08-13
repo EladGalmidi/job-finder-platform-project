@@ -16,6 +16,7 @@ export const MobileTabBar = (): React.JSX.Element => {
         <NavLink
           key={item.to}
           to={item.to}
+          end={item.to === '/dashboard'}
           className={({ isActive }) =>
             [styles.tab, isActive ? styles.active : ''].filter(Boolean).join(' ')
           }

@@ -93,8 +93,18 @@ const dashboardMetrics = (context: HandlerContext): DashboardMetrics => {
   ];
   const completed = completionParts.filter(Boolean).length;
 
+  // Distinct skills the matching roles ask for and the CV does not show.
+  const owned = new Set(skills.map((skill) => skill.skillId));
+  const missingSkillIds = new Set(
+    matched.flatMap((match) =>
+      match.missingSkills.filter((skill) => !owned.has(skill.skillId)).map((s) => s.skillId),
+    ),
+  );
+
   return {
     matchedJobsCount: matched.length,
+    applicationsSent: applications.filter((application) => application.status !== 'saved').length,
+    missingSkillsCount: missingSkillIds.size,
     newMatchesThisWeek: matched.filter((match) => {
       const job = JOBS.find((entry) => entry.id === match.jobId);
       if (job === undefined) return false;

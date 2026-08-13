@@ -5,6 +5,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 
 import { OnboardingGuard, ProtectedRoute, PublicOnlyRoute } from './guards/RouteGuards';
+import { LegacyJobRedirect } from './routes/LegacyJobRedirect';
 import { RouteError } from './routes/RouteError';
 
 type PlaceholderModule = typeof import('./routes/placeholderPages');
@@ -156,9 +157,36 @@ export const router = createBrowserRouter([
               {
                 element: <AppLayout />,
                 children: [
-                  { path: 'dashboard', lazy: page('DashboardPage') },
-                  { path: 'jobs', lazy: page('JobsPage') },
-                  { path: 'jobs/:jobId', lazy: page('JobsPage') },
+                  {
+                    path: 'dashboard',
+                    lazy: async () => {
+                      const { DashboardPage } = await import('@/features/dashboard/DashboardPage');
+                      return { Component: DashboardPage };
+                    },
+                  },
+                  {
+                    path: 'dashboard/jobs',
+                    lazy: async () => {
+                      const { JobsPage } = await import('@/features/jobs/JobsPage');
+                      return { Component: JobsPage };
+                    },
+                    children: [
+                      // Nested so the drawer renders over the list rather than
+                      // replacing it, while still owning a shareable URL.
+                      {
+                        path: ':jobId',
+                        lazy: async () => {
+                          const { JobDetailRoute } = await import(
+                            '@/features/jobs/JobDetailRoute'
+                          );
+                          return { Component: JobDetailRoute };
+                        },
+                      },
+                    ],
+                  },
+                  // The jobs list moved under /dashboard; keep old links working.
+                  { path: 'jobs', element: <Navigate to="/dashboard/jobs" replace /> },
+                  { path: 'jobs/:jobId', element: <LegacyJobRedirect /> },
                   { path: 'cv', lazy: page('CvPage') },
                   { path: 'applications', lazy: page('ApplicationsPage') },
                   { path: 'applications/:applicationId', lazy: page('ApplicationsPage') },

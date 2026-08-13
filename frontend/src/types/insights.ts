@@ -82,6 +82,10 @@ export interface DashboardMetrics {
   newMatchesThisWeek: number;
   activeApplications: number;
   interviewsScheduled: number;
+  /** Applications in any status beyond `saved`. */
+  applicationsSent: number;
+  /** Distinct skills required by matching roles that the CV does not show. */
+  missingSkillsCount: number;
   cvScore: number | null;
   profileCompletionPercent: number;
 }
