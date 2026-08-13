@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Button } from '@/components/ui/Button/Button';
 import { Chip } from '@/components/ui/Chip/Chip';
 import { OptionCard } from '@/components/ui/OptionCard/OptionCard';
+import { RadioCardGroup } from '@/components/ui/OptionCard/RadioCardGroup';
 import { RangeSlider } from '@/components/ui/RangeSlider/RangeSlider';
 import { Select } from '@/components/ui/Select/Select';
 import {
@@ -47,8 +48,6 @@ const DEFAULTS: UserPreferences = {
   remoteMode: 'any',
   jobTypes: ['fullTime'],
   salary: { min: 22000, max: 34000, currency: 'ILS', period: 'month' },
-  availability: 'oneMonth',
-  willingToRelocate: false,
 };
 
 const toggle = <T,>(list: readonly T[], value: T): T[] =>
@@ -207,7 +206,7 @@ export const PreferencesStep = (): React.JSX.Element => {
         <h2 className={styles.fieldLabel} id="workmode-label">
           {t('onboarding.preferences.workMode')}
         </h2>
-        <div className={styles.optionGrid} role="radiogroup" aria-labelledby="workmode-label">
+        <RadioCardGroup labelledBy="workmode-label" className={styles.optionGrid}>
           {(['any', ...REMOTE_MODES] as const).map((mode: RemoteMode | 'any') => (
             <OptionCard
               key={mode}
@@ -216,7 +215,7 @@ export const PreferencesStep = (): React.JSX.Element => {
               onSelect={() => patch({ remoteMode: mode })}
             />
           ))}
-        </div>
+        </RadioCardGroup>
       </div>
 
       <div className={styles.fieldGroup}>

@@ -87,6 +87,15 @@ export const DEMO_CV_ANALYSIS: CVAnalysis = {
     skillRef('sk-a11y', 'basic'),
     skillRef('sk-communication', 'proficient'),
   ],
+  /**
+   * Ordered by `demandPercent`, descending — both surfaces that render this list
+   * tell the user it is ranked that way, so the fixture has to actually be.
+   *
+   * `priority` is value for effort, not raw demand: `high` means the skill is
+   * asked for in at least half your matches and is cheap to pick up (four weeks
+   * or less), `medium` means it is in demand but slower, `low` is everything
+   * else. Without a rule the badges read as noise next to the percentages.
+   */
   missingSkills: [
     {
       skillId: skillRef('sk-k8s').skillId,
@@ -97,12 +106,12 @@ export const DEMO_CV_ANALYSIS: CVAnalysis = {
       learnEstimateWeeks: 8,
     },
     {
-      skillId: skillRef('sk-graphql').skillId,
-      name: 'GraphQL',
-      demandPercent: 41,
+      skillId: skillRef('sk-terraform').skillId,
+      name: 'Terraform',
+      demandPercent: 57,
       appearsInJobs: 2,
-      priority: 'high',
-      learnEstimateWeeks: 3,
+      priority: 'medium',
+      learnEstimateWeeks: 6,
     },
     {
       skillId: skillRef('sk-nextjs').skillId,
@@ -113,12 +122,12 @@ export const DEMO_CV_ANALYSIS: CVAnalysis = {
       learnEstimateWeeks: 2,
     },
     {
-      skillId: skillRef('sk-terraform').skillId,
-      name: 'Terraform',
-      demandPercent: 57,
+      skillId: skillRef('sk-graphql').skillId,
+      name: 'GraphQL',
+      demandPercent: 41,
       appearsInJobs: 2,
       priority: 'low',
-      learnEstimateWeeks: 6,
+      learnEstimateWeeks: 3,
     },
   ],
   experienceYears: 4,
@@ -134,7 +143,7 @@ export const DEMO_CV_ANALYSIS: CVAnalysis = {
       title: 'Quantify your impact',
       body: 'Six of your bullets describe responsibilities without an outcome. Recruiters scan for numbers first — add measurable results wherever you have them.',
       actionLabel: 'View CV analysis',
-      actionRoute: '/cv',
+      actionRoute: '/dashboard/cv',
     },
     {
       id: 'rec-2',
@@ -148,7 +157,7 @@ export const DEMO_CV_ANALYSIS: CVAnalysis = {
       title: 'Add Next.js to close a common gap',
       body: 'Next.js appears in roughly half the senior frontend listings you match. It is the cheapest gap on your list to close.',
       actionLabel: 'See market demand',
-      actionRoute: '/market',
+      actionRoute: '/dashboard/market',
     },
     {
       id: 'rec-4',

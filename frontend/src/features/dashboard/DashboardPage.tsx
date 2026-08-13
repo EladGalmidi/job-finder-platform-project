@@ -7,7 +7,7 @@ import { JobCard } from '@/components/domain/JobCard/JobCard';
 import { MatchScore } from '@/components/domain/MatchScore/MatchScore';
 import { SkillTag } from '@/components/domain/SkillTag/SkillTag';
 import { QueryBoundary } from '@/components/feedback/QueryBoundary';
-import { Button } from '@/components/ui/Button/Button';
+import { LinkButton } from '@/components/ui/Button/LinkButton';
 import { EmptyState } from '@/components/ui/EmptyState/EmptyState';
 import { MetricCard } from '@/components/ui/MetricCard/MetricCard';
 import { Skeleton } from '@/components/ui/Skeleton/Skeleton';
@@ -128,22 +128,20 @@ export const DashboardPage = (): React.JSX.Element => {
         </div>
 
         <div className={styles.welcomeActions}>
-          <Link to="/dashboard/jobs">
-            <Button>{t('dashboard.ctaBrowseJobs')}</Button>
-          </Link>
+          <LinkButton to="/dashboard/jobs">{t('dashboard.ctaBrowseJobs')}</LinkButton>
           {hasCv ? (
-            <Link to="/dashboard/cv">
-              <Button variant="secondary">{t('dashboard.ctaViewCv')}</Button>
-            </Link>
+            <LinkButton to="/dashboard/cv" variant="secondary">
+              {t('dashboard.ctaViewCv')}
+            </LinkButton>
           ) : (
-            <Link to="/onboarding/cv">
-              <Button variant="secondary">{t('dashboard.ctaUploadCv')}</Button>
-            </Link>
+            <LinkButton to="/onboarding/cv" variant="secondary">
+              {t('dashboard.ctaUploadCv')}
+            </LinkButton>
           )}
         </div>
       </section>
 
-      <section className={styles.metrics} aria-label={t('dashboard.metricMatchedJobs')}>
+      <section className={styles.metrics} aria-label={t('dashboard.metricsLabel')}>
         <MetricCard
           label={t('dashboard.metricCvScore')}
           value={metrics?.cvScore ?? null}
@@ -215,9 +213,9 @@ export const DashboardPage = (): React.JSX.Element => {
                   title={t('dashboard.matchesEmptyTitle')}
                   body={t('dashboard.matchesEmptyBody')}
                   action={
-                    <Link to="/dashboard/jobs">
-                      <Button variant="secondary">{t('dashboard.ctaBrowseJobs')}</Button>
-                    </Link>
+                    <LinkButton to="/dashboard/jobs" variant="secondary">
+                      {t('dashboard.ctaBrowseJobs')}
+                    </LinkButton>
                   }
                 />
               }
@@ -250,7 +248,7 @@ export const DashboardPage = (): React.JSX.Element => {
                     <span className={styles.activityDot} aria-hidden="true">
                       ●
                     </span>
-                    <span>
+                    <span className={styles.activityBody}>
                       <span className={styles.activityText}>{entry.text}</span>
                       <span className={styles.activityTime}>
                         {formatRelativeTime(locale, entry.at)}
@@ -282,9 +280,9 @@ export const DashboardPage = (): React.JSX.Element => {
                 title={t('dashboard.cvEmptyTitle')}
                 body={t('dashboard.cvEmptyBody')}
                 action={
-                  <Link to="/onboarding/cv">
-                    <Button variant="secondary">{t('dashboard.ctaUploadCv')}</Button>
-                  </Link>
+                  <LinkButton to="/onboarding/cv" variant="secondary">
+                    {t('dashboard.ctaUploadCv')}
+                  </LinkButton>
                 }
               />
             ) : (

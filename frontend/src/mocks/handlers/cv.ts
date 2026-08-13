@@ -55,6 +55,22 @@ const uploadCv = (context: HandlerContext): CV => {
   return cv;
 };
 
+/**
+ * Resolves a CV the caller actually owns.
+ *
+ * Another user's CV is reported as missing rather than forbidden — a 403 would
+ * confirm the id exists. A real backend has to make the same check; leaving it
+ * out of the mock would let a whole class of authorisation bug reach the client
+ * unnoticed.
+ */
+const ownedCv = (userId: string, cvId: string): CV => {
+  const cv = mockDb.state.cvs[cvId];
+  if (cv?.userId !== asUserId(userId)) {
+    throw new ApiError('NOT_FOUND', `No CV with id ${cvId}`, 404);
+  }
+  return cv;
+};
+
 const activeCv = (context: HandlerContext): CV | null => {
   const userId = requireUserId(context);
   const user = mockDb.state.users[userId];
@@ -70,12 +86,10 @@ const activeCv = (context: HandlerContext): CV | null => {
  * instead of restarting at zero.
  */
 const startAnalysis = (context: HandlerContext): { analysisJobId: string } => {
-  requireUserId(context);
+  const userId = requireUserId(context);
   const cvId = context.params['cvId'] ?? '';
 
-  if (mockDb.state.cvs[cvId] === undefined) {
-    throw new ApiError('NOT_FOUND', `No CV with id ${cvId}`, 404);
-  }
+  ownedCv(userId, cvId);
 
   const job: AnalysisJob = {
     id: asAnalysisJobId(`analysis-job-${String(Date.now())}`),
@@ -114,13 +128,15 @@ const buildAnalysis = (cv: CV): CVAnalysis => {
 };
 
 const pollAnalysisJob = (context: HandlerContext): AnalysisJob => {
-  requireUserId(context);
+  const userId = requireUserId(context);
   const id = context.params['analysisJobId'] ?? '';
   const job = mockDb.state.analysisJobs[id];
 
   if (job === undefined) {
     throw new ApiError('NOT_FOUND', `No analysis job with id ${id}`, 404);
   }
+
+  ownedCv(userId, job.cvId);
 
   if (job.status === 'succeeded' || job.status === 'failed') return job;
 
@@ -157,8 +173,10 @@ const pollAnalysisJob = (context: HandlerContext): AnalysisJob => {
 };
 
 const getAnalysis = (context: HandlerContext): CVAnalysis => {
-  requireUserId(context);
+  const userId = requireUserId(context);
   const cvId = context.params['cvId'] ?? '';
+
+  ownedCv(userId, cvId);
   const analysis = mockDb.state.analysesByCvId[cvId];
 
   if (analysis === undefined) {

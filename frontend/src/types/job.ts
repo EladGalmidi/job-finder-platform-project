@@ -73,7 +73,13 @@ export interface Job {
 
 export type MatchBand = 'high' | 'medium' | 'low';
 
-export type MatchReasonKind = 'skills' | 'seniority' | 'location' | 'salary' | 'role';
+export type MatchReasonKind =
+  | 'skills'
+  | 'seniority'
+  | 'location'
+  | 'jobType'
+  | 'salary'
+  | 'role';
 
 export interface MatchReason {
   kind: MatchReasonKind;

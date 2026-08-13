@@ -183,8 +183,13 @@
   border-radius: var(--radius-pill);
 }
 
+/* Column flex rather than a bare inline wrapper: the name and email are spans,
+   and as inline boxes they share a line with no separator and ignore the
+   ellipsis truncation below. Flex items are blockified, which fixes both. */
 .userBody {
+  display: flex;
   flex: 1;
+  flex-direction: column;
   min-inline-size: 0;
 }
 

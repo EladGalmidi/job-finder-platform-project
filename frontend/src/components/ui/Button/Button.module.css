@@ -97,3 +97,14 @@
 .relative {
   position: relative;
 }
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts
+   Small buttons carry the primary card actions on a phone (Save, Share, Apply).
+   34px is a comfortable size for a mouse and a miss for a thumb, so they grow to
+   the same 44px minimum the rest of the app uses for touch targets. */
+@media (max-width: 599px) {
+  .sizeSm {
+    min-block-size: 44px;
+    padding-inline: var(--space-4);
+  }
+}

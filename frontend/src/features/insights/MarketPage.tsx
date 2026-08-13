@@ -179,8 +179,11 @@ export const MarketPage = (): React.JSX.Element => {
                               {t(MARKET_TREND_LABEL[skill.trend])}
                               {skill.trendDelta === 0
                                 ? ''
-                                : ` · ${t('market.trendDelta', {
-                                    delta: skill.trendDelta > 0 ? `+${String(skill.trendDelta)}` : String(skill.trendDelta),
+                                : ` · ${tPlural('market.trendDelta', Math.abs(skill.trendDelta), {
+                                    delta:
+                                      skill.trendDelta > 0
+                                        ? `+${String(skill.trendDelta)}`
+                                        : String(skill.trendDelta),
                                   })}`}
                             </span>
                             <span>{t('market.salaryImpact', { percent: skill.avgSalaryImpactPercent })}</span>

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import { useAppDispatch } from '@/app/hooks';
 import { Badge } from '@/components/ui/Badge/Badge';
 import { Button } from '@/components/ui/Button/Button';
+import { LinkButton } from '@/components/ui/Button/LinkButton';
 import { Drawer } from '@/components/ui/Drawer/Drawer';
 import { Select } from '@/components/ui/Select/Select';
 import { toastPushed } from '@/features/ui/uiSlice';
@@ -100,11 +100,9 @@ export const ApplicationDetail = ({
       }
       footer={
         <div className={styles.detailFooter}>
-          <Link to={jobDetailPath(job.id)} style={{ flex: 1 }}>
-            <Button variant="secondary" fullWidth>
-              {t('applications.viewJob')}
-            </Button>
-          </Link>
+          <LinkButton to={jobDetailPath(job.id)} variant="secondary" fullWidth>
+            {t('applications.viewJob')}
+          </LinkButton>
           <Button variant="danger" onClick={onRemove} isLoading={isRemoving}>
             {t('applications.remove')}
           </Button>

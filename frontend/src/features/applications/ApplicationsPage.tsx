@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { Link } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { QueryBoundary } from '@/components/feedback/QueryBoundary';
 import { Badge } from '@/components/ui/Badge/Badge';
 import { Button } from '@/components/ui/Button/Button';
+import { LinkButton } from '@/components/ui/Button/LinkButton';
 import { EmptyState } from '@/components/ui/EmptyState/EmptyState';
 import { Select } from '@/components/ui/Select/Select';
 import { Skeleton } from '@/components/ui/Skeleton/Skeleton';
@@ -182,7 +182,7 @@ export const ApplicationsPage = (): React.JSX.Element => {
       </div>
 
       <div className={styles.toolbar}>
-        <div className={styles.statusFilters} role="group" aria-label={t('applications.title')}>
+        <div className={styles.statusFilters} role="group" aria-label={t('applications.filterStatus')}>
           <button
             type="button"
             className={cx(styles.statusChip, statusFilter === 'all' && styles.statusChipActive)}
@@ -250,9 +250,7 @@ export const ApplicationsPage = (): React.JSX.Element => {
               title={t('applications.emptyTitle')}
               body={t('applications.emptyBody')}
               action={
-                <Link to="/dashboard/jobs">
-                  <Button>{t('applications.emptyCta')}</Button>
-                </Link>
+                <LinkButton to="/dashboard/jobs">{t('applications.emptyCta')}</LinkButton>
               }
             />
           )

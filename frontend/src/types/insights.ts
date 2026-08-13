@@ -6,6 +6,7 @@
   SalaryRange,
   Seniority,
   SkillId,
+  UserId,
 } from './common';
 
 export type AlertType = 'newMatch' | 'cvTip' | 'deadline' | 'market' | 'status';
@@ -14,6 +15,8 @@ export type AlertSeverity = 'info' | 'success' | 'warning' | 'danger';
 
 export interface Alert {
   id: AlertId;
+  /** Owner. Alerts are generated per profile, never shared between accounts. */
+  userId: UserId;
   type: AlertType;
   severity: AlertSeverity;
   title: string;
@@ -34,6 +37,8 @@ export type ActivityType =
 
 export interface Activity {
   id: ActivityId;
+  /** Owner. The feed is a record of what this account did, nothing else. */
+  userId: UserId;
   at: ISODateTime;
   type: ActivityType;
   entityId: string;

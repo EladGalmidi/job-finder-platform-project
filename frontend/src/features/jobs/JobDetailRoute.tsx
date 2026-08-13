@@ -168,7 +168,7 @@ export const JobDetailRoute = (): React.JSX.Element => {
               <dd className={styles.factValue}>{t(SENIORITY_LABEL[job.seniority])}</dd>
             </div>
             <div className={styles.fact}>
-              <dt className={styles.factLabel}>{t('jobs.filterSalaryMin')}</dt>
+              <dt className={styles.factLabel}>{t('jobs.factSalary')}</dt>
               <dd className={styles.factValue}>
                 {job.salary === null
                   ? t('jobs.salaryUndisclosed')
@@ -176,7 +176,7 @@ export const JobDetailRoute = (): React.JSX.Element => {
               </dd>
             </div>
             <div className={styles.fact}>
-              <dt className={styles.factLabel}>{t('jobs.postedRelative', { when: '' })}</dt>
+              <dt className={styles.factLabel}>{t('jobs.factPosted')}</dt>
               <dd className={styles.factValue}>
                 {formatRelativeTime(locale, job.postedAt)} ·{' '}
                 {tPlural('jobs.applicants', job.applicantsCount)}

@@ -15,18 +15,20 @@ const requireUserId = (context: HandlerContext): string => {
 };
 
 const listAlerts = (context: HandlerContext): readonly Alert[] => {
-  requireUserId(context);
+  const userId = requireUserId(context);
   return Object.values(mockDb.state.alerts)
-    .filter((alert) => !alert.isDismissed)
+    .filter((alert) => alert.userId === userId && !alert.isDismissed)
     .sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime());
 };
 
 const updateAlert = (context: HandlerContext): Alert => {
-  requireUserId(context);
+  const userId = requireUserId(context);
   const id = context.params['alertId'] ?? '';
   const alert = mockDb.state.alerts[id];
 
-  if (alert === undefined) {
+  // Someone else's alert is indistinguishable from one that does not exist —
+  // a 403 here would confirm the id is real.
+  if (alert?.userId !== userId) {
     throw new ApiError('NOT_FOUND', `No alert with id ${id}`, 404);
   }
 
@@ -47,10 +49,11 @@ const updateAlert = (context: HandlerContext): Alert => {
 };
 
 const listActivity = (context: HandlerContext): readonly Activity[] => {
-  requireUserId(context);
+  const userId = requireUserId(context);
   const limit = context.query.number('limit') ?? 10;
 
   return Object.values(mockDb.state.activity)
+    .filter((entry) => entry.userId === userId)
     .sort((left, right) => new Date(right.at).getTime() - new Date(left.at).getTime())
     .slice(0, limit);
 };

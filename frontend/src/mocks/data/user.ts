@@ -11,8 +11,6 @@ export const DEMO_PREFERENCES: UserPreferences = {
   remoteMode: 'hybrid',
   jobTypes: ['fullTime'],
   salary: { min: 25000, max: 35000, currency: 'ILS', period: 'month' },
-  availability: 'oneMonth',
-  willingToRelocate: false,
 };
 
 /**

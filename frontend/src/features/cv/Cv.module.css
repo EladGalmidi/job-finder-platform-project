@@ -326,6 +326,14 @@
   color: var(--color-text-subtle);
 }
 
+.keywordHint {
+  max-inline-size: 62ch;
+  margin-block-end: var(--space-2);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+  color: var(--color-text-subtle);
+}
+
 /* Breakpoint: lg (1200px) — see src/styles/breakpoints.ts */
 @media (max-width: 1199px) {
   .columns {

@@ -14,8 +14,11 @@ export interface OptionCardProps {
 
 /**
  * A larger, more scannable alternative to a radio list for short option sets.
- * Exposes radio semantics in `single` mode so arrow-key navigation and screen
- * reader announcements behave the way users expect.
+ *
+ * In `single` mode this carries radio semantics, which only hold up inside a
+ * `RadioCardGroup` — that is what supplies the group role and the arrow-key
+ * navigation the role implies. Roving tabindex lives here: an unselected radio
+ * is skipped by Tab so the group is one stop, not five.
  */
 export const OptionCard = ({
   title,
@@ -30,7 +33,7 @@ export const OptionCard = ({
     className={cx(styles.card, selected && styles.selected)}
     onClick={onSelect}
     {...(mode === 'single'
-      ? { role: 'radio', 'aria-checked': selected }
+      ? { role: 'radio', 'aria-checked': selected, tabIndex: selected ? 0 : -1 }
       : { 'aria-pressed': selected })}
   >
     {selected ? (

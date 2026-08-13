@@ -188,7 +188,7 @@ export const JobsPage = (): React.JSX.Element => {
             ))}
 
             {totalPages > 1 ? (
-              <nav className={styles.pagination} aria-label={t('jobs.title')}>
+              <nav className={styles.pagination} aria-label={t('jobs.pagination')}>
                 <Button
                   variant="secondary"
                   size="sm"

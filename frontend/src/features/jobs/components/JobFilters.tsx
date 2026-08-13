@@ -1,7 +1,10 @@
+import { useCallback, useRef } from 'react';
+
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Button } from '@/components/ui/Button/Button';
 import { filtersClosed, selectFiltersOpen } from '@/features/ui/uiSlice';
 import { useTranslation } from '@/i18n/useTranslation';
+import { useFocusTrap } from '@/lib/a11y/useFocusTrap';
 import { useBreakpointDown } from '@/lib/useMediaQuery';
 import { cx } from '@/lib/cx';
 import {
@@ -43,11 +46,18 @@ export const JobFilters = ({ api }: JobFiltersProps): React.JSX.Element | null =
   const isOpen = useAppSelector(selectFiltersOpen);
   const isMobile = useBreakpointDown('md');
   const { t } = useTranslation();
+  const sheetRef = useRef<HTMLElement>(null);
 
   const { query, setQuery, clearFilters, activeFilterCount } = api;
 
-  // On mobile the panel is modal and only rendered when opened; on desktop it
-  // is always present.
+  const close = useCallback(() => dispatch(filtersClosed()), [dispatch]);
+
+  // On mobile the panel really is modal — scrim, fixed position, covers the
+  // list — so it needs the semantics and the keyboard behaviour to match:
+  // dialog role, focus moved in and trapped, Escape to dismiss. On desktop it
+  // is an ordinary sidebar and none of that applies.
+  useFocusTrap(sheetRef, { isActive: isMobile && isOpen, onEscape: close });
+
   if (isMobile && !isOpen) return null;
 
   const group = <T extends string>(
@@ -82,14 +92,15 @@ export const JobFilters = ({ api }: JobFiltersProps): React.JSX.Element | null =
   return (
     <>
       {isMobile ? (
-        <div
-          className={styles.filtersScrim}
-          onClick={() => dispatch(filtersClosed())}
-          aria-hidden="true"
-        />
+        <div className={styles.filtersScrim} onClick={close} aria-hidden="true" />
       ) : null}
 
-      <aside className={styles.filters} aria-label={t('jobs.filtersTitle')}>
+      <aside
+        ref={sheetRef}
+        className={styles.filters}
+        aria-label={t('jobs.filtersTitle')}
+        {...(isMobile ? { role: 'dialog' as const, 'aria-modal': true } : {})}
+      >
         <div className={styles.filtersHead}>
           <h2 className={styles.filtersTitle}>{t('jobs.filtersTitle')}</h2>
           {activeFilterCount > 0 ? (
@@ -164,7 +175,7 @@ export const JobFilters = ({ api }: JobFiltersProps): React.JSX.Element | null =
             <Button variant="secondary" fullWidth onClick={clearFilters}>
               {t('jobs.filtersClear')}
             </Button>
-            <Button fullWidth onClick={() => dispatch(filtersClosed())}>
+            <Button fullWidth onClick={close}>
               {t('jobs.filtersApply')}
             </Button>
           </div>

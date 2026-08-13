@@ -5,7 +5,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 
 import { OnboardingGuard, ProtectedRoute, PublicOnlyRoute } from './guards/RouteGuards';
-import { LegacyJobRedirect } from './routes/LegacyJobRedirect';
+import { LegacyRedirect } from './routes/LegacyRedirect';
 import { RouteError } from './routes/RouteError';
 
 type PlaceholderModule = typeof import('./routes/placeholderPages');
@@ -208,15 +208,16 @@ export const router = createBrowserRouter([
                     },
                   },
 
-                  // Everything moved under /dashboard; keep old links working.
-                  { path: 'jobs', element: <Navigate to="/dashboard/jobs" replace /> },
-                  { path: 'jobs/:jobId', element: <LegacyJobRedirect /> },
-                  { path: 'cv', element: <Navigate to="/dashboard/cv" replace /> },
+                  // Everything moved under /dashboard; keep old links working,
+                  // query string included.
+                  { path: 'jobs', element: <LegacyRedirect to="/dashboard/jobs" /> },
+                  { path: 'jobs/:jobId', element: <LegacyRedirect to="/dashboard/jobs/:jobId" /> },
+                  { path: 'cv', element: <LegacyRedirect to="/dashboard/cv" /> },
                   {
                     path: 'applications',
-                    element: <Navigate to="/dashboard/applications" replace />,
+                    element: <LegacyRedirect to="/dashboard/applications" />,
                   },
-                  { path: 'market', element: <Navigate to="/dashboard/market" replace /> },
+                  { path: 'market', element: <LegacyRedirect to="/dashboard/market" /> },
                   { path: 'settings', lazy: page('SettingsPage') },
                 ],
               },
