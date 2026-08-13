@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { QueryBoundary } from '@/components/feedback/QueryBoundary';
 import { Badge } from '@/components/ui/Badge/Badge';
 import { Button } from '@/components/ui/Button/Button';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
 import { LinkButton } from '@/components/ui/Button/LinkButton';
 import { EmptyState } from '@/components/ui/EmptyState/EmptyState';
 import { Select } from '@/components/ui/Select/Select';
@@ -46,6 +47,7 @@ export const ApplicationsPage = (): React.JSX.Element => {
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | 'all'>('all');
   const [sort, setSort] = useState<ApplicationSort>('recent');
   const [openId, setOpenId] = useState<ApplicationId | null>(null);
+  const [removingId, setRemovingId] = useState<ApplicationId | null>(null);
 
   useEffect(() => {
     void dispatch(fetchApplications({ q: '', statuses: [], sort: 'recent' }));
@@ -127,10 +129,18 @@ export const ApplicationsPage = (): React.JSX.Element => {
     });
   };
 
-  const onRemove = (application: Application): void => {
-    if (!window.confirm(t('applications.removeConfirm'))) return;
+  /**
+   * Removal is destructive with no undo, so it is confirmed first. The pending
+   * application is held in state rather than a boolean: the dialog needs to
+   * name what it is about to delete, and the row it came from can disappear
+   * from `visible` while the dialog is open.
+   */
+  const onConfirmRemove = (): void => {
+    if (removingId === null) return;
+    const id = removingId;
+    setRemovingId(null);
 
-    void dispatch(removeApplication(application.id)).then((result) => {
+    void dispatch(removeApplication(id)).then((result) => {
       if (removeApplication.fulfilled.match(result)) {
         dispatch(toastPushed({ severity: 'info', title: t('applications.removed') }));
         return;
@@ -319,7 +329,7 @@ export const ApplicationsPage = (): React.JSX.Element => {
                   <button
                     type="button"
                     className={styles.iconButton}
-                    onClick={() => onRemove(application)}
+                    onClick={() => setRemovingId(application.id)}
                     aria-label={t('applications.remove')}
                   >
                     <span aria-hidden="true">✕</span>
@@ -338,6 +348,16 @@ export const ApplicationsPage = (): React.JSX.Element => {
           onClose={() => setOpenId(null)}
         />
       )}
+
+      <ConfirmDialog
+        isOpen={removingId !== null}
+        title={t('applications.removeConfirmTitle')}
+        body={t('applications.removeConfirm')}
+        confirmLabel={t('applications.remove')}
+        cancelLabel={t('common.cancel')}
+        onConfirm={onConfirmRemove}
+        onCancel={() => setRemovingId(null)}
+      />
     </div>
   );
 };

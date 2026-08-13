@@ -1,10 +1,19 @@
 import { createLogger } from '@/lib/logger';
-import { createMockTransport } from '@/mocks/transport/mockTransport';
 import type { ApiResponse, HttpMethod, HttpTransport, QueryValue, RequestConfig } from '@/types';
 
 import { createAxiosTransport } from './axiosTransport';
 
 const log = createLogger('http');
+
+/**
+ * True when the app should talk to the mock backend.
+ *
+ * Vite substitutes `import.meta.env.VITE_API_MODE` with a literal at build time,
+ * so this folds to a constant and the guarded dynamic import in the bootstrap
+ * disappears entirely from a live build. Nothing in this module imports
+ * `src/mocks`, which is what makes that possible.
+ */
+export const isMockMode = (): boolean => import.meta.env.VITE_API_MODE !== 'live';
 
 type Params = Readonly<Record<string, QueryValue | readonly QueryValue[]>>;
 
@@ -15,21 +24,25 @@ interface CallOptions {
 }
 
 const resolveTransport = (): HttpTransport => {
-  const mode = import.meta.env.VITE_API_MODE;
-
-  if (mode === 'live') {
-    const baseURL = import.meta.env.VITE_API_BASE_URL;
-    if (!baseURL) {
-      // Fail fast: a live build with no base URL is a misconfiguration, not a
-      // situation to silently paper over with a mock.
-      throw new Error('VITE_API_MODE=live requires VITE_API_BASE_URL to be set');
-    }
-    log.info('using live transport', { baseURL });
-    return createAxiosTransport(baseURL);
+  if (isMockMode()) {
+    // Fail fast rather than falling back to a live call against nothing. In
+    // mock mode the bootstrap installs the transport before the app renders;
+    // reaching here means that ordering broke.
+    throw new Error(
+      'Mock mode is active but no transport was installed. ' +
+        'Call installMockTransport() before issuing requests.',
+    );
   }
 
-  log.info('using mock transport');
-  return createMockTransport();
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
+  if (!baseURL) {
+    // Fail fast: a live build with no base URL is a misconfiguration, not a
+    // situation to silently paper over.
+    throw new Error('VITE_API_MODE=live requires VITE_API_BASE_URL to be set');
+  }
+
+  log.info('using live transport', { baseURL });
+  return createAxiosTransport(baseURL);
 };
 
 let transport: HttpTransport | null = null;

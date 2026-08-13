@@ -125,7 +125,7 @@ export const he: Catalog = {
   'landing.cv.title': 'ציון שאפשר באמת לעשות איתו משהו',
   'landing.cv.subtitle':
     'לא מספר לתפארת. כל קטע אומר מה לשנות, וכל כישור חסר אומר כמה הוא נפוץ במשרות שאתם רוצים.',
-  'landing.cv.point1': 'ניקוד לפי קטעים, לא מספר אחד מעורפל',
+  'landing.cv.point1': 'ציון לפי קטעים, לא מספר אחד מעורפל',
   'landing.cv.point2': 'כישורים חסרים מדורגים לפי ביקוש אמיתי בשוק',
   'landing.cv.point3': 'ניסוחים קונקרטיים, לא "הוסיפו עוד מילות מפתח"',
   'landing.cv.overall': 'ציון כולל',
@@ -584,7 +584,9 @@ export const he: Catalog = {
   'applications.statusChanged': 'הועבר ל{status}',
   'applications.remove': 'הסרה',
   'applications.removed': 'המועמדות הוסרה',
-  'applications.removeConfirm': 'להסיר את המועמדות? לא ניתן לבטל.',
+  'applications.removeConfirmTitle': 'להסיר את המועמדות?',
+  'applications.removeConfirm':
+    'היסטוריית הסטטוסים וכל ההערות שכתבתם יימחקו יחד איתה. לא ניתן לבטל את הפעולה.',
   'applications.notes': 'הערות',
   'applications.notesEmpty': 'עדיין אין הערות.',
   'applications.addNote': 'הוספת הערה',
@@ -643,4 +645,36 @@ export const he: Catalog = {
   'dev.resetDb': 'איפוס בסיס נתוני המוק',
   'dev.faults': 'הזרקת תקלה',
   'dev.faultsNone': 'ללא תקלה',
-};
+
+  // ------------------------------------------------------------- settings
+  'settings.title': 'הגדרות',
+  'settings.subtitle': 'הפרופיל שלכם, מה שאתם מחפשים, ואיך האפליקציה נראית.',
+
+  'settings.profileTitle': 'פרופיל',
+  'settings.profileBody': 'כך השם שלכם מוצג באפליקציה.',
+  'settings.fullName': 'שם מלא',
+  'settings.headline': 'כותרת',
+  'settings.headlinePlaceholder': 'מפתחת Frontend · React ו-TypeScript',
+  'settings.headlineHint': 'שורה קצרה שמתארת את מה שאתם עושים. לא חובה.',
+  'settings.email': 'אימייל',
+  'settings.emailHint': 'כתובת ההתחברות. לשינוי, פנו לתמיכה.',
+  'settings.profileSaved': 'הפרופיל עודכן',
+
+  'settings.preferencesTitle': 'העדפות משרה',
+  'settings.preferencesBody':
+    'מה שאתם מחפשים. ההעדפות קובעות את ציוני ההתאמה, ולכן שינוי שלהן מדרג מחדש את כל המשרות.',
+  'settings.preferencesSaved': 'ההעדפות עודכנו — ההתאמות דורגו מחדש',
+  'settings.unsaved': 'יש שינויים שלא נשמרו',
+
+  'settings.appearanceTitle': 'תצוגה',
+  'settings.appearanceBody': 'חל על הדפדפן הזה בלבד.',
+  'settings.theme': 'ערכת נושא',
+  'settings.themeLight': 'בהירה',
+  'settings.themeDark': 'כהה',
+  'settings.language': 'שפה',
+
+  'settings.accountTitle': 'חשבון',
+  'settings.accountBody': 'מחוברים כ-{email}.',
+  'settings.signOutConfirmTitle': 'להתנתק?',
+  'settings.signOutConfirm': 'תצטרכו להתחבר שוב כדי לראות את ההתאמות שלכם.',
+} as const;

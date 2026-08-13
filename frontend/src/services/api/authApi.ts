@@ -20,6 +20,9 @@ export const authApi = {
   me: (signal?: AbortSignal): Promise<User> =>
     api.get<User>('/auth/me', signal === undefined ? undefined : { signal }),
 
+  updateProfile: (profile: { fullName: string; headline: string }): Promise<User> =>
+    api.patch<User>('/users/me', profile),
+
   updatePreferences: (preferences: UserPreferences): Promise<User> =>
     api.patch<User>('/users/me/preferences', preferences),
 

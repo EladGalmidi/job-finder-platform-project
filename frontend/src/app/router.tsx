@@ -218,7 +218,13 @@ export const router = createBrowserRouter([
                     element: <LegacyRedirect to="/dashboard/applications" />,
                   },
                   { path: 'market', element: <LegacyRedirect to="/dashboard/market" /> },
-                  { path: 'settings', lazy: page('SettingsPage') },
+                  {
+                    path: 'settings',
+                    lazy: async () => {
+                      const { SettingsPage } = await import('@/features/settings/SettingsPage');
+                      return { Component: SettingsPage };
+                    },
+                  },
                 ],
               },
             ],

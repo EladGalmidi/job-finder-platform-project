@@ -593,7 +593,9 @@ export const en = {
   'applications.statusChanged': 'Moved to {status}',
   'applications.remove': 'Remove',
   'applications.removed': 'Application removed',
-  'applications.removeConfirm': 'Remove this application? This cannot be undone.',
+  'applications.removeConfirmTitle': 'Remove this application?',
+  'applications.removeConfirm':
+    'The status history and any notes you have written go with it. This cannot be undone.',
   'applications.notes': 'Notes',
   'applications.notesEmpty': 'No notes yet.',
   'applications.addNote': 'Add a note',
@@ -652,4 +654,36 @@ export const en = {
   'dev.resetDb': 'Reset mock database',
   'dev.faults': 'Inject fault',
   'dev.faultsNone': 'No fault',
+
+  // ------------------------------------------------------------- settings
+  'settings.title': 'Settings',
+  'settings.subtitle': 'Your profile, what you are looking for, and how the app looks.',
+
+  'settings.profileTitle': 'Profile',
+  'settings.profileBody': 'How your name appears across the app.',
+  'settings.fullName': 'Full name',
+  'settings.headline': 'Headline',
+  'settings.headlinePlaceholder': 'Frontend Engineer · React & TypeScript',
+  'settings.headlineHint': 'A short line describing what you do. Optional.',
+  'settings.email': 'Email',
+  'settings.emailHint': 'Sign-in address. Contact support to change it.',
+  'settings.profileSaved': 'Profile updated',
+
+  'settings.preferencesTitle': 'Job preferences',
+  'settings.preferencesBody':
+    'What you are looking for. These drive your match scores, so changing them rescores every listing.',
+  'settings.preferencesSaved': 'Preferences updated — your matches have been rescored',
+  'settings.unsaved': 'You have unsaved changes',
+
+  'settings.appearanceTitle': 'Appearance',
+  'settings.appearanceBody': 'Applies to this browser only.',
+  'settings.theme': 'Theme',
+  'settings.themeLight': 'Light',
+  'settings.themeDark': 'Dark',
+  'settings.language': 'Language',
+
+  'settings.accountTitle': 'Account',
+  'settings.accountBody': 'Signed in as {email}.',
+  'settings.signOutConfirmTitle': 'Sign out?',
+  'settings.signOutConfirm': 'You will need to sign in again to see your matches.',
 } as const;

@@ -167,47 +167,21 @@
 
 /* ------------------------------------------------------------ preferences */
 
+/* The preference fields themselves live in features/preferences, shared with
+   settings. This only spaces the block below the step heading. */
+.fields {
+  margin-block-start: var(--space-8);
+}
+
+/* --------------------------------------------------------------- cv upload */
+
+/* The CV step's drop-zone block. */
 .fieldGroup {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   margin-block-start: var(--space-8);
 }
-
-.fieldLabel {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-}
-
-.fieldHint {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-.chipRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.optionGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: var(--space-3);
-}
-
-.selectRow {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
-}
-
-.fieldError {
-  font-size: var(--font-size-sm);
-  color: var(--color-danger);
-}
-
-/* --------------------------------------------------------------- cv upload */
 
 .cvActions {
   display: flex;
@@ -483,10 +457,6 @@
 
   .stepTitle {
     font-size: var(--font-size-xl);
-  }
-
-  .selectRow {
-    grid-template-columns: 1fr;
   }
 
   .actions {

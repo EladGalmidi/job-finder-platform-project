@@ -1,0 +1,52 @@
+/* Breakpoints mirror src/styles/breakpoints.ts — sm 600. */
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-block-start: var(--space-8);
+}
+
+.fieldGroup:first-child {
+  margin-block-start: 0;
+}
+
+.fieldLabel {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.fieldHint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.optionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-3);
+}
+
+.selectRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.fieldError {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts */
+@media (max-width: 599px) {
+  .selectRow {
+    grid-template-columns: 1fr;
+  }
+}

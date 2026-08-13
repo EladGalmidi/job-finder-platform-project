@@ -1,0 +1,71 @@
+/* Breakpoints mirror src/styles/breakpoints.ts — sm 600. */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  background-color: var(--color-overlay);
+  animation: fade-in var(--duration-base) ease both;
+}
+
+.panel {
+  position: fixed;
+
+  /* Centred with auto margins against a full-viewport inset rather than the
+     usual 50% + translate(-50%). The translate trick is physical, so it lands
+     off-centre once the inline inset resolves to the right edge in RTL; auto
+     margins centre on both axes in either direction, and the animation below
+     is then free to use `scale` without fighting a transform. */
+  inset: 0;
+  z-index: var(--z-modal);
+  inline-size: min(440px, calc(100vi - var(--space-8)));
+  block-size: fit-content;
+  padding: var(--space-6);
+  margin: auto;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  animation: confirm-in var(--duration-base) var(--ease-out-expo) both;
+}
+
+@keyframes confirm-in {
+  from {
+    opacity: 0;
+    scale: 0.97;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.title {
+  font-size: var(--font-size-lg);
+}
+
+.body {
+  margin-block-start: var(--space-2);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  margin-block-start: var(--space-6);
+}
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts */
+@media (max-width: 599px) {
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .actions > button {
+    inline-size: 100%;
+  }
+}

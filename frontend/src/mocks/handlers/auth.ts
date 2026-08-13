@@ -152,6 +152,32 @@ export const authRoutes: readonly MockRoute[] = [
 
   {
     method: 'PATCH',
+    pattern: '/users/me',
+    latency: 'normal',
+    auth: true,
+    handler: (context): User => {
+      const user = requireUser(context);
+      const fullName = readString(context.body, 'fullName').trim();
+      const headline = readString(context.body, 'headline').trim();
+
+      if (!isValidFullName(fullName)) {
+        throw new ApiError('VALIDATION_FAILED', 'Check the highlighted fields', 422, {
+          fullName: 'NAME_TOO_SHORT',
+        });
+      }
+
+      // An empty headline is a deliberate clear, not a missing value.
+      const updated: User = { ...user, fullName, headline: headline === '' ? null : headline };
+      mockDb.mutate((draft) => {
+        draft.users[user.id] = updated;
+      });
+
+      return updated;
+    },
+  },
+
+  {
+    method: 'PATCH',
     pattern: '/users/me/preferences',
     latency: 'normal',
     auth: true,
