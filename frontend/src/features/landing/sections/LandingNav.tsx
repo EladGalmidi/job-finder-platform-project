@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { Button } from '@/components/ui/Button/Button';
+import { LinkButton } from '@/components/ui/Button/LinkButton';
 import { localeSet, selectLocale, selectTheme, themeToggled } from '@/features/ui/uiSlice';
 import { useTranslation } from '@/i18n/useTranslation';
 import { cx } from '@/lib/cx';
@@ -70,14 +70,12 @@ export const LandingNav = (): React.JSX.Element => {
             <span aria-hidden="true">{theme === 'dark' ? '☾' : '☀'}</span>
           </button>
 
-          <Link to="/login">
-            <Button variant="ghost" size="sm">
-              {t('landing.nav.login')}
-            </Button>
-          </Link>
-          <Link to="/signup">
-            <Button size="sm">{t('landing.nav.signup')}</Button>
-          </Link>
+          <LinkButton to="/login" variant="ghost" size="sm">
+            {t('landing.nav.login')}
+          </LinkButton>
+          <LinkButton to="/signup" size="sm">
+            {t('landing.nav.signup')}
+          </LinkButton>
         </div>
       </div>
     </header>

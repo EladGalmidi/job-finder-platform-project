@@ -2,10 +2,8 @@ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 
 import { Spinner } from '../Spinner/Spinner';
 
+import { buttonClasses, type ButtonSize, type ButtonVariant } from './buttonClasses';
 import styles from './Button.module.css';
-
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
-export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className'> {
   readonly variant?: ButtonVariant;
@@ -15,12 +13,6 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
   readonly iconStart?: ReactNode;
   readonly iconEnd?: ReactNode;
 }
-
-const SIZE_CLASS: Record<ButtonSize, string> = {
-  sm: styles.sizeSm ?? '',
-  md: styles.sizeMd ?? '',
-  lg: styles.sizeLg ?? '',
-};
 
 /**
  * While loading, the label is hidden with `visibility` rather than unmounted so
@@ -41,15 +33,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   },
   ref,
 ) {
-  const classes = [
-    styles.button,
-    styles.relative,
-    SIZE_CLASS[size],
-    styles[variant],
-    fullWidth ? styles.fullWidth : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = buttonClasses({ variant, size, fullWidth });
 
   return (
     <button

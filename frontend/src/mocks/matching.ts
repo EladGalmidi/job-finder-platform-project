@@ -13,9 +13,10 @@ import type { Job, JobMatch, MatchReason, SkillRef, UserPreferences } from '@/ty
  */
 
 const WEIGHTS = {
-  skills: 0.6,
-  seniority: 0.15,
+  skills: 0.55,
+  seniority: 0.13,
   location: 0.12,
+  jobType: 0.07,
   salary: 0.08,
   role: 0.05,
 } as const;
@@ -54,6 +55,7 @@ export const computeMatch = ({ job, userSkills, preferences }: MatchInput): JobM
 
   let seniorityScore = 0.6;
   let locationScore = 0.6;
+  let jobTypeScore = 0.6;
   let salaryScore = 0.6;
   let roleScore = 0.5;
 
@@ -80,6 +82,16 @@ export const computeMatch = ({ job, userSkills, preferences }: MatchInput): JobM
       text: locationOk ? `${job.location} is within your preferred areas` : `${job.location} is outside your preferred areas`,
     });
 
+    jobTypeScore = preferences.jobTypes.includes(job.jobType) ? 1 : 0.25;
+    reasons.push({
+      kind: 'jobType',
+      impact: jobTypeScore === 1 ? 'positive' : 'negative',
+      text:
+        jobTypeScore === 1
+          ? 'Contract type matches what you asked for'
+          : 'Contract type is not one you selected',
+    });
+
     if (job.salary !== null) {
       const overlaps =
         job.salary.max >= preferences.salary.min && job.salary.min <= preferences.salary.max;
@@ -104,6 +116,7 @@ export const computeMatch = ({ job, userSkills, preferences }: MatchInput): JobM
     skillRatio * WEIGHTS.skills +
     seniorityScore * WEIGHTS.seniority +
     locationScore * WEIGHTS.location +
+    jobTypeScore * WEIGHTS.jobType +
     salaryScore * WEIGHTS.salary +
     roleScore * WEIGHTS.role;
 

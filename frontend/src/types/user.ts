@@ -11,8 +11,6 @@
 
 export type AuthProvider = 'email' | 'google' | 'linkedin';
 
-export type Availability = 'immediate' | 'oneMonth' | 'threeMonths';
-
 export interface UserPreferences {
   desiredRoles: RoleKey[];
   seniority: Seniority;
@@ -20,8 +18,6 @@ export interface UserPreferences {
   remoteMode: RemoteMode | 'any';
   jobTypes: JobType[];
   salary: SalaryRange;
-  availability: Availability;
-  willingToRelocate: boolean;
 }
 
 export interface User {

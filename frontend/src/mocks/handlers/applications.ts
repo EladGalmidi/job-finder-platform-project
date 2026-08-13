@@ -28,9 +28,28 @@ const jobTitle = (jobId: string): string =>
 const jobCompany = (jobId: string): string =>
   JOBS.find((job) => job.id === asJobId(jobId))?.company.name ?? 'a company';
 
-const recordActivity = (type: Activity['type'], entityId: string, text: string): void => {
+/**
+ * Display names for the generated activity copy. The seeded fixtures write
+ * "Moved … to Interview", so the live entries have to match rather than
+ * interpolating the raw enum and producing "… to interview" beside them.
+ */
+const STATUS_TEXT: Record<ApplicationStatus, string> = {
+  saved: 'Saved',
+  applied: 'Applied',
+  interview: 'Interview',
+  offer: 'Offer',
+  rejected: 'Rejected',
+};
+
+const recordActivity = (
+  userId: string,
+  type: Activity['type'],
+  entityId: string,
+  text: string,
+): void => {
   const activity: Activity = {
     id: asActivityId(`act-${String(Date.now())}-${String(Math.floor(Math.random() * 1000))}`),
+    userId: asUserId(userId),
     at: nowIso(),
     type,
     entityId,
@@ -127,6 +146,7 @@ const createApplication = (context: HandlerContext): Application => {
   });
 
   recordActivity(
+    userId,
     status === 'applied' ? 'applied' : 'jobSaved',
     application.id,
     status === 'applied'
@@ -155,9 +175,10 @@ const transition = (application: Application, to: ApplicationStatus): Applicatio
   });
 
   recordActivity(
+    application.userId,
     to === 'applied' ? 'applied' : 'statusChanged',
     updated.id,
-    `Moved ${jobCompany(updated.jobId)} application to ${to}`,
+    `Moved ${jobCompany(updated.jobId)} application to ${STATUS_TEXT[to]}`,
   );
 
   return updated;

@@ -246,6 +246,15 @@
   border-radius: var(--radius-pill);
 }
 
+/* The text and its timestamp stack. Both are spans, so the wrapper has to
+   establish the block context — left inline they share a line with no gap and
+   read as "…to applied2 minutes ago", and the margin below is ignored. */
+.activityBody {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
 .activityText {
   font-size: var(--font-size-sm);
 }

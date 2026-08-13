@@ -1,10 +1,11 @@
 import { daysAgo, hoursAgo } from '@/lib/dates';
-import { asActivityId, asAlertId } from '@/types';
+import { asActivityId, asAlertId, asUserId } from '@/types';
 import type { Activity, Alert } from '@/types';
 
 export const ALERTS: readonly Alert[] = [
   {
     id: asAlertId('alert-1'),
+    userId: asUserId('user-demo'),
     type: 'newMatch',
     severity: 'success',
     title: '3 new matches this week',
@@ -12,10 +13,11 @@ export const ALERTS: readonly Alert[] = [
     createdAt: hoursAgo(5),
     isRead: false,
     isDismissed: false,
-    actionRoute: '/jobs?tab=matched',
+    actionRoute: '/dashboard/jobs?tab=fullMatch',
   },
   {
     id: asAlertId('alert-2'),
+    userId: asUserId('user-demo'),
     type: 'cvTip',
     severity: 'warning',
     title: 'Your CV is missing measurable outcomes',
@@ -23,10 +25,11 @@ export const ALERTS: readonly Alert[] = [
     createdAt: hoursAgo(20),
     isRead: false,
     isDismissed: false,
-    actionRoute: '/cv',
+    actionRoute: '/dashboard/cv',
   },
   {
     id: asAlertId('alert-3'),
+    userId: asUserId('user-demo'),
     type: 'market',
     severity: 'info',
     title: 'Next.js demand up 14% this quarter',
@@ -34,10 +37,11 @@ export const ALERTS: readonly Alert[] = [
     createdAt: daysAgo(2),
     isRead: true,
     isDismissed: false,
-    actionRoute: '/market',
+    actionRoute: '/dashboard/market',
   },
   {
     id: asAlertId('alert-4'),
+    userId: asUserId('user-demo'),
     type: 'deadline',
     severity: 'danger',
     title: 'Interview follow-up overdue',
@@ -45,13 +49,14 @@ export const ALERTS: readonly Alert[] = [
     createdAt: daysAgo(3),
     isRead: false,
     isDismissed: false,
-    actionRoute: '/applications',
+    actionRoute: '/dashboard/applications',
   },
 ] as const;
 
 export const ACTIVITY: readonly Activity[] = [
   {
     id: asActivityId('act-1'),
+    userId: asUserId('user-demo'),
     at: hoursAgo(4),
     type: 'jobSaved',
     entityId: 'job-008',
@@ -60,6 +65,7 @@ export const ACTIVITY: readonly Activity[] = [
   },
   {
     id: asActivityId('act-2'),
+    userId: asUserId('user-demo'),
     at: hoursAgo(26),
     type: 'statusChanged',
     entityId: 'app-2',
@@ -68,6 +74,7 @@ export const ACTIVITY: readonly Activity[] = [
   },
   {
     id: asActivityId('act-3'),
+    userId: asUserId('user-demo'),
     at: daysAgo(2),
     type: 'applied',
     entityId: 'app-3',
@@ -76,6 +83,7 @@ export const ACTIVITY: readonly Activity[] = [
   },
   {
     id: asActivityId('act-4'),
+    userId: asUserId('user-demo'),
     at: daysAgo(6),
     type: 'cvAnalyzed',
     entityId: 'cv-demo',
@@ -84,6 +92,7 @@ export const ACTIVITY: readonly Activity[] = [
   },
   {
     id: asActivityId('act-5'),
+    userId: asUserId('user-demo'),
     at: daysAgo(30),
     type: 'preferencesUpdated',
     entityId: 'user-demo',

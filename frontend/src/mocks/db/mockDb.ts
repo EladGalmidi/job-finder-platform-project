@@ -21,7 +21,8 @@ const log = createLogger('mockDb');
  * Bumping this wipes and reseeds. Any change to the persisted shape must bump it,
  * otherwise returning users get a half-migrated store.
  */
-const SCHEMA_VERSION = 1;
+// v2: alerts and activity gained a `userId` so the feeds are scoped per account.
+const SCHEMA_VERSION = 2;
 
 /**
  * Only mutable entities are persisted. Jobs, skills, companies and market data

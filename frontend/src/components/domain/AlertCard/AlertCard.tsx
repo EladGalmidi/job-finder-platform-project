@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom';
-
-import { Button } from '@/components/ui/Button/Button';
+import { LinkButton } from '@/components/ui/Button/LinkButton';
 import { useTranslation } from '@/i18n/useTranslation';
 import { cx } from '@/lib/cx';
 import { formatRelativeTime } from '@/lib/format';
@@ -49,11 +47,9 @@ export const AlertCard = ({ alert, onDismiss, isDismissing }: AlertCardProps): R
 
         <div className={styles.actions}>
           {alert.actionRoute === null ? null : (
-            <Link to={alert.actionRoute}>
-              <Button size="sm" variant="secondary">
-                {t('jobs.viewDetails')}
-              </Button>
-            </Link>
+            <LinkButton to={alert.actionRoute} size="sm" variant="secondary">
+              {t('jobs.viewDetails')}
+            </LinkButton>
           )}
           <span className={styles.time}>{formatRelativeTime(locale, alert.createdAt)}</span>
         </div>

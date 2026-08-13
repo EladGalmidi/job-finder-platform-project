@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { MatchScore } from '@/components/domain/MatchScore/MatchScore';
@@ -12,6 +13,7 @@ import {
   selectDashboardMetrics,
   selectMetricsStatus,
 } from '@/features/insights/insightsSlice';
+import { toastPushed } from '@/features/ui/uiSlice';
 import { useTranslation } from '@/i18n/useTranslation';
 import { cx } from '@/lib/cx';
 import { PRIORITY_LABEL, SEVERITY_LABEL } from '@/lib/labels';
@@ -34,6 +36,7 @@ const SEVERITY_TONE: Record<RecommendationSeverity, 'danger' | 'warning' | 'info
 
 export const ResultsStep = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { t, tPlural } = useTranslation();
   const { goTo } = useOnboardingSteps();
 
@@ -63,10 +66,16 @@ export const ResultsStep = (): React.JSX.Element => {
 
   const onFinish = (): void => {
     setIsFinishing(true);
-    void dispatch(completeOnboarding()).then(() => {
-      // The onboarding guard redirects to the dashboard once the user is marked
-      // complete; navigating explicitly keeps the transition immediate.
-      window.location.assign('/dashboard');
+    void dispatch(completeOnboarding()).then((result) => {
+      // Only navigate once the server has actually marked the profile complete.
+      // Leaving on an unchecked promise sent users to a dashboard the guard
+      // immediately bounced them back out of, with nothing explaining why.
+      if (completeOnboarding.fulfilled.match(result)) {
+        navigate('/dashboard', { replace: true });
+        return;
+      }
+      setIsFinishing(false);
+      dispatch(toastPushed({ severity: 'danger', title: t('state.errorTitle') }));
     });
   };
 

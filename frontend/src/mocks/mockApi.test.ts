@@ -3,8 +3,10 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { STORAGE_KEYS, writeString } from '@/lib/storage';
 import { applicationsApi } from '@/services/api/applicationsApi';
 import { authApi } from '@/services/api/authApi';
+import { cvApi } from '@/services/api/cvApi';
+import { insightsApi } from '@/services/api/insightsApi';
 import { jobsApi } from '@/services/api/jobsApi';
-import { ApiError, asJobId, type JobQuery } from '@/types';
+import { ApiError, asCvId, asJobId, type JobQuery } from '@/types';
 
 import { mockDb } from './db/mockDb';
 
@@ -23,6 +25,16 @@ const baseQuery: JobQuery = {
 
 const signIn = async (): Promise<void> => {
   const session = await authApi.login({ email: 'demo@jobmatch.ai', password: 'demo1234' });
+  writeString(STORAGE_KEYS.authToken, session.token);
+};
+
+/** A fresh account, which owns none of the seeded demo data. */
+const signUpNewUser = async (): Promise<void> => {
+  const session = await authApi.signup({
+    fullName: 'Dana Levi',
+    email: 'dana@example.com',
+    password: 'Str0ngPass!23',
+  });
   writeString(STORAGE_KEYS.authToken, session.token);
 };
 
@@ -122,5 +134,46 @@ describe('mock API', () => {
       code: 'NOT_FOUND',
       status: 404,
     });
+  });
+
+  it('scopes alerts and activity to the signed-in account', async () => {
+    // The feeds used to be global: a brand-new account saw the demo user's
+    // history on its dashboard while its own metrics correctly read zero.
+    await signIn();
+    expect((await insightsApi.alerts()).length).toBeGreaterThan(0);
+    expect((await insightsApi.activity()).length).toBeGreaterThan(0);
+
+    await signUpNewUser();
+    expect(await insightsApi.alerts()).toHaveLength(0);
+    expect(await insightsApi.activity()).toHaveLength(0);
+  });
+
+  it('will not serve a CV analysis to an account that does not own it', async () => {
+    await signIn();
+    const cv = await cvApi.active();
+    expect(cv).not.toBeNull();
+
+    await signUpNewUser();
+    await expect(cvApi.analysis(cv?.id ?? asCvId('cv-demo'))).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+      status: 404,
+    });
+  });
+
+  it('ranks missing skills by demand, as both surfaces claim', async () => {
+    await signIn();
+    const cv = await cvApi.active();
+    const analysis = await cvApi.analysis(cv?.id ?? asCvId('cv-demo'));
+
+    const demand = analysis.missingSkills.map((skill) => skill.demandPercent);
+    expect(demand).toEqual([...demand].sort((left, right) => right - left));
+  });
+
+  it('scores the job type the user asked for', async () => {
+    // jobTypes was a required onboarding field that fed nothing.
+    await signIn();
+    const page = await jobsApi.list(baseQuery);
+    const reasons = page.items.flatMap((item) => item.match?.reasons ?? []);
+    expect(reasons.some((reason) => reason.kind === 'jobType')).toBe(true);
   });
 });

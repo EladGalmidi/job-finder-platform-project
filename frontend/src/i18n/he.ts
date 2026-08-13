@@ -125,7 +125,7 @@ export const he: Catalog = {
   'landing.cv.title': 'ציון שאפשר באמת לעשות איתו משהו',
   'landing.cv.subtitle':
     'לא מספר לתפארת. כל קטע אומר מה לשנות, וכל כישור חסר אומר כמה הוא נפוץ במשרות שאתם רוצים.',
-  'landing.cv.point1': 'ניקוד לפי קטעים, לא מספר אחד מעורפל',
+  'landing.cv.point1': 'ציון לפי קטעים, לא מספר אחד מעורפל',
   'landing.cv.point2': 'כישורים חסרים מדורגים לפי ביקוש אמיתי בשוק',
   'landing.cv.point3': 'ניסוחים קונקרטיים, לא "הוסיפו עוד מילות מפתח"',
   'landing.cv.overall': 'ציון כולל',
@@ -400,6 +400,7 @@ export const he: Catalog = {
   'dashboard.ctaViewCv': 'לניתוח קורות החיים',
   'dashboard.refreshed': 'הדשבורד רוענן',
 
+  'dashboard.metricsLabel': 'סקירת פרופיל',
   'dashboard.metricCvScore': 'ציון קורות חיים',
   'dashboard.metricMatchedJobs': 'משרות מתאימות',
   'dashboard.metricMissingSkills': 'כישורים חסרים',
@@ -448,6 +449,7 @@ export const he: Catalog = {
   'jobs.results_two': 'שתי תוצאות',
   'jobs.results_many': '{count} תוצאות',
   'jobs.results_other': '{count} תוצאות',
+  'jobs.pagination': 'עמודי תוצאות משרות',
   'jobs.filtersTitle': 'סינון',
   'jobs.filtersShow': 'סינון',
   'jobs.filtersHide': 'הסתרת הסינון',
@@ -481,6 +483,8 @@ export const he: Catalog = {
   'jobs.missingSkills': 'חסר לכם',
   'jobs.promoted': 'מקודם',
   'jobs.postedRelative': 'פורסם {when}',
+  'jobs.factSalary': 'טווח שכר',
+  'jobs.factPosted': 'פורסם',
   'jobs.applicants_one': 'מועמד אחד',
   'jobs.applicants_two': 'שני מועמדים',
   'jobs.applicants_many': '{count} מועמדים',
@@ -542,6 +546,8 @@ export const he: Catalog = {
   'cv.detectedTitle': 'כישורים שמצאנו',
   'cv.keywordsFound': 'מילות מפתח שנמצאו',
   'cv.keywordsMissing': 'מילות מפתח חסרות',
+  'cv.keywordsHint':
+    'מונחים שמגייסים מחפשים ושאינם מופיעים בטקסט. כישור יכול להשתמע מההקשר ועדיין להיות חסר כמילת מפתח מפורשת.',
   'cv.experienceYears': 'שנות ניסיון',
   'cv.seniorityEstimate': 'רמה משוערת',
   'cv.emptyTitle': 'עדיין לא נותחו קורות חיים',
@@ -558,6 +564,7 @@ export const he: Catalog = {
   'applications.sortOldest': 'הישנות קודם',
   'applications.sortCompany': 'חברה א-ת',
   'applications.sortStatus': 'סטטוס',
+  'applications.filterStatus': 'סינון לפי סטטוס',
   'applications.filterAll': 'הכול',
   'applications.count_one': 'מועמדות אחת',
   'applications.count_two': 'שתי מועמדויות',
@@ -577,7 +584,9 @@ export const he: Catalog = {
   'applications.statusChanged': 'הועבר ל{status}',
   'applications.remove': 'הסרה',
   'applications.removed': 'המועמדות הוסרה',
-  'applications.removeConfirm': 'להסיר את המועמדות? לא ניתן לבטל.',
+  'applications.removeConfirmTitle': 'להסיר את המועמדות?',
+  'applications.removeConfirm':
+    'היסטוריית הסטטוסים וכל ההערות שכתבתם יימחקו יחד איתה. לא ניתן לבטל את הפעולה.',
   'applications.notes': 'הערות',
   'applications.notesEmpty': 'עדיין אין הערות.',
   'applications.addNote': 'הוספת הערה',
@@ -606,7 +615,10 @@ export const he: Catalog = {
   'market.trendUp': 'בעלייה',
   'market.trendDown': 'בירידה',
   'market.trendStable': 'יציב',
-  'market.trendDelta': '{delta} נקודות ברבעון',
+  'market.trendDelta_one': '{delta} נקודה ברבעון',
+  'market.trendDelta_two': '{delta} נקודות ברבעון',
+  'market.trendDelta_many': '{delta} נקודות ברבעון',
+  'market.trendDelta_other': '{delta} נקודות ברבעון',
   'market.salaryImpact': 'השפעה על השכר: {percent}%+',
   'market.openPositions_one': 'משרה פתוחה אחת',
   'market.openPositions_two': 'שתי משרות פתוחות',
@@ -633,4 +645,36 @@ export const he: Catalog = {
   'dev.resetDb': 'איפוס בסיס נתוני המוק',
   'dev.faults': 'הזרקת תקלה',
   'dev.faultsNone': 'ללא תקלה',
-};
+
+  // ------------------------------------------------------------- settings
+  'settings.title': 'הגדרות',
+  'settings.subtitle': 'הפרופיל שלכם, מה שאתם מחפשים, ואיך האפליקציה נראית.',
+
+  'settings.profileTitle': 'פרופיל',
+  'settings.profileBody': 'כך השם שלכם מוצג באפליקציה.',
+  'settings.fullName': 'שם מלא',
+  'settings.headline': 'כותרת',
+  'settings.headlinePlaceholder': 'מפתחת Frontend · React ו-TypeScript',
+  'settings.headlineHint': 'שורה קצרה שמתארת את מה שאתם עושים. לא חובה.',
+  'settings.email': 'אימייל',
+  'settings.emailHint': 'כתובת ההתחברות. לשינוי, פנו לתמיכה.',
+  'settings.profileSaved': 'הפרופיל עודכן',
+
+  'settings.preferencesTitle': 'העדפות משרה',
+  'settings.preferencesBody':
+    'מה שאתם מחפשים. ההעדפות קובעות את ציוני ההתאמה, ולכן שינוי שלהן מדרג מחדש את כל המשרות.',
+  'settings.preferencesSaved': 'ההעדפות עודכנו — ההתאמות דורגו מחדש',
+  'settings.unsaved': 'יש שינויים שלא נשמרו',
+
+  'settings.appearanceTitle': 'תצוגה',
+  'settings.appearanceBody': 'חל על הדפדפן הזה בלבד.',
+  'settings.theme': 'ערכת נושא',
+  'settings.themeLight': 'בהירה',
+  'settings.themeDark': 'כהה',
+  'settings.language': 'שפה',
+
+  'settings.accountTitle': 'חשבון',
+  'settings.accountBody': 'מחוברים כ-{email}.',
+  'settings.signOutConfirmTitle': 'להתנתק?',
+  'settings.signOutConfirm': 'תצטרכו להתחבר שוב כדי לראות את ההתאמות שלכם.',
+} as const;

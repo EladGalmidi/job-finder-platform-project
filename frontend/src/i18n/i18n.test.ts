@@ -15,6 +15,36 @@ describe('catalogues', () => {
       expect(value.trim(), `he.${key} is empty`).not.toBe('');
     }
   });
+
+  /**
+   * A placeholder present in English but dropped from Hebrew silently loses a
+   * value at runtime — no error, just a sentence missing its number or name.
+   *
+   * The plural families are the deliberate exception. Hebrew says "משרה אחת"
+   * and "שתי משרות" rather than "1 job" / "2 jobs", so the one and two forms
+   * spell the count as a word and carry no `{count}`. Everything else must
+   * match exactly.
+   */
+  it('keeps the same placeholders in both catalogues', () => {
+    const placeholders = (value: string): string[] =>
+      [...value.matchAll(/\{(\w+)\}/g)].map((match) => match[1] ?? '').sort();
+
+    for (const [key, english] of Object.entries(en)) {
+      if (/_(one|two)$/.test(key)) continue;
+
+      const hebrew = he[key as keyof typeof he];
+      expect(placeholders(hebrew), `placeholders differ for ${key}`).toEqual(
+        placeholders(english),
+      );
+    }
+  });
+
+  it('writes the Hebrew one and two forms without a bare count', () => {
+    for (const [key, value] of Object.entries(he)) {
+      if (!/_(one|two)$/.test(key)) continue;
+      expect(value, `${key} should spell the count out in Hebrew`).not.toContain('{count}');
+    }
+  });
 });
 
 describe('translate', () => {

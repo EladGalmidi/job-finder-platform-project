@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { SkillTag } from '@/components/domain/SkillTag/SkillTag';
 import { QueryBoundary } from '@/components/feedback/QueryBoundary';
 import { Badge } from '@/components/ui/Badge/Badge';
 import { Button } from '@/components/ui/Button/Button';
+import { LinkButton } from '@/components/ui/Button/LinkButton';
 import { EmptyState } from '@/components/ui/EmptyState/EmptyState';
 import { ProgressRing } from '@/components/ui/ProgressRing/ProgressRing';
 import { Skeleton } from '@/components/ui/Skeleton/Skeleton';
@@ -108,11 +109,9 @@ export const CvPage = (): React.JSX.Element => {
         </div>
 
         <div className={styles.actions}>
-          <Link to="/onboarding/cv">
-            <Button variant="secondary" size="sm">
-              {t('cv.uploadNew')}
-            </Button>
-          </Link>
+          <LinkButton to="/onboarding/cv" variant="secondary" size="sm">
+            {t('cv.uploadNew')}
+          </LinkButton>
           <Button variant="secondary" size="sm" onClick={onLinkedinImport} isLoading={isImporting}>
             {t('cv.importLinkedin')}
           </Button>
@@ -141,9 +140,7 @@ export const CvPage = (): React.JSX.Element => {
             title={t('cv.emptyTitle')}
             body={t('cv.emptyBody')}
             action={
-              <Link to="/onboarding/cv">
-                <Button>{t('cv.uploadNew')}</Button>
-              </Link>
+              <LinkButton to="/onboarding/cv">{t('cv.uploadNew')}</LinkButton>
             }
           />
         }
@@ -327,11 +324,9 @@ export const CvPage = (): React.JSX.Element => {
                         <p className={styles.recBody}>{rec.body}</p>
                         {rec.actionRoute === undefined || rec.actionLabel === undefined ? null : (
                           <div className={styles.recAction}>
-                            <Link to={rec.actionRoute}>
-                              <Button size="sm" variant="secondary">
-                                {rec.actionLabel}
-                              </Button>
-                            </Link>
+                            <LinkButton to={rec.actionRoute} size="sm" variant="secondary">
+                              {rec.actionLabel}
+                            </LinkButton>
                           </div>
                         )}
                       </article>
@@ -364,6 +359,10 @@ export const CvPage = (): React.JSX.Element => {
 
                   <div className={styles.keywordGroup}>
                     <p className={styles.keywordLabel}>{t('cv.keywordsMissing')}</p>
+                    {/* Without this, a term can appear under "skills we found"
+                        and here at once, which reads as a contradiction rather
+                        than the detected-vs-literal distinction it is. */}
+                    <p className={styles.keywordHint}>{t('cv.keywordsHint')}</p>
                     <div className={styles.chipRow}>
                       {analysis.keywords.missing.map((keyword) => (
                         <SkillTag key={keyword} name={keyword} variant="missing" />

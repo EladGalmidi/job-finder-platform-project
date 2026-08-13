@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import { useAppDispatch } from '@/app/hooks';
 import { Badge } from '@/components/ui/Badge/Badge';
 import { Button } from '@/components/ui/Button/Button';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
+import { LinkButton } from '@/components/ui/Button/LinkButton';
 import { Drawer } from '@/components/ui/Drawer/Drawer';
 import { Select } from '@/components/ui/Select/Select';
 import { toastPushed } from '@/features/ui/uiSlice';
@@ -37,6 +38,7 @@ export const ApplicationDetail = ({
   const [note, setNote] = useState('');
   const [isSavingNote, setIsSavingNote] = useState(false);
   const [isRemoving, setIsRemoving] = useState(false);
+  const [confirmingRemove, setConfirmingRemove] = useState(false);
 
   const onStatusChange = (status: ApplicationStatus): void => {
     void dispatch(changeApplicationStatus({ id: application.id, status })).then((result) => {
@@ -72,9 +74,7 @@ export const ApplicationDetail = ({
   };
 
   const onRemove = (): void => {
-    // Removal is destructive and there is no undo, so it is confirmed first.
-    if (!window.confirm(t('applications.removeConfirm'))) return;
-
+    setConfirmingRemove(false);
     setIsRemoving(true);
     void dispatch(removeApplication(application.id)).then((result) => {
       setIsRemoving(false);
@@ -100,12 +100,10 @@ export const ApplicationDetail = ({
       }
       footer={
         <div className={styles.detailFooter}>
-          <Link to={jobDetailPath(job.id)} style={{ flex: 1 }}>
-            <Button variant="secondary" fullWidth>
-              {t('applications.viewJob')}
-            </Button>
-          </Link>
-          <Button variant="danger" onClick={onRemove} isLoading={isRemoving}>
+          <LinkButton to={jobDetailPath(job.id)} variant="secondary" fullWidth>
+            {t('applications.viewJob')}
+          </LinkButton>
+          <Button variant="danger" onClick={() => setConfirmingRemove(true)} isLoading={isRemoving}>
             {t('applications.remove')}
           </Button>
         </div>
@@ -210,6 +208,20 @@ export const ApplicationDetail = ({
           </Button>
         </div>
       </section>
+
+      {/* Nested inside the drawer so the confirm sits above it; the drawer's own
+          trap yields to this one while it is open, and Escape unwinds one layer
+          at a time rather than closing both. */}
+      <ConfirmDialog
+        isOpen={confirmingRemove}
+        title={t('applications.removeConfirmTitle')}
+        body={t('applications.removeConfirm')}
+        confirmLabel={t('applications.remove')}
+        cancelLabel={t('common.cancel')}
+        onConfirm={onRemove}
+        onCancel={() => setConfirmingRemove(false)}
+        isBusy={isRemoving}
+      />
     </Drawer>
   );
 };

@@ -1,7 +1,5 @@
-import { Link } from 'react-router-dom';
-
 import { MatchScore } from '@/components/domain/MatchScore/MatchScore';
-import { Button } from '@/components/ui/Button/Button';
+import { LinkButton } from '@/components/ui/Button/LinkButton';
 import { useTranslation } from '@/i18n/useTranslation';
 import { cx } from '@/lib/cx';
 
@@ -35,14 +33,12 @@ export const HeroSection = (): React.JSX.Element => {
         <p className={styles.heroSubtitle}>{t('landing.hero.subtitle')}</p>
 
         <div className={styles.heroActions}>
-          <Link to="/signup">
-            <Button size="lg">{t('landing.hero.ctaPrimary')}</Button>
-          </Link>
-          <a href="#how-it-works">
-            <Button size="lg" variant="secondary">
-              {t('landing.hero.ctaSecondary')}
-            </Button>
-          </a>
+          <LinkButton to="/signup" size="lg">
+            {t('landing.hero.ctaPrimary')}
+          </LinkButton>
+          <LinkButton to="#how-it-works" size="lg" variant="secondary">
+            {t('landing.hero.ctaSecondary')}
+          </LinkButton>
         </div>
 
         <p className={styles.heroNote}>{t('landing.hero.note')}</p>

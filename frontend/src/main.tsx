@@ -6,6 +6,8 @@ import { Provider } from 'react-redux';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/heebo';
 
+import { isMockMode } from '@/services/http/client';
+
 import { App } from './app/App';
 import { store } from './app/store';
 
@@ -18,10 +20,27 @@ if (container === null) {
   throw new Error('Root element #root was not found in index.html');
 }
 
-createRoot(container).render(
-  <StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </StrictMode>,
-);
+/**
+ * The mock backend is installed before the first render, never imported
+ * statically.
+ *
+ * `isMockMode()` folds to a constant at build time, so a live build drops this
+ * branch and never emits the mock chunk — the fixtures stay out of production
+ * instead of shipping as dead weight behind a runtime check.
+ */
+const bootstrap = async (): Promise<void> => {
+  if (isMockMode()) {
+    const { installMockTransport } = await import('@/mocks/install');
+    installMockTransport();
+  }
+
+  createRoot(container).render(
+    <StrictMode>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </StrictMode>,
+  );
+};
+
+void bootstrap();

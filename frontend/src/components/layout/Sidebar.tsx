@@ -5,6 +5,7 @@ import { logout, selectCurrentUser } from '@/features/auth/authSlice';
 import { selectAllApplications } from '@/features/applications/applicationsSlice';
 import { selectUnreadAlertCount } from '@/features/insights/insightsSlice';
 import {
+  directionForLocale,
   selectSidebarCollapsed,
   selectUpgradeDismissed,
   sidebarToggled,
@@ -30,7 +31,12 @@ export const Sidebar = (): React.JSX.Element => {
   const user = useAppSelector(selectCurrentUser);
   const unreadAlerts = useAppSelector(selectUnreadAlertCount);
   const applications = useAppSelector(selectAllApplications);
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
+
+  // The chevron is a directional control: it has to point at the edge the
+  // sidebar collapses towards, which flips with the document direction.
+  const isRtl = directionForLocale(locale) === 'rtl';
+  const collapseGlyph = collapsed === isRtl ? '«' : '»';
 
   const activeApplications = applications.filter(
     (application) => application.status !== 'rejected',
@@ -125,7 +131,7 @@ export const Sidebar = (): React.JSX.Element => {
           aria-label={collapsed ? t('nav.expandSidebar') : t('nav.collapseSidebar')}
         >
           <span className={styles.glyph} aria-hidden="true">
-            {collapsed ? '»' : '«'}
+            {collapseGlyph}
           </span>
           <span className={styles.label}>{t('nav.collapseSidebar')}</span>
         </button>

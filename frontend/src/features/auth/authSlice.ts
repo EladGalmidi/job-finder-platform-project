@@ -169,6 +169,17 @@ export const savePreferences = createAppAsyncThunk(
   },
 );
 
+export const saveProfile = createAppAsyncThunk(
+  'auth/saveProfile',
+  async (profile: { fullName: string; headline: string }, thunkApi) => {
+    try {
+      return await authApi.updateProfile(profile);
+    } catch (error) {
+      return thunkApi.rejectWithValue(toRejectValue(error));
+    }
+  },
+);
+
 export const completeOnboarding = createAppAsyncThunk(
   'auth/completeOnboarding',
   async (_: void, thunkApi) => {
@@ -263,6 +274,9 @@ const authSlice = createSlice({
 
     builder
       .addCase(savePreferences.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(saveProfile.fulfilled, (state, action) => {
         state.user = action.payload;
       })
       .addCase(completeOnboarding.fulfilled, (state, action) => {
