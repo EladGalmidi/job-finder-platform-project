@@ -1,0 +1,138 @@
+.zone {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--space-12);
+  padding-inline: var(--space-6);
+  text-align: center;
+  background-color: var(--color-surface-sunken);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.active {
+  background-color: var(--color-primary-soft);
+  border-color: var(--color-primary);
+}
+
+.invalid {
+  border-color: var(--color-danger);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  inline-size: 48px;
+  block-size: 48px;
+  font-size: var(--font-size-lg);
+  color: var(--color-primary);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-xs);
+}
+
+.title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.or {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.constraints {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.hiddenInput {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+/* Selected-file card */
+.file {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.fileIcon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  border-radius: var(--radius-md);
+}
+
+.fileMeta {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.fileName {
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fileSize {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.fileRemove {
+  flex-shrink: 0;
+  min-inline-size: 40px;
+  min-block-size: 40px;
+  color: var(--color-text-subtle);
+  border-radius: var(--radius-md);
+}
+
+.fileRemove:hover {
+  color: var(--color-danger);
+  background-color: var(--color-danger-soft);
+}
+
+.error {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin-block-start: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+
+.previewNote {
+  margin-block-start: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts */
+@media (max-width: 599px) {
+  .zone {
+    padding-block: var(--space-8);
+  }
+}

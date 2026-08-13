@@ -1,0 +1,17 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "plugins": ["stylelint-plugin-logical-css"],
+  "rules": {
+    "plugin/use-logical-properties-and-values": [true, { "severity": "error" }],
+    "plugin/use-logical-units": [true, { "severity": "error" }],
+    "selector-class-pattern": "^[a-z][a-zA-Z0-9]*$",
+    "custom-property-pattern": "^[a-z][a-zA-Z0-9]*(-[a-z0-9]+)*$",
+    "custom-property-empty-line-before": null,
+    "declaration-empty-line-before": null,
+    "no-descending-specificity": null,
+    "media-feature-range-notation": "prefix",
+    "value-keyword-case": "lower",
+    "import-notation": "string"
+  },
+  "ignoreFiles": ["dist/**/*", "node_modules/**/*"]
+}

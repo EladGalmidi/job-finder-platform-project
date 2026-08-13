@@ -1,0 +1,146 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.head {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.logo {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  inline-size: 46px;
+  block-size: 46px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: #fff;
+  border-radius: var(--radius-md);
+}
+
+.headBody {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+/*
+ * The title is a link covering the card via ::after, so the whole card is
+ * clickable while only the title is in the tab order.
+ */
+.title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.titleLink::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+}
+
+.cardRelative {
+  position: relative;
+}
+
+.company {
+  margin-block-start: 2px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  margin-block-start: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.metaItem {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.salary {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.score {
+  flex-shrink: 0;
+}
+
+.skills {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.skillGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.skillLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* Listing text in a language other than the UI locale. */
+.contentBlock {
+  min-inline-size: 0;
+}
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts */
+@media (max-width: 599px) {
+  .card {
+    padding: var(--space-4);
+  }
+
+  .actions > button {
+    flex: 1;
+  }
+}

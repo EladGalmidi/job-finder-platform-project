@@ -1,0 +1,15 @@
+.splash {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: center;
+  min-block-size: 100dvb;
+  color: var(--color-text-muted);
+}
+
+.brand {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}

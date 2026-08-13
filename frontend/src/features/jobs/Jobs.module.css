@@ -1,0 +1,240 @@
+/* Breakpoints mirror src/styles/breakpoints.ts — sm 600, md 900, lg 1200. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin-block-start: var(--space-1);
+  color: var(--color-text-muted);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.searchForm {
+  position: relative;
+  flex: 1;
+  min-inline-size: 240px;
+}
+
+.searchIcon {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: var(--space-3);
+  color: var(--color-text-subtle);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.searchInput {
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding-block: var(--space-2);
+  padding-inline: var(--space-10) var(--space-4);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-subtle);
+}
+
+.sortSelect {
+  min-inline-size: 190px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.resultCount {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.bodyNoFilters {
+  grid-template-columns: 1fr;
+}
+
+/* Filter panel */
+
+.filters {
+  position: sticky;
+  inset-block-start: calc(var(--topbar-height) + var(--space-4));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.filtersHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filtersTitle {
+  font-size: var(--font-size-md);
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.filterLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filterOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.filterChip {
+  padding-block: var(--space-1);
+  padding-inline: var(--space-3);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-sunken);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.filterChip:hover {
+  color: var(--color-text);
+}
+
+.filterChipActive {
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  border-color: var(--color-primary);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-inline-size: 0;
+}
+
+.pagination {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: center;
+  padding-block-start: var(--space-4);
+}
+
+.pageInfo {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Filters become a bottom sheet below md. */
+
+/* Breakpoint: md (900px) — see src/styles/breakpoints.ts */
+@media (max-width: 899px) {
+  .body,
+  .bodyNoFilters {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: 0;
+    z-index: var(--z-drawer);
+    max-block-size: 80dvb;
+
+    /* stylelint-disable-next-line plugin/use-logical-properties-and-values --
+       overflow-block lacks Safari support. */
+    overflow-y: auto;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    box-shadow: var(--shadow-lg);
+    animation: fade-up var(--duration-base) var(--ease-out-expo) both;
+  }
+
+  .filtersScrim {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-drawer);
+    background-color: var(--color-overlay);
+  }
+
+  .filtersFooter {
+    position: sticky;
+    inset-block-end: 0;
+    display: flex;
+    gap: var(--space-3);
+    padding-block-start: var(--space-3);
+    background-color: var(--color-surface);
+    border-block-start: 1px solid var(--color-border);
+  }
+}
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts */
+@media (max-width: 599px) {
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .controls {
+    inline-size: 100%;
+  }
+
+  .searchForm {
+    min-inline-size: 100%;
+  }
+
+  .sortSelect {
+    flex: 1;
+    min-inline-size: 0;
+  }
+}

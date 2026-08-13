@@ -1,0 +1,110 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.values {
+  display: flex;
+  gap: var(--space-4);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.value {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.valueLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.valueAmount {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.track {
+  position: relative;
+  block-size: 32px;
+}
+
+.rail {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline: 0;
+  block-size: 6px;
+  background-color: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  transform: translateY(-50%);
+}
+
+.fill {
+  position: absolute;
+  inset-block-start: 50%;
+  block-size: 6px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+  transform: translateY(-50%);
+}
+
+/*
+ * Two native range inputs stacked on one track. Native inputs keep full keyboard
+ * support and screen-reader semantics, which a div-based slider would have to
+ * reimplement badly.
+ */
+.input {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  inline-size: 100%;
+  block-size: 32px;
+  margin: 0;
+  pointer-events: none;
+  background: none;
+  appearance: none;
+}
+
+.input::-webkit-slider-thumb {
+  inline-size: 22px;
+  block-size: 22px;
+  pointer-events: auto;
+  cursor: grab;
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  appearance: none;
+}
+
+.input::-moz-range-thumb {
+  inline-size: 22px;
+  block-size: 22px;
+  pointer-events: auto;
+  cursor: grab;
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+}
+
+.input:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.input:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}

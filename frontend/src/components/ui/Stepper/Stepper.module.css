@@ -1,0 +1,92 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.meta {
+  display: flex;
+  gap: var(--space-3);
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.bar {
+  block-size: 6px;
+  overflow: hidden;
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-pill);
+}
+
+.fill {
+  block-size: 100%;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+  transition: inline-size var(--duration-slow) var(--ease-out-expo);
+}
+
+.steps {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+
+.step {
+  display: flex;
+  flex: 1;
+  gap: var(--space-2);
+  align-items: center;
+  min-inline-size: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.marker {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  inline-size: 22px;
+  block-size: 22px;
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-subtle);
+  background-color: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+}
+
+.done .marker {
+  color: var(--color-primary-contrast);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.current .marker {
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  border-color: var(--color-primary);
+}
+
+.current {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+}
+
+.done {
+  color: var(--color-text-muted);
+}
+
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts */
+@media (max-width: 599px) {
+  .steps {
+    display: none;
+  }
+}

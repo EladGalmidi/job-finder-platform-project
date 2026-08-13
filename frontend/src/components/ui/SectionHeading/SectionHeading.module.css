@@ -1,0 +1,41 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-inline-size: 62ch;
+}
+
+.centered {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+}
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts */
+@media (max-width: 599px) {
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .subtitle {
+    font-size: var(--font-size-md);
+  }
+}

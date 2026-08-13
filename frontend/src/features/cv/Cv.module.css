@@ -1,0 +1,359 @@
+/* Breakpoints mirror src/styles/breakpoints.ts — sm 600, md 900, lg 1200. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin-block-start: var(--space-1);
+  color: var(--color-text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Score hero */
+
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  align-items: center;
+  padding: var(--space-6);
+  background: linear-gradient(
+    120deg,
+    var(--color-primary-soft),
+    color-mix(in srgb, var(--color-primary-soft) 30%, var(--color-surface))
+  );
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+}
+
+.heroScore {
+  display: flex;
+  gap: var(--space-5);
+  align-items: center;
+}
+
+.heroNumbers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.heroValue {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.heroOutOf {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.heroMeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-inline-start: var(--space-8);
+  border-inline-start: 1px solid var(--color-border);
+}
+
+.heroMetaRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.heroMetaLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.heroMetaValue {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Panels */
+
+.columns {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-inline-size: 0;
+}
+
+.panel {
+  padding: var(--space-6);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.panelTitle {
+  font-size: var(--font-size-lg);
+}
+
+.panelSubtitle {
+  margin-block: 2px var(--space-5);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* Breakdown */
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.sectionName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.sectionWeight {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.sectionScore {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.meter {
+  block-size: 10px;
+  overflow: hidden;
+  background-color: var(--color-surface-sunken);
+  border-radius: var(--radius-pill);
+}
+
+.meterFill {
+  block-size: 100%;
+  border-radius: var(--radius-pill);
+
+  /* Grows from the inline start, so bars fill rightwards in LTR and leftwards
+     in RTL without a direction-specific rule. */
+  transition: inline-size var(--duration-slower) var(--ease-out-expo);
+}
+
+.sectionSummary {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.tips {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-inline-start: var(--space-4);
+  margin-block-start: var(--space-1);
+}
+
+.tip {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.tipMark {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+/* Recommendations */
+
+.recommendations {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.recommendation {
+  padding: var(--space-4);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-inline-start: 3px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.recCritical {
+  border-inline-start-color: var(--color-danger);
+}
+
+.recImportant {
+  border-inline-start-color: var(--color-warning);
+}
+
+.recNice {
+  border-inline-start-color: var(--color-info);
+}
+
+.recHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.recTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.recBody {
+  margin-block-start: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.recAction {
+  margin-block-start: var(--space-3);
+}
+
+/* Missing skills and demand */
+
+.missingList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.missingItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.missingHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.missingName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.missingDemandRow {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.missingDemandValue {
+  min-inline-size: 44px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.missingMeta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* Chips */
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.keywordGroup {
+  margin-block-start: var(--space-4);
+}
+
+.keywordLabel {
+  margin-block-end: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+/* Breakpoint: lg (1200px) — see src/styles/breakpoints.ts */
+@media (max-width: 1199px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts */
+@media (max-width: 599px) {
+  .hero,
+  .panel {
+    padding: var(--space-5);
+  }
+
+  .heroMeta {
+    padding-inline-start: 0;
+    border-inline-start: none;
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+
+  .actions {
+    inline-size: 100%;
+  }
+
+  .actions > button {
+    flex: 1;
+  }
+}

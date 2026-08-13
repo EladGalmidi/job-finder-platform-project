@@ -1,0 +1,184 @@
+.topbar {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  min-block-size: var(--topbar-height);
+  padding-inline: var(--space-6);
+  background-color: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  border-block-end: 1px solid var(--color-border);
+  backdrop-filter: blur(8px);
+}
+
+.title {
+  flex-shrink: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.mobileBrand {
+  display: none;
+  gap: var(--space-2);
+  align-items: center;
+  font-weight: var(--font-weight-semibold);
+}
+
+.search {
+  position: relative;
+  flex: 1;
+  max-inline-size: 420px;
+}
+
+.searchIcon {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-subtle);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.searchInput {
+  inline-size: 100%;
+  min-block-size: 40px;
+  padding-block: var(--space-2);
+  padding-inline: var(--space-10) var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background-color: var(--color-surface-sunken);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.searchInput:focus {
+  background-color: var(--color-surface);
+  border-color: var(--color-border-strong);
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-subtle);
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-2);
+  align-items: center;
+  margin-inline-start: auto;
+}
+
+.iconButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 40px;
+  min-block-size: 40px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.iconButton:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-sunken);
+}
+
+.iconButtonActive {
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+}
+
+.spinning {
+  animation: spin-refresh 700ms linear;
+}
+
+@keyframes spin-refresh {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.labelledButton {
+  gap: var(--space-2);
+  padding-inline: var(--space-3);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.dot {
+  position: absolute;
+  inset-block-start: 6px;
+  inset-inline-end: 6px;
+  display: grid;
+  place-items: center;
+  min-inline-size: 16px;
+  block-size: 16px;
+  padding-inline: 4px;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-contrast);
+  background-color: var(--color-danger);
+  border-radius: var(--radius-pill);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  inline-size: 36px;
+  block-size: 36px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  border-radius: var(--radius-pill);
+}
+
+/* Breakpoint: lg (1200px) — see src/styles/breakpoints.ts */
+@media (max-width: 1199px) {
+  .updateCvLabel {
+    display: none;
+  }
+
+  .labelledButton {
+    padding-inline: 0;
+  }
+}
+
+/* Breakpoint: md (900px) — see src/styles/breakpoints.ts */
+@media (max-width: 899px) {
+  .topbar {
+    gap: var(--space-2);
+    padding-inline: var(--space-4);
+  }
+
+  .title {
+    display: none;
+  }
+
+  .mobileBrand {
+    display: flex;
+  }
+
+  .search {
+    max-inline-size: none;
+  }
+}
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts */
+@media (max-width: 599px) {
+  .mobileBrand,
+  .localeButton {
+    display: none;
+  }
+}

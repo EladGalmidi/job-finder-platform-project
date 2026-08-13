@@ -1,0 +1,113 @@
+.card {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-inline-start: 3px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.info {
+  border-inline-start-color: var(--color-info);
+}
+
+.success {
+  border-inline-start-color: var(--color-success);
+}
+
+.warning {
+  border-inline-start-color: var(--color-warning);
+}
+
+.danger {
+  border-inline-start-color: var(--color-danger);
+}
+
+.icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  inline-size: 30px;
+  block-size: 30px;
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-pill);
+}
+
+.iconinfo {
+  color: var(--color-info);
+  background-color: var(--color-info-soft);
+}
+
+.iconsuccess {
+  color: var(--color-success);
+  background-color: var(--color-success-soft);
+}
+
+.iconwarning {
+  color: var(--color-warning);
+  background-color: var(--color-warning-soft);
+}
+
+.icondanger {
+  color: var(--color-danger);
+  background-color: var(--color-danger-soft);
+}
+
+.body {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.titleRow {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.unread {
+  inline-size: 7px;
+  block-size: 7px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-pill);
+}
+
+.text {
+  margin-block-start: var(--space-1);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin-block-start: var(--space-3);
+}
+
+.time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.dismiss {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 32px;
+  min-block-size: 32px;
+  color: var(--color-text-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.dismiss:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-sunken);
+}

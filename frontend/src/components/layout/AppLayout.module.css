@@ -1,0 +1,41 @@
+.shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-block-size: 100dvb;
+  transition: grid-template-columns var(--transition-base);
+}
+
+.shellCollapsed {
+  grid-template-columns: var(--sidebar-width-collapsed) 1fr;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.content {
+  flex: 1;
+  inline-size: 100%;
+  max-inline-size: var(--content-max-width);
+  padding-block: var(--space-8);
+  padding-inline: var(--space-8);
+  margin-inline: auto;
+}
+
+/* Breakpoint: md (900px) — see src/styles/breakpoints.ts */
+@media (max-width: 899px) {
+  .shell,
+  .shellCollapsed {
+    grid-template-columns: 1fr;
+  }
+
+  .content {
+    padding-block: var(--space-5);
+    padding-inline: var(--space-4);
+
+    /* Clear the fixed bottom tab bar. */
+    padding-block-end: calc(var(--mobile-tabbar-height) + var(--space-6));
+  }
+}

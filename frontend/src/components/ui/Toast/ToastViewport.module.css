@@ -1,0 +1,77 @@
+.viewport {
+  position: fixed;
+  inset-block-end: var(--space-4);
+  inset-inline-end: var(--space-4);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  inline-size: min(380px, calc(100vi - var(--space-8)));
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-4);
+  pointer-events: auto;
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-inline-start: 3px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.info {
+  border-inline-start-color: var(--color-info);
+}
+
+.success {
+  border-inline-start-color: var(--color-success);
+}
+
+.warning {
+  border-inline-start-color: var(--color-warning);
+}
+
+.danger {
+  border-inline-start-color: var(--color-danger);
+}
+
+.content {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.message {
+  margin-block-start: var(--space-1);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.dismiss {
+  flex-shrink: 0;
+  min-inline-size: 32px;
+  min-block-size: 32px;
+  color: var(--color-text-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.dismiss:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-sunken);
+}
+
+/* Breakpoint: sm (600px) — see src/styles/breakpoints.ts */
+@media (max-width: 599px) {
+  .viewport {
+    inset-inline: var(--space-3);
+    inline-size: auto;
+  }
+}

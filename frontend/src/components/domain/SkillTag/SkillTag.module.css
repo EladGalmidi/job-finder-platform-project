@@ -1,0 +1,30 @@
+.tag {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  padding-block: 3px;
+  padding-inline: var(--space-2);
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+}
+
+.neutral {
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-sunken);
+}
+
+.have {
+  color: var(--color-success);
+  background-color: var(--color-success-soft);
+}
+
+.missing {
+  color: var(--color-danger);
+  background-color: var(--color-danger-soft);
+}
+
+.more {
+  color: var(--color-text-subtle);
+}

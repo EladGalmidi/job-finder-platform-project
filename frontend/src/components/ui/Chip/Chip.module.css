@@ -1,0 +1,43 @@
+.chip {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-block-size: 40px;
+  padding-block: var(--space-2);
+  padding-inline: var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.chip:hover:not(:disabled) {
+  color: var(--color-text);
+  border-color: var(--color-text-subtle);
+}
+
+.selected {
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  border-color: var(--color-primary);
+}
+
+.selected:hover {
+  color: var(--color-primary);
+}
+
+/* A checkmark backs up the colour change so selection is never colour-only. */
+.check {
+  font-size: var(--font-size-xs);
+}
+
+.chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

@@ -1,0 +1,64 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select {
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding-block: var(--space-2);
+  padding-inline: var(--space-4) var(--space-10);
+  color: var(--color-text);
+  cursor: pointer;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  appearance: none;
+  transition: border-color var(--transition-fast);
+}
+
+.select:hover:not(:disabled) {
+  border-color: var(--color-text-subtle);
+}
+
+.select:disabled {
+  cursor: not-allowed;
+  background-color: var(--color-surface-sunken);
+  opacity: 0.7;
+}
+
+.invalid {
+  border-color: var(--color-danger);
+}
+
+/* Logical inset keeps the chevron on the trailing edge in both directions. */
+.chevron {
+  position: absolute;
+  inset-inline-end: var(--space-4);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+  pointer-events: none;
+}
+
+.hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.error {
+  font-size: var(--font-size-xs);
+  color: var(--color-danger);
+}
