@@ -1,4 +1,4 @@
-@import './tokens.css';
+﻿@import './tokens.css';
 @import './reset.css';
 
 /*
@@ -48,3 +48,48 @@
   direction: ltr;
   text-align: start;
 }
+
+/*
+ * Shared entrance animations. `translateY` is direction-agnostic, so these are
+ * safe in both LTR and RTL; anything moving on the inline axis must use a
+ * logical property instead.
+ */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/*
+ * Components reference these keyframes from their own CSS Modules rather than
+ * through a shared utility class, which keeps the animation next to the element
+ * it belongs to.
+ */

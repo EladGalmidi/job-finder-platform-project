@@ -27,7 +27,10 @@ export interface HttpTransport {
 }
 
 export type ApiErrorCode =
+  /** No or expired session on a protected endpoint. */
   | 'UNAUTHORIZED'
+  /** Credentials supplied but rejected. Distinct copy from UNAUTHORIZED. */
+  | 'INVALID_CREDENTIALS'
   | 'FORBIDDEN'
   | 'NOT_FOUND'
   | 'VALIDATION_FAILED'

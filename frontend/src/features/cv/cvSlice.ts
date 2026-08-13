@@ -177,6 +177,15 @@ export const selectActiveCv = (state: CvSliceRoot): CV | null =>
 export const selectActiveAnalysis = (state: CvSliceRoot): CVAnalysis | null =>
   state.cv.activeCvId === null ? null : (state.cv.analysesByCvId[state.cv.activeCvId] ?? null);
 
+/**
+ * Looks an analysis up by CV id rather than by the active pointer.
+ *
+ * `activeCvId` is only populated by an upload or by fetching the active CV, so
+ * a page loaded directly into the flow has the analysis but no pointer.
+ */
+export const selectAnalysisForCv = (state: CvSliceRoot, cvId: CvId | null): CVAnalysis | null =>
+  cvId === null ? null : (state.cv.analysesByCvId[cvId] ?? null);
+
 export const selectAnalysisJob = (state: CvSliceRoot): AnalysisJob | null => state.cv.analysisJob;
 export const selectUploadStatus = (state: CvSliceRoot): RequestStatus => state.cv.uploadStatus;
 export const selectUploadError = (state: CvSliceRoot): SerializedApiError | null =>

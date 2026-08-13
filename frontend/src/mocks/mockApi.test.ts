@@ -36,10 +36,12 @@ describe('mock API', () => {
     mockDb.reset();
   });
 
-  it('rejects the documented failure password with a structured error', async () => {
+  it('distinguishes bad credentials from an expired session', async () => {
+    // INVALID_CREDENTIALS rather than UNAUTHORIZED: the login form needs copy
+    // about the password being wrong, not about the session having expired.
     await expect(
       authApi.login({ email: 'demo@jobmatch.ai', password: 'wrongpass' }),
-    ).rejects.toMatchObject({ code: 'UNAUTHORIZED', status: 401 });
+    ).rejects.toMatchObject({ code: 'INVALID_CREDENTIALS', status: 401 });
   });
 
   it('reports field-level validation details rather than a message string', async () => {

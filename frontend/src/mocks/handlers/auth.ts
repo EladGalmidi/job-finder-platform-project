@@ -61,7 +61,7 @@ export const authRoutes: readonly MockRoute[] = [
       }
 
       if (password === INVALID_PASSWORD) {
-        throw new ApiError('UNAUTHORIZED', 'Email or password is incorrect', 401);
+        throw new ApiError('INVALID_CREDENTIALS', 'Email or password is incorrect', 401);
       }
 
       return issueSession({ ...DEMO_USER, email });

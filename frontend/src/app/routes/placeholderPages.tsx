@@ -5,30 +5,6 @@ import { PagePlaceholder } from '@/components/layout/PagePlaceholder';
  * below; they exist so routing, guards and layout can be verified now.
  */
 
-export const LandingPage = (): React.JSX.Element => (
-  <PagePlaceholder
-    phase="Phase 4"
-    title="Landing"
-    body="The marketing page — hero, how it works, features, CV analysis preview, job matching preview, CTA and footer — is built in the landing phase."
-  />
-);
-
-export const SignupPage = (): React.JSX.Element => (
-  <PagePlaceholder
-    phase="Phase 3"
-    title="Sign up"
-    body="The full sign-up experience is built in the auth phase. The login page already exercises the auth thunks, guards and error states."
-  />
-);
-
-export const OnboardingPage = (): React.JSX.Element => (
-  <PagePlaceholder
-    phase="Phase 5"
-    title="Onboarding"
-    body="Welcome, preferences, CV upload, analysing and results. The polled analysis endpoint and the onboarding slice state are already in place."
-  />
-);
-
 export const DashboardPage = (): React.JSX.Element => (
   <PagePlaceholder
     phase="Phase 10"

@@ -14,6 +14,7 @@ export const STORAGE_KEYS = {
   locale: 'jobmatch.ui.locale',
   sidebarCollapsed: 'jobmatch.ui.sidebarCollapsed',
   authToken: 'jobmatch.auth.token',
+  onboarding: 'jobmatch.onboarding.draft.v1',
   mockDb: 'jobmatch.mock.db.v1',
 } as const;
 

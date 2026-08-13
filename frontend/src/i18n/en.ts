@@ -20,8 +20,13 @@ export const en = {
   'common.skip': 'Skip',
   'common.back': 'Back',
   'common.next': 'Next',
+  'common.continue': 'Continue',
   'common.remove': 'Remove',
   'common.dismiss': 'Dismiss',
+  'common.optional': 'Optional',
+  'common.showPassword': 'Show password',
+  'common.hidePassword': 'Hide password',
+  'common.or': 'or',
 
   'nav.dashboard': 'Dashboard',
   'nav.jobs': 'Jobs',
@@ -44,12 +49,6 @@ export const en = {
   'locale.en': 'English',
   'locale.he': 'עברית',
 
-  'auth.signIn': 'Sign in',
-  'auth.signUp': 'Sign up',
-  'auth.email': 'Email',
-  'auth.password': 'Password',
-  'auth.fullName': 'Full name',
-
   'match.high': 'Strong match',
   'match.medium': 'Partial match',
   'match.low': 'Weak match',
@@ -61,6 +60,7 @@ export const en = {
   'state.errorBody': 'The request did not complete. You can try again.',
 
   'error.UNAUTHORIZED': 'Your session has expired. Please sign in again.',
+  'error.INVALID_CREDENTIALS': 'That email and password do not match. Please try again.',
   'error.FORBIDDEN': 'You do not have access to this.',
   'error.NOT_FOUND': 'We could not find what you were looking for.',
   'error.VALIDATION_FAILED': 'Please check the highlighted fields.',
@@ -78,6 +78,303 @@ export const en = {
   'jobs.count_two': '{count} jobs',
   'jobs.count_many': '{count} jobs',
   'jobs.count_other': '{count} jobs',
+
+  'skills.count_one': '{count} skill',
+  'skills.count_two': '{count} skills',
+  'skills.count_many': '{count} skills',
+  'skills.count_other': '{count} skills',
+
+  /* ---------------------------------------------------------------- landing */
+
+  'landing.nav.howItWorks': 'How it works',
+  'landing.nav.features': 'Features',
+  'landing.nav.insights': 'Insights',
+  'landing.nav.login': 'Log in',
+  'landing.nav.signup': 'Get started free',
+
+  'landing.hero.badge': 'CV analysis · Job matching · Market data',
+  'landing.hero.title': 'Stop guessing which jobs',
+  'landing.hero.titleAccent': 'are worth your time',
+  'landing.hero.subtitle':
+    'JobMatch AI reads your CV, scores it against the roles you actually want, and shows you exactly which skills stand between you and the job.',
+  'landing.hero.ctaPrimary': 'Analyse my CV',
+  'landing.hero.ctaSecondary': 'See how it works',
+  'landing.hero.note': 'No credit card. Takes about two minutes.',
+  'landing.hero.cardScore': 'CV score',
+  'landing.hero.cardScoreCaption': 'Above average for mid-level frontend',
+  'landing.hero.cardMatches': 'New matches this week',
+  'landing.hero.cardGap': 'Top skill gap',
+
+  'landing.stats.jobs': 'Live roles analysed',
+  'landing.stats.skills': 'Skills tracked',
+  'landing.stats.accuracy': 'Match relevance',
+  'landing.stats.time': 'Average time to first match',
+
+  'landing.how.eyebrow': 'How it works',
+  'landing.how.title': 'Three steps, about two minutes',
+  'landing.how.subtitle':
+    'No forms to fill for an hour. Upload once, and every role you see afterwards is scored against you.',
+  'landing.how.step1.title': 'Upload your CV',
+  'landing.how.step1.body':
+    'PDF or DOCX. We pull out your skills, seniority and experience without you retyping any of it.',
+  'landing.how.step2.title': 'Understand your profile',
+  'landing.how.step2.body':
+    'Get a scored breakdown of structure, skills, experience and keywords — with the specific lines holding you back.',
+  'landing.how.step3.title': 'Find jobs that match',
+  'landing.how.step3.body':
+    'Every listing carries a match score, the skills you already have, and the ones you are missing.',
+
+  'landing.cv.eyebrow': 'CV analysis',
+  'landing.cv.title': 'A score you can actually act on',
+  'landing.cv.subtitle':
+    'Not a vanity number. Every section tells you what to change, and every missing skill tells you how common it is in the roles you want.',
+  'landing.cv.point1': 'Section-by-section scoring, not one opaque number',
+  'landing.cv.point2': 'Missing skills ranked by real market demand',
+  'landing.cv.point3': 'Concrete rewrites, not "add more keywords"',
+  'landing.cv.overall': 'Overall',
+  'landing.cv.breakdown': 'Breakdown',
+  'landing.cv.missingTitle': 'Top missing skills',
+  'landing.cv.demand': '{percent}% of matching roles',
+
+  'landing.match.eyebrow': 'Job matching',
+  'landing.match.title': 'Every role, scored against you',
+  'landing.match.subtitle':
+    'Green means apply today. Orange means you are close. Red saves you the afternoon.',
+  'landing.match.matching': 'You have',
+  'landing.match.missing': 'You are missing',
+
+  'landing.features.eyebrow': 'Features',
+  'landing.features.title': 'Built for an actual job search',
+  'landing.features.subtitle':
+    'The parts that usually live in a spreadsheet, done properly.',
+  'landing.features.f1.title': 'Match scoring',
+  'landing.features.f1.body':
+    'Skills, seniority, location and salary weighted into one score you can sort by.',
+  'landing.features.f2.title': 'Skill gap analysis',
+  'landing.features.f2.body':
+    'See exactly which skills separate you from the roles you want, ranked by demand.',
+  'landing.features.f3.title': 'Application tracking',
+  'landing.features.f3.body':
+    'Saved, applied, interview, offer. With notes and a timeline for each one.',
+  'landing.features.f4.title': 'Market data',
+  'landing.features.f4.body':
+    'Real salary bands and demand trends by role and seniority.',
+  'landing.features.f5.title': 'Personalised alerts',
+  'landing.features.f5.body':
+    'Told when a strong match appears, not every time anything is posted.',
+  'landing.features.f6.title': 'Works in Hebrew and English',
+  'landing.features.f6.body':
+    'Full RTL support, and listings keep the language they were posted in.',
+
+  'landing.proof.eyebrow': 'What people say',
+  'landing.proof.title': 'From guessing to targeting',
+  'landing.proof.disclaimer': 'Illustrative examples shown with sample data.',
+  'landing.proof.t1.quote':
+    'I had been applying to everything. The score made it obvious that half of it was never going to land, and the other half needed two skills I could pick up in a month.',
+  'landing.proof.t1.name': 'Frontend engineer',
+  'landing.proof.t1.role': '4 years experience · Tel Aviv',
+  'landing.proof.t2.quote':
+    'The breakdown told me my CV was all responsibilities and no results. Rewrote six bullets, and the callbacks changed immediately.',
+  'landing.proof.t2.name': 'Backend engineer',
+  'landing.proof.t2.role': '6 years experience · Herzliya',
+  'landing.proof.t3.quote':
+    'Being able to see the salary band per seniority before the first call was worth it on its own.',
+  'landing.proof.t3.name': 'Product manager',
+  'landing.proof.t3.role': '5 years experience · Ramat Gan',
+
+  'landing.cta.title': 'See where you actually stand',
+  'landing.cta.subtitle':
+    'Upload your CV and get a scored profile plus your first matches in about two minutes.',
+  'landing.cta.button': 'Get started free',
+  'landing.cta.secondary': 'I already have an account',
+
+  'landing.footer.product': 'Product',
+  'landing.footer.company': 'Company',
+  'landing.footer.legal': 'Legal',
+  'landing.footer.about': 'About',
+  'landing.footer.careers': 'Careers',
+  'landing.footer.contact': 'Contact',
+  'landing.footer.privacy': 'Privacy',
+  'landing.footer.terms': 'Terms',
+  'landing.footer.rights': 'All rights reserved.',
+  'landing.footer.demoNote':
+    'Demo product. All jobs, companies and analysis shown are sample data.',
+
+  /* ------------------------------------------------------------------- auth */
+
+  'auth.signIn': 'Sign in',
+  'auth.signUp': 'Sign up',
+  'auth.email': 'Email',
+  'auth.password': 'Password',
+  'auth.fullName': 'Full name',
+  'auth.loginTitle': 'Welcome back',
+  'auth.loginSubtitle': 'Pick up where you left off.',
+  'auth.signupTitle': 'Create your account',
+  'auth.signupSubtitle': 'Upload a CV and see your matches in about two minutes.',
+  'auth.noAccount': 'New here?',
+  'auth.hasAccount': 'Already have an account?',
+  'auth.forgotPassword': 'Forgot password?',
+  'auth.continueWithGoogle': 'Continue with Google',
+  'auth.continueWithLinkedin': 'Continue with LinkedIn',
+  'auth.emailPlaceholder': 'you@example.com',
+  'auth.namePlaceholder': 'Alex Ronen',
+  'auth.passwordHint': 'At least 8 characters.',
+  'auth.terms': 'I agree to the terms of service and privacy policy',
+  'auth.demoHint': 'Demo: any valid email and an 8+ character password works.',
+  'auth.demoHintFail': 'Use the password "wrongpass" to see the error state.',
+  'auth.redirecting': 'Signing you in',
+  'auth.panelTitle': 'Know where you stand before you apply',
+  'auth.panelPoint1': 'A CV score you can act on',
+  'auth.panelPoint2': 'Every job matched against your profile',
+  'auth.panelPoint3': 'The skills standing between you and the role',
+
+  'validation.nameRequired': 'Enter your name',
+  'validation.nameTooShort': 'Name must be at least 2 characters',
+  'validation.emailRequired': 'Enter your email',
+  'validation.emailInvalid': 'Enter a valid email address',
+  'validation.passwordRequired': 'Enter a password',
+  'validation.passwordTooShort': 'Password must be at least 8 characters',
+  'validation.termsRequired': 'Please accept the terms to continue',
+  'validation.rolesRequired': 'Pick at least one role',
+  'validation.locationsRequired': 'Pick at least one location',
+  'validation.jobTypesRequired': 'Pick at least one job type',
+
+  'password.weak': 'Weak',
+  'password.fair': 'Fair',
+  'password.strong': 'Strong',
+  'password.strengthLabel': 'Password strength: {level}',
+
+  /* ------------------------------------------------------------- onboarding */
+
+  'onboarding.stepOf': 'Step {current} of {total}',
+  'onboarding.progress': 'Onboarding progress',
+  'onboarding.step.welcome': 'Welcome',
+  'onboarding.step.preferences': 'Preferences',
+  'onboarding.step.cv': 'CV',
+  'onboarding.step.analyzing': 'Analysis',
+  'onboarding.step.results': 'Results',
+  'onboarding.exit': 'Save and exit',
+
+  'onboarding.welcome.title': 'Welcome, {name}',
+  'onboarding.welcome.subtitle':
+    'Two minutes of setup and every job you see afterwards is scored against your profile.',
+  'onboarding.welcome.point1.title': 'Tell us what you are looking for',
+  'onboarding.welcome.point1.body': 'Role, location, job type and the salary you expect.',
+  'onboarding.welcome.point2.title': 'Upload your CV',
+  'onboarding.welcome.point2.body':
+    'PDF or DOCX. You can skip this and add it later, with fewer matches until you do.',
+  'onboarding.welcome.point3.title': 'Get your profile',
+  'onboarding.welcome.point3.body': 'A CV score, your matches, and the skills you are missing.',
+  'onboarding.welcome.cta': 'Let us start',
+
+  'onboarding.preferences.title': 'What are you looking for?',
+  'onboarding.preferences.subtitle':
+    'This drives your match scores. You can change any of it later in settings.',
+  'onboarding.preferences.roles': 'Desired role',
+  'onboarding.preferences.rolesHint': 'Pick one or more.',
+  'onboarding.preferences.seniority': 'Seniority',
+  'onboarding.preferences.locations': 'Location',
+  'onboarding.preferences.locationsHint': 'Where would you work?',
+  'onboarding.preferences.jobTypes': 'Job type',
+  'onboarding.preferences.workMode': 'Work mode',
+  'onboarding.preferences.salary': 'Expected monthly salary',
+  'onboarding.preferences.salaryHint': 'Gross, in shekels. Used to score salary fit.',
+  'onboarding.preferences.salaryMin': 'Minimum',
+  'onboarding.preferences.salaryMax': 'Maximum',
+  'onboarding.preferences.saving': 'Saving preferences',
+
+  'onboarding.cv.title': 'Upload your CV',
+  'onboarding.cv.subtitle':
+    'We read it once to pull out your skills and experience. Nothing is shared with employers.',
+  'onboarding.cv.dropTitle': 'Drag your CV here',
+  'onboarding.cv.dropOr': 'or',
+  'onboarding.cv.browse': 'Choose a file',
+  'onboarding.cv.constraints': 'PDF or DOCX · up to 5 MB',
+  'onboarding.cv.dropActive': 'Release to upload',
+  'onboarding.cv.linkedin': 'Import from LinkedIn instead',
+  'onboarding.cv.linkedinNote': 'Simulated import for this demo.',
+  'onboarding.cv.skip': 'Skip for now',
+  'onboarding.cv.skipNote':
+    'You will still get matches from your preferences, but no CV score until you upload one.',
+  'onboarding.cv.uploaded': 'Ready to analyse',
+  'onboarding.cv.uploading': 'Uploading',
+  'onboarding.cv.removeFile': 'Remove file',
+  'onboarding.cv.analyse': 'Analyse my CV',
+  'onboarding.cv.previewNote': 'File contents are not rendered in this demo.',
+
+  'onboarding.analyzing.title': 'Analysing your CV',
+  'onboarding.analyzing.subtitle': 'This usually takes a few seconds.',
+  'onboarding.analyzing.complete': 'Analysis complete',
+  'onboarding.analyzing.failed': 'The analysis did not finish',
+  'onboarding.analyzing.step.parsing': 'Reading the document',
+  'onboarding.analyzing.step.extractingSkills': 'Extracting skills',
+  'onboarding.analyzing.step.scoringStructure': 'Scoring structure and clarity',
+  'onboarding.analyzing.step.comparingMarket': 'Comparing against market data',
+  'onboarding.analyzing.step.matchingJobs': 'Matching open roles',
+  'onboarding.analyzing.step.buildingRecommendations': 'Building recommendations',
+
+  'onboarding.results.title': 'Here is where you stand',
+  'onboarding.results.subtitle': 'Your profile is ready. This is the short version.',
+  'onboarding.results.cvScore': 'CV score',
+  'onboarding.results.matchedJobs': 'Matching jobs',
+  'onboarding.results.experience': 'Experience',
+  'onboarding.results.years_one': '{count} year',
+  'onboarding.results.years_two': '{count} years',
+  'onboarding.results.years_many': '{count} years',
+  'onboarding.results.years_other': '{count} years',
+  'onboarding.results.yourSkills': 'Skills we found',
+  'onboarding.results.missingSkills': 'Skills you are missing',
+  'onboarding.results.missingHint': 'Ranked by how often they appear in roles you match.',
+  'onboarding.results.recommendations': 'What to fix first',
+  'onboarding.results.cta': 'Go to my dashboard',
+  'onboarding.results.finishing': 'Setting up your dashboard',
+  'onboarding.results.noCvTitle': 'No CV yet',
+  'onboarding.results.noCvBody':
+    'You skipped the upload, so matches come from your preferences only. Add a CV any time to get a score and skill gaps.',
+  'onboarding.results.uploadNow': 'Upload a CV',
+  'onboarding.results.weeksToLearn_one': '~{count} week',
+  'onboarding.results.weeksToLearn_two': '~{count} weeks',
+  'onboarding.results.weeksToLearn_many': '~{count} weeks',
+  'onboarding.results.weeksToLearn_other': '~{count} weeks',
+
+  'priority.high': 'High priority',
+  'priority.medium': 'Medium priority',
+  'priority.low': 'Low priority',
+
+  'severity.critical': 'Critical',
+  'severity.important': 'Important',
+  'severity.nice': 'Nice to have',
+
+  'role.devops': 'DevOps',
+  'role.backend': 'Backend',
+  'role.frontend': 'Frontend',
+  'role.fullstack': 'Full Stack',
+  'role.productManager': 'Product Manager',
+  'role.data': 'Data',
+
+  'seniority.junior': 'Junior',
+  'seniority.mid': 'Mid-level',
+  'seniority.senior': 'Senior',
+  'seniority.lead': 'Lead',
+  'seniority.principal': 'Principal',
+
+  'jobType.fullTime': 'Full time',
+  'jobType.partTime': 'Part time',
+  'jobType.contract': 'Contract',
+  'jobType.student': 'Student',
+  'jobType.internship': 'Internship',
+
+  'remote.onsite': 'On site',
+  'remote.hybrid': 'Hybrid',
+  'remote.remote': 'Remote',
+  'remote.any': 'Any',
+
+  'cvSection.structure': 'Structure',
+  'cvSection.skills': 'Skills',
+  'cvSection.experience': 'Experience',
+  'cvSection.keywords': 'Keywords',
+  'cvSection.education': 'Education',
+  'cvSection.impact': 'Impact',
 
   'dev.title': 'Component gallery',
   'dev.subtitle': 'Foundation primitives and mock controls.',

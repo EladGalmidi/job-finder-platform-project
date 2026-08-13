@@ -1,7 +1,7 @@
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import { createAppAsyncThunk, toRejectValue } from '@/app/createAppAsyncThunk';
-import { STORAGE_KEYS, readString, remove, writeString } from '@/lib/storage';
+import { STORAGE_KEYS, readJson, readString, remove, writeJson, writeString } from '@/lib/storage';
 import { authApi } from '@/services/api/authApi';
 import type {
   AuthSession,
@@ -51,12 +51,41 @@ interface AuthState {
   onboarding: OnboardingState;
 }
 
-const initialOnboarding: OnboardingState = {
+const emptyOnboarding: OnboardingState = {
   step: 'welcome',
   draftPreferences: null,
   cvId: null,
   analysisJobId: null,
   skippedCv: false,
+};
+
+const isOnboardingState = (value: unknown): value is OnboardingState => {
+  if (typeof value !== 'object' || value === null) return false;
+  const candidate = value as Record<string, unknown>;
+  return ONBOARDING_STEPS.includes(candidate['step'] as OnboardingStep);
+};
+
+/**
+ * Onboarding progress is persisted so a refresh mid-flow resumes where the user
+ * left off instead of dropping them back on the welcome screen. It is cleared
+ * on completion and on logout.
+ */
+const persistOnboarding = (state: OnboardingState): void => {
+  writeJson(STORAGE_KEYS.onboarding, {
+    step: state.step,
+    draftPreferences: state.draftPreferences,
+    cvId: state.cvId,
+    analysisJobId: state.analysisJobId,
+    skippedCv: state.skippedCv,
+  });
+};
+
+const loadOnboarding = (): OnboardingState =>
+  readJson(STORAGE_KEYS.onboarding, isOnboardingState) ?? emptyOnboarding;
+
+const clearOnboarding = (): OnboardingState => {
+  remove(STORAGE_KEYS.onboarding);
+  return emptyOnboarding;
 };
 
 const initialState: AuthState = {
@@ -65,7 +94,7 @@ const initialState: AuthState = {
   token: readString(STORAGE_KEYS.authToken),
   error: null,
   submitStatus: 'idle',
-  onboarding: initialOnboarding,
+  onboarding: loadOnboarding(),
 };
 
 /**
@@ -160,23 +189,28 @@ const authSlice = createSlice({
     },
     onboardingStepSet(state, action: PayloadAction<OnboardingStep>) {
       state.onboarding.step = action.payload;
+      persistOnboarding(state.onboarding);
     },
     onboardingPreferencesDrafted(state, action: PayloadAction<UserPreferences>) {
       state.onboarding.draftPreferences = action.payload;
+      persistOnboarding(state.onboarding);
     },
     onboardingCvSet(state, action: PayloadAction<CvId | null>) {
       state.onboarding.cvId = action.payload;
       state.onboarding.skippedCv = false;
+      persistOnboarding(state.onboarding);
     },
     onboardingCvSkipped(state) {
       state.onboarding.cvId = null;
       state.onboarding.skippedCv = true;
+      persistOnboarding(state.onboarding);
     },
     onboardingAnalysisJobSet(state, action: PayloadAction<AnalysisJobId | null>) {
       state.onboarding.analysisJobId = action.payload;
+      persistOnboarding(state.onboarding);
     },
     onboardingReset(state) {
-      state.onboarding = initialOnboarding;
+      state.onboarding = clearOnboarding();
     },
   },
   extraReducers: (builder) => {
@@ -210,7 +244,7 @@ const authSlice = createSlice({
           state.status = 'authenticated';
           state.user = action.payload.user;
           state.token = action.payload.token;
-          state.onboarding = initialOnboarding;
+          state.onboarding = clearOnboarding();
         })
         .addCase(thunk.rejected, (state, action) => {
           state.submitStatus = 'failed';
@@ -224,7 +258,7 @@ const authSlice = createSlice({
       state.token = null;
       state.error = null;
       state.submitStatus = 'idle';
-      state.onboarding = initialOnboarding;
+      state.onboarding = clearOnboarding();
     });
 
     builder
@@ -233,7 +267,7 @@ const authSlice = createSlice({
       })
       .addCase(completeOnboarding.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.onboarding = initialOnboarding;
+        state.onboarding = clearOnboarding();
       });
   },
 });
