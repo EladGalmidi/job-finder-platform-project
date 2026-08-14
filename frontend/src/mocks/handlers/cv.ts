@@ -1,10 +1,10 @@
 import { nowIso } from '@/lib/dates';
-import { seededInt } from '@/lib/random';
-import { clampScore } from '@/lib/scoring';
 import { checkCvFile } from '@/lib/validation';
 import { ANALYSIS_STEPS, ApiError, asAnalysisJobId, asCvId, asUserId } from '@/types';
 import type { AnalysisJob, CV, CVAnalysis } from '@/types';
 
+import { buildAnalysisFromText } from '../cv/buildAnalysis';
+import { extractText } from '../cv/extractText';
 import { DEMO_CV_ANALYSIS } from '../data/cv';
 import { mockDb } from '../db/mockDb';
 import type { HandlerContext, MockRoute } from '../transport/router';
@@ -19,7 +19,7 @@ const requireUserId = (context: HandlerContext): string => {
   return context.userId;
 };
 
-const uploadCv = (context: HandlerContext): CV => {
+const uploadCv = async (context: HandlerContext): Promise<CV> => {
   const userId = requireUserId(context);
   const file = context.file;
 
@@ -44,8 +44,13 @@ const uploadCv = (context: HandlerContext): CV => {
     status: 'pending',
   };
 
+  // Read the document now, while the File is still in hand — by the time the
+  // analysis job runs, only what is stored here remains.
+  const text = await extractText(file);
+
   mockDb.mutate((draft) => {
     draft.cvs[cv.id] = cv;
+    draft.cvText[cv.id] = text;
     const user = draft.users[userId];
     if (user !== undefined) {
       draft.users[userId] = { ...user, activeCvId: cv.id };
@@ -113,18 +118,22 @@ const startAnalysis = (context: HandlerContext): { analysisJobId: string } => {
   return { analysisJobId: job.id };
 };
 
+/**
+ * Builds the analysis for a CV.
+ *
+ * Derived from the text of the uploaded document. The seeded demo CV has no
+ * file behind it, so it keeps its authored fixture — that one is a sample by
+ * design, and it is the only case where the analysis is not read from a
+ * document.
+ */
 const buildAnalysis = (cv: CV): CVAnalysis => {
-  // Seeded on file identity so re-analysing the same CV is reproducible.
-  const seed = `${cv.fileName}:${String(cv.fileSizeBytes)}`;
-  const drift = seededInt(seed, -8, 12);
+  const text = mockDb.state.cvText[cv.id] ?? '';
 
-  return {
-    ...DEMO_CV_ANALYSIS,
-    id: `analysis-${cv.id}`,
-    cvId: cv.id,
-    score: clampScore(DEMO_CV_ANALYSIS.score + drift),
-    analyzedAt: nowIso(),
-  };
+  if (text.trim() === '') {
+    return { ...DEMO_CV_ANALYSIS, id: `analysis-${cv.id}`, cvId: cv.id, analyzedAt: nowIso() };
+  }
+
+  return buildAnalysisFromText(cv, text).analysis;
 };
 
 const pollAnalysisJob = (context: HandlerContext): AnalysisJob => {

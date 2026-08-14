@@ -27,6 +27,7 @@ export interface MockRoute {
   readonly latency?: LatencyProfile;
   /** When true the handler is only reached with a valid session. */
   readonly auth?: boolean;
+  /** May be async — reading an uploaded CV's text is. `unknown` covers both. */
   readonly handler: (context: HandlerContext) => unknown;
 }
 

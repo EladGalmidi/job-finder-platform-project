@@ -22,7 +22,8 @@ const log = createLogger('mockDb');
  * otherwise returning users get a half-migrated store.
  */
 // v2: alerts and activity gained a `userId` so the feeds are scoped per account.
-const SCHEMA_VERSION = 2;
+// v3: uploaded CV text is stored so analysis can be derived from the real file.
+const SCHEMA_VERSION = 3;
 
 /**
  * Only mutable entities are persisted. Jobs, skills, companies and market data
@@ -36,6 +37,12 @@ export interface MockDbState {
   version: number;
   users: Record<string, User>;
   cvs: Record<string, CV>;
+  /**
+   * Extracted CV text, keyed by CV id. Held separately from the `CV` record so
+   * the domain model stays free of a field only the stand-in backend needs. A
+   * real deployment keeps this server-side and never ships it to the browser.
+   */
+  cvText: Record<string, string>;
   analysesByCvId: Record<string, CVAnalysis>;
   applications: Record<string, Application>;
   alerts: Record<string, Alert>;
@@ -52,6 +59,7 @@ const createSeedState = (): MockDbState => ({
   version: SCHEMA_VERSION,
   users: byId([DEMO_USER, NEW_USER]),
   cvs: byId([DEMO_CV]),
+  cvText: {},
   analysesByCvId: { [DEMO_CV.id]: DEMO_CV_ANALYSIS },
   applications: byId(APPLICATIONS),
   alerts: byId(ALERTS),

@@ -47,14 +47,16 @@ export const createMockTransport = (): HttpTransport => ({
       throw new ApiError('UNAUTHORIZED', 'Not signed in', 401);
     }
 
-    const data = matched.route.handler({
+    // Awaited: some handlers are genuinely async — reading the text out of an
+    // uploaded CV, for one. A non-promise passes straight through.
+    const data = (await matched.route.handler({
       params: matched.params,
       query: createQueryAccess(config.params),
       body: config.body,
       file: config.file,
       userId,
       signal: config.signal,
-    }) as T;
+    })) as T;
 
     log.debug('handled', { method: config.method, url: config.url });
 
