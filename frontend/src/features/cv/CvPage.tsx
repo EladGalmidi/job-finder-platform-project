@@ -118,6 +118,14 @@ export const CvPage = (): React.JSX.Element => {
           <Button variant="secondary" size="sm" onClick={report.download} disabled={analysis === null}>
             {t('cv.downloadReport')}
           </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => void report.exportJson()}
+            disabled={cv === null}
+          >
+            {t('cv.exportJson')}
+          </Button>
           <Button variant="ghost" size="sm" onClick={report.share} disabled={analysis === null}>
             {t('cv.shareLink')}
           </Button>

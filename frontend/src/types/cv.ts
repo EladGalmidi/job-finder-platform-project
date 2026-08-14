@@ -1,4 +1,5 @@
 ﻿import type { AnalysisJobId, CvId, ISODateTime, Seniority, SkillId, UserId } from './common';
+import type { SkillLevel } from './job';
 import type { SkillRef } from './job';
 
 export type CvSource = 'upload' | 'linkedin';
@@ -71,6 +72,57 @@ export interface CVAnalysis {
   recommendations: Recommendation[];
   matchedJobsCount: number;
   analyzedAt: ISODateTime;
+}
+
+/**
+ * A CV reduced to machine-readable form, for handing to another system.
+ *
+ * Deliberately an envelope rather than a parsed record. `content.text` is the
+ * document as extracted and is the ground truth; `parsed` is this system's
+ * reading of it, which a consumer is free to distrust and re-derive. Keeping
+ * both means a parsing mistake here never becomes an unrecoverable one
+ * downstream, and `extraction` says how much of the file was actually read.
+ *
+ * Nothing is inferred that cannot be evidenced from the text. Employers, job
+ * titles and dates are absent because this system does not parse them, and an
+ * empty field is more useful to a consumer than a guessed one.
+ */
+export interface CvDocument {
+  /** Bumped whenever the shape changes, so consumers can branch on it. */
+  schemaVersion: '1.0';
+  generatedAt: ISODateTime;
+
+  source: {
+    cvId: CvId;
+    fileName: string;
+    fileSizeBytes: number;
+    mimeType: string;
+    uploadedAt: ISODateTime;
+  };
+
+  extraction: {
+    /** How the text was obtained. */
+    method: 'pdf-text-layer' | 'docx';
+    pages: number | null;
+    characters: number;
+  };
+
+  content: {
+    /** The document text, as extracted. Ground truth for any re-parse. */
+    text: string;
+  };
+
+  parsed: {
+    skills: {
+      id: SkillId;
+      name: string;
+      /** Inferred from how often the skill is mentioned, nothing more. */
+      level: SkillLevel | null;
+    }[];
+    experienceYears: number | null;
+    seniorityEstimate: Seniority | null;
+    keywordsFound: string[];
+  };
 }
 
 export type AnalysisStepKey =

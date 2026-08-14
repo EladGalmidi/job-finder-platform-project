@@ -1,9 +1,10 @@
 import { nowIso } from '@/lib/dates';
 import { checkCvFile } from '@/lib/validation';
 import { ANALYSIS_STEPS, ApiError, asAnalysisJobId, asCvId, asUserId } from '@/types';
-import type { AnalysisJob, CV, CVAnalysis } from '@/types';
+import type { AnalysisJob, CV, CVAnalysis, CvDocument } from '@/types';
 
 import { buildAnalysisFromText } from '../cv/buildAnalysis';
+import { buildCvDocument } from '../cv/buildDocument';
 import { extractText } from '../cv/extractText';
 import { DEMO_CV_ANALYSIS } from '../data/cv';
 import { mockDb } from '../db/mockDb';
@@ -211,6 +212,27 @@ const pollAnalysisJob = (context: HandlerContext): AnalysisJob => {
   return updated;
 };
 
+/**
+ * The CV as a machine-readable document, for export into another system.
+ *
+ * Served from the endpoint rather than assembled in the UI: the raw text lives
+ * here and never crosses into the client otherwise, and a real backend would
+ * produce this from the same text it parsed.
+ */
+const getDocument = (context: HandlerContext): CvDocument => {
+  const userId = requireUserId(context);
+  const cvId = context.params['cvId'] ?? '';
+
+  const cv = ownedCv(userId, cvId);
+  const text = mockDb.state.cvText[cvId] ?? '';
+
+  if (text.trim() === '') {
+    throw new ApiError('CV_NO_TEXT', `No stored text for ${cvId}`, 422);
+  }
+
+  return buildCvDocument(cv, text);
+};
+
 const getAnalysis = (context: HandlerContext): CVAnalysis => {
   const userId = requireUserId(context);
   const cvId = context.params['cvId'] ?? '';
@@ -273,6 +295,13 @@ export const cvRoutes: readonly MockRoute[] = [
     latency: 'fast',
     auth: true,
     handler: pollAnalysisJob,
+  },
+  {
+    method: 'GET',
+    pattern: '/cv/:cvId/document',
+    latency: 'fast',
+    auth: true,
+    handler: getDocument,
   },
   {
     method: 'GET',
