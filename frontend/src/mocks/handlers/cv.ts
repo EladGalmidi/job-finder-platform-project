@@ -76,6 +76,9 @@ const uploadCv = async (context: HandlerContext): Promise<CV> => {
       textItems: String(seen?.textItems ?? 0),
       characters: String(seen?.characters ?? 0),
       usedOcr: String(seen?.usedOcr ?? false),
+      // The parser's own complaints, so a failure explains itself instead of
+      // living only in a console line nobody should have to go looking for.
+      notes: extraction.detail ?? '',
     });
   }
 

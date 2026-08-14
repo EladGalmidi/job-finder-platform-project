@@ -1,5 +1,7 @@
 import { createLogger } from '@/lib/logger';
 
+import { extractDocxXml } from './extractDocxXml';
+
 const log = createLogger('cvExtract');
 
 /** Rendering scale for OCR. Below roughly 2x, small print stops resolving. */
@@ -105,7 +107,21 @@ export const extractText = async (file: File): Promise<ExtractionResult> => {
 
   try {
     if (isDocx) {
-      const docx = await extractDocx(file);
+      let docx = await extractDocx(file);
+
+      // mammoth reads Word's document model, which omits text boxes and some
+      // shapes. Designed CV templates lay whole pages out that way, so a
+      // document plainly full of text can come back empty. Reading the XML
+      // directly picks up everything the model skipped.
+      if (docx.text.trim() === '') {
+        log.warn('mammoth found no text, reading docx xml directly', {
+          name: file.name,
+          notes: docx.notes,
+        });
+        const raw = await extractDocxXml(file);
+        if (raw.trim() !== '') docx = { text: raw, notes: [...docx.notes, 'read from raw xml'] };
+      }
+
       const trimmed = docx.text.trim();
 
       // Diagnostics are reported for Word files too. Without them the caller
