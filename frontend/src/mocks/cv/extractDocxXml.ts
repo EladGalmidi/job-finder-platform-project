@@ -36,7 +36,13 @@ const decodeEntities = (value: string): string =>
  * all present, which is the whole requirement. It is a fallback, never the first
  * choice.
  */
-export const extractDocxXml = async (file: File): Promise<string> => {
+export interface DocxXmlResult {
+  readonly text: string;
+  /** Entry names found in the archive, so a failure can describe the file. */
+  readonly entries: string[];
+}
+
+export const extractDocxXml = async (file: File): Promise<DocxXmlResult> => {
   const { unzipSync } = await import('fflate');
 
   const zip = unzipSync(new Uint8Array(await file.arrayBuffer()));
@@ -47,9 +53,11 @@ export const extractDocxXml = async (file: File): Promise<string> => {
     // document.xml first so the body leads, headers and footers after.
     .sort((left, right) => (left.includes('document') ? -1 : right.includes('document') ? 1 : 0));
 
+  const entries = Object.keys(zip);
+
   if (parts.length === 0) {
-    log.warn('no document parts in docx', { entries: Object.keys(zip).slice(0, 10) });
-    return '';
+    log.warn('no word document parts in archive', { entries: entries.slice(0, 12) });
+    return { text: '', entries };
   }
 
   const chunks: string[] = [];
@@ -84,5 +92,5 @@ export const extractDocxXml = async (file: File): Promise<string> => {
   const text = chunks.join('\n');
   log.debug('read docx xml', { parts: parts.length, characters: text.trim().length });
 
-  return text;
+  return { text, entries };
 };

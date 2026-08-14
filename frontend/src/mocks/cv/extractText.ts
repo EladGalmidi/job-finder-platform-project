@@ -107,7 +107,16 @@ export const extractText = async (file: File): Promise<ExtractionResult> => {
 
   try {
     if (isDocx) {
-      let docx = await extractDocx(file);
+      // mammoth throws outright on an archive it does not recognise as Word.
+      // Left unguarded that abandons the whole extraction, including the raw
+      // XML reader that exists precisely for documents it cannot handle.
+      let docx = await extractDocx(file).catch((error: unknown) => {
+        log.warn('mammoth threw, continuing to raw xml', {
+          name: file.name,
+          error: String(error),
+        });
+        return { text: '', notes: [`mammoth: ${String(error)}`] };
+      });
 
       // mammoth reads Word's document model, which omits text boxes and some
       // shapes. Designed CV templates lay whole pages out that way, so a
@@ -119,7 +128,16 @@ export const extractText = async (file: File): Promise<ExtractionResult> => {
           notes: docx.notes,
         });
         const raw = await extractDocxXml(file);
-        if (raw.trim() !== '') docx = { text: raw, notes: [...docx.notes, 'read from raw xml'] };
+
+        docx =
+          raw.text.trim() === ''
+            ? {
+                text: '',
+                // The archive's contents, so a file that yields nothing can say
+                // what it actually contained instead of leaving us to guess.
+                notes: [...docx.notes, `archive entries: ${raw.entries.slice(0, 12).join(', ')}`],
+              }
+            : { text: raw.text, notes: [...docx.notes, 'read from raw xml'] };
       }
 
       const trimmed = docx.text.trim();

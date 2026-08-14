@@ -65,6 +65,8 @@ export const he: Catalog = {
   'error.UNSUPPORTED_FILE_TYPE': 'ניתן להעלות קבצי PDF או DOCX בלבד.',
   'error.CV_NO_TEXT':
     'לא הצלחנו לקרוא טקסט מהקובץ. אם מדובר בקובץ סרוק או מבוסס תמונה, ייצאו גרסה טקstualית ונסו שוב.',
+  'cv.noTextDocxDetail':
+    'לא הצלחנו לקרוא טקסט מקובץ ה-Word הזה. מה שנמצא בתוכו: {notes}. שלחו את השורה הזו בחזרה והיא תזהה את הבעיה.',
   'cv.noTextDocx':
     'לא הצלחנו לקרוא טקסט מקובץ ה-Word הזה. אם שמו שונה מקובץ doc ישן, פתחו אותו ב-Word ושמרו בשם כקובץ docx, ואז העלו שוב.',
   'cv.noTextScan':

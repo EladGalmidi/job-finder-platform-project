@@ -54,7 +54,12 @@ const uploadErrorMessage = (
   // A Word file must never be described as a PDF. The PDF wording is only
   // correct for PDFs, and showing it for a .docx sent readers chasing a scan
   // that did not exist.
-  if (error.details?.['format'] === 'docx') return t('cv.noTextDocx');
+  if (error.details?.['format'] === 'docx') {
+    const notes = error.details['notes'] ?? '';
+    // With the archive contents in hand the message identifies the file itself,
+    // rather than asking the reader to guess which of several causes applies.
+    return notes === '' ? t('cv.noTextDocx') : t('cv.noTextDocxDetail', { notes });
+  }
 
   const pages = error.details?.['pages'] ?? '0';
   const rawItems = error.details?.['rawItems'] ?? '0';
