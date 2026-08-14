@@ -698,6 +698,12 @@ export const en = {
   'settings.themeDark': 'Dark',
   'settings.language': 'Language',
 
+  'settings.dataTitle': 'Data export',
+  'settings.dataBody':
+    'For moving CVs into another system. The file contains the extracted text and the fields we detect from it.',
+  'settings.autoExportJson': 'Export JSON automatically after each analysis',
+  'settings.autoExportJsonHint':
+    'Saves the document to your downloads folder as soon as an analysis finishes, without opening the CV page.',
   'settings.accountTitle': 'Account',
   'settings.accountBody': 'Signed in as {email}.',
   'settings.signOutConfirmTitle': 'Sign out?',

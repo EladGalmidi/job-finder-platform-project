@@ -17,6 +17,8 @@ interface UiState {
   theme: Theme;
   locale: Locale;
   sidebarCollapsed: boolean;
+  /** Write the CV's JSON document to disk whenever an analysis completes. */
+  autoExportJson: boolean;
   mobileNavOpen: boolean;
   toasts: Toast[];
   /**
@@ -48,6 +50,7 @@ const initialState: UiState = {
   theme: readTheme(),
   locale: readLocale(),
   sidebarCollapsed: readString(STORAGE_KEYS.sidebarCollapsed) === 'true',
+  autoExportJson: readString(STORAGE_KEYS.autoExportJson) === 'true',
   mobileNavOpen: false,
   toasts: [],
   refreshToken: 0,
@@ -62,6 +65,15 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
+    /**
+     * Writes the CV's JSON document to disk as soon as an analysis finishes.
+     * Off by default — a download nobody asked for is a surprise, and this only
+     * makes sense while someone is deliberately moving CVs into another system.
+     */
+    autoExportJsonSet(state, action: PayloadAction<boolean>) {
+      state.autoExportJson = action.payload;
+      writeString(STORAGE_KEYS.autoExportJson, String(action.payload));
+    },
     themeSet(state, action: PayloadAction<Theme>) {
       state.theme = action.payload;
       writeString(STORAGE_KEYS.theme, action.payload);
@@ -127,6 +139,7 @@ const uiSlice = createSlice({
 });
 
 export const {
+  autoExportJsonSet,
   themeSet,
   themeToggled,
   localeSet,
@@ -153,6 +166,7 @@ export const selectLocale = (state: UiSliceRoot): Locale => state.ui.locale;
 export const selectDirection = (state: UiSliceRoot): Direction =>
   directionForLocale(state.ui.locale);
 export const selectSidebarCollapsed = (state: UiSliceRoot): boolean => state.ui.sidebarCollapsed;
+export const selectAutoExportJson = (state: UiSliceRoot): boolean => state.ui.autoExportJson;
 export const selectMobileNavOpen = (state: UiSliceRoot): boolean => state.ui.mobileNavOpen;
 export const selectToasts = (state: UiSliceRoot): readonly Toast[] => state.ui.toasts;
 export const selectRefreshToken = (state: UiSliceRoot): number => state.ui.refreshToken;

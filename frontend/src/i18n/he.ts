@@ -688,6 +688,12 @@ export const he: Catalog = {
   'settings.themeDark': 'כהה',
   'settings.language': 'שפה',
 
+  'settings.dataTitle': 'ייצוא נתונים',
+  'settings.dataBody':
+    'להעברת קורות חיים למערכת אחרת. הקובץ מכיל את הטקסט שחולץ ואת השדות שזוהו ממנו.',
+  'settings.autoExportJson': 'ייצוא JSON אוטומטי בסיום כל ניתוח',
+  'settings.autoExportJsonHint':
+    'שומר את הקובץ לתיקיית ההורדות מיד עם סיום הניתוח, בלי לפתוח את עמוד קורות החיים.',
   'settings.accountTitle': 'חשבון',
   'settings.accountBody': 'מחוברים כ-{email}.',
   'settings.signOutConfirmTitle': 'להתנתק?',

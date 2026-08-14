@@ -3,8 +3,9 @@ import { useCallback } from 'react';
 import { useAppDispatch } from '@/app/hooks';
 import { toastPushed } from '@/features/ui/uiSlice';
 import { useTranslation } from '@/i18n/useTranslation';
-import { cvApi } from '@/services/api/cvApi';
 import { createLogger } from '@/lib/logger';
+
+import { exportCvDocument } from './exportCvDocument';
 import type { CV, CVAnalysis } from '@/types';
 
 const log = createLogger('cvReport');
@@ -132,40 +133,16 @@ export const useCvReport = (cv: CV | null, analysis: CVAnalysis | null): CvRepor
       });
   }, [dispatch, t]);
 
-  /**
-   * Saves the CV as JSON.
-   *
-   * The document is fetched rather than assembled here: the raw text lives
-   * behind the API and this component has no business reaching for it. That
-   * keeps the export identical whether a mock or a real backend answers.
-   */
   const exportJson = useCallback(async () => {
     if (cv === null) return;
 
-    try {
-      const document_ = await cvApi.document(cv.id);
-      saveBlob(
-        new Blob([JSON.stringify(document_, null, 2)], { type: 'application/json' }),
-        `${cv.fileName.replace(/\.[^.]+$/, '')}.json`,
-      );
-      dispatch(toastPushed({ severity: 'success', title: t('cv.exportJsonDone') }));
-    } catch (error) {
-      log.error('json export failed', { error: String(error) });
-      dispatch(toastPushed({ severity: 'danger', title: t('cv.exportJsonFailed') }));
-    }
+    const ok = await exportCvDocument(cv.id, cv.fileName);
+    dispatch(
+      ok
+        ? toastPushed({ severity: 'success', title: t('cv.exportJsonDone') })
+        : toastPushed({ severity: 'danger', title: t('cv.exportJsonFailed') }),
+    );
   }, [cv, dispatch, t]);
 
   return { download, share, exportJson };
-};
-
-/** Hands a blob to the browser as a download. */
-const saveBlob = (blob: Blob, fileName: string): void => {
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement('a');
-  anchor.href = url;
-  anchor.download = fileName;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
 };

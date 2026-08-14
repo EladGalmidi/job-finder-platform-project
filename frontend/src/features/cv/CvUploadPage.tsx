@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Button } from '@/components/ui/Button/Button';
 import { FileDrop } from '@/components/ui/FileDrop/FileDrop';
 import { ProgressRing } from '@/components/ui/ProgressRing/ProgressRing';
-import { toastPushed } from '@/features/ui/uiSlice';
+import { selectAutoExportJson, toastPushed } from '@/features/ui/uiSlice';
 import { useTranslation } from '@/i18n/useTranslation';
 import type { TranslationKey } from '@/i18n/types';
 import type { SerializedApiError } from '@/types';
@@ -21,6 +21,7 @@ import {
   uploadCv,
   uploadErrorCleared,
 } from './cvSlice';
+import { exportCvDocument } from './exportCvDocument';
 import { useCvAnalysisRun } from './useCvAnalysisRun';
 import styles from './CvUpload.module.css';
 
@@ -66,6 +67,7 @@ export const CvUploadPage = (): React.JSX.Element => {
   const { t } = useTranslation();
 
   const currentCv = useAppSelector(selectActiveCv);
+  const autoExportJson = useAppSelector(selectAutoExportJson);
   const uploadStatus = useAppSelector(selectUploadStatus);
   const uploadError = useAppSelector(selectUploadError);
 
@@ -79,6 +81,11 @@ export const CvUploadPage = (): React.JSX.Element => {
   const { job, progressPercent } = useCvAnalysisRun({
     cvId: analysingCvId,
     onComplete: () => {
+      // Exported against the id of the CV just analysed; the store may still be
+      // holding the previous one at this point.
+      if (autoExportJson && analysingCvId !== null) {
+        void exportCvDocument(analysingCvId, file?.name ?? 'cv');
+      }
       dispatch(toastPushed({ severity: 'success', title: t('cv.replaceDone') }));
       navigate('/dashboard/cv', { replace: true });
     },
