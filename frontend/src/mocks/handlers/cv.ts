@@ -64,7 +64,15 @@ const uploadCv = async (context: HandlerContext): Promise<CV> => {
   }
 
   if (extraction.outcome === 'empty') {
-    throw new ApiError('CV_NO_TEXT', `No readable text in ${file.name}`, 422);
+    const seen = extraction.diagnostics;
+    // The counts ride along so a support conversation starts from evidence
+    // rather than guesswork: pages with no text items is a scan, text items
+    // with no characters is a font without a Unicode mapping.
+    throw new ApiError('CV_NO_TEXT', `No readable text in ${file.name}`, 422, {
+      pages: String(seen?.pages ?? 0),
+      textItems: String(seen?.textItems ?? 0),
+      characters: String(seen?.characters ?? 0),
+    });
   }
 
   mockDb.mutate((draft) => {
