@@ -13,6 +13,7 @@ import {
 } from '@/features/cv/cvSlice';
 import { useTranslation } from '@/i18n/useTranslation';
 import type { TranslationKey } from '@/i18n/types';
+import type { SerializedApiError } from '@/types';
 
 import { useOnboardingSteps } from '../useOnboardingSteps';
 import styles from '../Onboarding.module.css';
@@ -21,6 +22,28 @@ import styles from '../Onboarding.module.css';
  * The selected `File` is held in component state, not Redux — a File is not
  * serialisable and only its metadata ever reaches the store.
  */
+/**
+ * Turns an upload failure into something the reader can act on.
+ *
+ * CV_NO_TEXT has two very different causes and the counts tell them apart: no
+ * text blocks at all is a scan and nothing will extract it, whereas blocks that
+ * yield no characters is a font-encoding gap on our side. Sending someone to
+ * re-export a file that was never the problem wastes their time.
+ */
+const uploadErrorMessage = (
+  error: SerializedApiError,
+  t: ReturnType<typeof useTranslation>['t'],
+): string => {
+  if (error.code !== 'CV_NO_TEXT') return t(`error.${error.code}` as TranslationKey);
+
+  const pages = error.details?.['pages'] ?? '0';
+  const textItems = error.details?.['textItems'] ?? '0';
+
+  return textItems === '0'
+    ? t('cv.noTextScan', { pages, textItems })
+    : t('cv.noTextEncoding', { pages, textItems });
+};
+
 export const CvUploadStep = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -78,7 +101,7 @@ export const CvUploadStep = (): React.JSX.Element => {
           disabled={isBusy}
           {...(uploadError === null
             ? {}
-            : { externalError: t(`error.${uploadError.code}` as TranslationKey) })}
+            : { externalError: uploadErrorMessage(uploadError, t) })}
         />
 
         {file !== null && !isBusy ? (
