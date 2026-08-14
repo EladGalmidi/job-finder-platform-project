@@ -1,0 +1,162 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { Button } from '@/components/ui/Button/Button';
+import { FileDrop } from '@/components/ui/FileDrop/FileDrop';
+import { ProgressRing } from '@/components/ui/ProgressRing/ProgressRing';
+import { toastPushed } from '@/features/ui/uiSlice';
+import { useTranslation } from '@/i18n/useTranslation';
+import type { TranslationKey } from '@/i18n/types';
+import { ANALYSIS_STEP_LABEL } from '@/lib/labels';
+import { cx } from '@/lib/cx';
+import { ANALYSIS_STEPS, type CvId } from '@/types';
+
+import {
+  importCvFromLinkedin,
+  selectActiveCv,
+  selectUploadError,
+  selectUploadStatus,
+  uploadCv,
+} from './cvSlice';
+import { useCvAnalysisRun } from './useCvAnalysisRun';
+import styles from './CvUpload.module.css';
+
+/**
+ * Replacing the CV after onboarding.
+ *
+ * This exists because every "Upload new CV" control used to point at
+ * /onboarding/cv, which the onboarding guard bounces straight back to the
+ * dashboard for anyone who has finished onboarding — so the buttons did
+ * nothing, and there was no way to change your CV at all.
+ *
+ * Upload and analysis are one route rather than two: the user asked to replace
+ * their CV, and the progress is a step within that, not a separate destination
+ * they should be able to land on.
+ */
+export const CvUploadPage = (): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const currentCv = useAppSelector(selectActiveCv);
+  const uploadStatus = useAppSelector(selectUploadStatus);
+  const uploadError = useAppSelector(selectUploadError);
+
+  const [file, setFile] = useState<File | null>(null);
+  const [isLinkedinPending, setIsLinkedinPending] = useState(false);
+  const [analysingCvId, setAnalysingCvId] = useState<CvId | null>(null);
+
+  const isUploading = uploadStatus === 'loading';
+  const isBusy = isUploading || isLinkedinPending;
+
+  const { job, progressPercent } = useCvAnalysisRun({
+    cvId: analysingCvId,
+    onComplete: () => {
+      dispatch(toastPushed({ severity: 'success', title: t('cv.replaceDone') }));
+      navigate('/dashboard/cv', { replace: true });
+    },
+  });
+
+  const onAnalyse = (): void => {
+    if (file === null) return;
+
+    void dispatch(uploadCv(file)).then((result) => {
+      if (uploadCv.fulfilled.match(result)) {
+        setAnalysingCvId(result.payload.id);
+      }
+    });
+  };
+
+  const onLinkedin = (): void => {
+    setIsLinkedinPending(true);
+    void dispatch(importCvFromLinkedin()).then((result) => {
+      setIsLinkedinPending(false);
+      if (importCvFromLinkedin.fulfilled.match(result)) {
+        setAnalysingCvId(result.payload.id);
+      }
+    });
+  };
+
+  if (analysingCvId !== null) {
+    const currentStep = job?.currentStep ?? 'parsing';
+    const completed = job?.completedSteps ?? [];
+
+    return (
+      <div className={styles.page}>
+        <section className={cx(styles.panel, styles.analysing)}>
+          <h2 className={styles.title}>{t('onboarding.analyzing.title')}</h2>
+          <p className={styles.subtitle}>{t('onboarding.analyzing.subtitle')}</p>
+
+          <ProgressRing value={progressPercent} size={132} thickness={12} label={t('onboarding.analyzing.title')}>
+            <span className={styles.percent}>{progressPercent}%</span>
+          </ProgressRing>
+
+          <ol className={styles.steps}>
+            {ANALYSIS_STEPS.map((step) => {
+              const isDone = completed.includes(step);
+              const isActive = !isDone && step === currentStep;
+              return (
+                <li
+                  key={step}
+                  className={cx(styles.step, isActive && styles.stepActive, isDone && styles.stepDone)}
+                >
+                  <span className={styles.stepMark} aria-hidden="true">
+                    {isDone ? '✓' : ANALYSIS_STEPS.indexOf(step) + 1}
+                  </span>
+                  {t(ANALYSIS_STEP_LABEL[step])}
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.page}>
+      <header>
+        <h2 className={styles.title}>{t('cv.replaceTitle')}</h2>
+        <p className={styles.subtitle}>{t('cv.replaceSubtitle')}</p>
+      </header>
+
+      <section className={styles.panel}>
+        {currentCv === null ? null : (
+          <p className={styles.currentCv}>{t('cv.replaceCurrent', { name: currentCv.fileName })}</p>
+        )}
+
+        <FileDrop
+          file={file}
+          onSelect={setFile}
+          onClear={() => setFile(null)}
+          disabled={isBusy}
+          {...(uploadError === null
+            ? {}
+            : { externalError: t(`error.${uploadError.code}` as TranslationKey) })}
+        />
+
+        <div className={styles.linkedinRow}>
+          <Button
+            variant="secondary"
+            onClick={onLinkedin}
+            isLoading={isLinkedinPending}
+            disabled={isUploading}
+          >
+            {t('onboarding.cv.linkedin')}
+          </Button>
+          <span className={styles.note}>{t('onboarding.cv.linkedinNote')}</span>
+        </div>
+
+        <div className={styles.actions}>
+          <Button variant="ghost" onClick={() => navigate('/dashboard/cv')} disabled={isBusy}>
+            {t('common.cancel')}
+          </Button>
+          <Button size="lg" onClick={onAnalyse} isLoading={isUploading} disabled={file === null}>
+            {t('onboarding.cv.analyse')}
+          </Button>
+        </div>
+      </section>
+    </div>
+  );
+};

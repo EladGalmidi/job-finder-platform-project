@@ -109,7 +109,7 @@ export const CvPage = (): React.JSX.Element => {
         </div>
 
         <div className={styles.actions}>
-          <LinkButton to="/onboarding/cv" variant="secondary" size="sm">
+          <LinkButton to="/dashboard/cv/upload" variant="secondary" size="sm">
             {t('cv.uploadNew')}
           </LinkButton>
           <Button variant="secondary" size="sm" onClick={onLinkedinImport} isLoading={isImporting}>
@@ -140,7 +140,7 @@ export const CvPage = (): React.JSX.Element => {
             title={t('cv.emptyTitle')}
             body={t('cv.emptyBody')}
             action={
-              <LinkButton to="/onboarding/cv">{t('cv.uploadNew')}</LinkButton>
+              <LinkButton to="/dashboard/cv/upload">{t('cv.uploadNew')}</LinkButton>
             }
           />
         }

@@ -533,6 +533,11 @@ export const en = {
   'cv.analysedAt': 'Analysed {when}',
   'cv.fileMeta': '{name} · {size}',
   'cv.uploadNew': 'Upload new CV',
+  'cv.replaceTitle': 'Upload a new CV',
+  'cv.replaceSubtitle':
+    'The new file replaces the current one and everything is scored again against it.',
+  'cv.replaceCurrent': 'Currently using {name}.',
+  'cv.replaceDone': 'CV replaced — your matches have been rescored',
   'cv.importLinkedin': 'Import from LinkedIn',
   'cv.downloadReport': 'Download report',
   'cv.shareLink': 'Share CV link',

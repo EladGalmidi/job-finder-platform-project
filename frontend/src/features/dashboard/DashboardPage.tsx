@@ -134,7 +134,7 @@ export const DashboardPage = (): React.JSX.Element => {
               {t('dashboard.ctaViewCv')}
             </LinkButton>
           ) : (
-            <LinkButton to="/onboarding/cv" variant="secondary">
+            <LinkButton to="/dashboard/cv/upload" variant="secondary">
               {t('dashboard.ctaUploadCv')}
             </LinkButton>
           )}
@@ -280,7 +280,7 @@ export const DashboardPage = (): React.JSX.Element => {
                 title={t('dashboard.cvEmptyTitle')}
                 body={t('dashboard.cvEmptyBody')}
                 action={
-                  <LinkButton to="/onboarding/cv" variant="secondary">
+                  <LinkButton to="/dashboard/cv/upload" variant="secondary">
                     {t('dashboard.ctaUploadCv')}
                   </LinkButton>
                 }

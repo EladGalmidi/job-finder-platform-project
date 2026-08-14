@@ -192,6 +192,16 @@ export const router = createBrowserRouter([
                     },
                   },
                   {
+                    // Replacing the CV after onboarding. It cannot live under
+                    // /onboarding, which the onboarding guard closes off once
+                    // the user is done.
+                    path: 'dashboard/cv/upload',
+                    lazy: async () => {
+                      const { CvUploadPage } = await import('@/features/cv/CvUploadPage');
+                      return { Component: CvUploadPage };
+                    },
+                  },
+                  {
                     path: 'dashboard/applications',
                     lazy: async () => {
                       const { ApplicationsPage } = await import(

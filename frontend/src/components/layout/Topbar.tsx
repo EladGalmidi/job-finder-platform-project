@@ -112,7 +112,7 @@ export const Topbar = ({ title }: TopbarProps): React.JSX.Element => {
         <button
           type="button"
           className={cx(styles.iconButton, styles.labelledButton)}
-          onClick={() => navigate('/onboarding/cv')}
+          onClick={() => navigate('/dashboard/cv/upload')}
         >
           <span aria-hidden="true">↑</span>
           <span className={styles.updateCvLabel}>{t('topbar.updateCv')}</span>
