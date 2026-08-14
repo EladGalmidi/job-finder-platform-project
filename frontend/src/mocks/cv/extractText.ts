@@ -1,6 +1,8 @@
 import { createLogger } from '@/lib/logger';
 
+import { extractDocxImages } from './extractDocxImages';
 import { extractDocxXml } from './extractDocxXml';
+import { composeFragments, withOcrWorker } from './ocr';
 
 const log = createLogger('cvExtract');
 
@@ -140,6 +142,32 @@ export const extractText = async (file: File): Promise<ExtractionResult> => {
             : { text: raw.text, notes: [...docx.notes, 'read from raw xml'] };
       }
 
+      // Still nothing, which means the document holds no text in any form. Its
+      // words may still be there as pictures — one per line, or per word — which
+      // is what a Word file converted from a PDF typically looks like.
+      let usedOcr = false;
+
+      if (docx.text.trim() === '') {
+        log.warn('docx has no text at all, trying OCR on its pictures', { name: file.name });
+
+        const ocr = await withTimeout(extractDocxByOcr(file), OCR_TIMEOUT_MS, 'OCR').catch(
+          (error: unknown) => {
+            log.warn('docx OCR abandoned', { name: file.name, error: String(error) });
+            return { text: '', images: 0 };
+          },
+        );
+
+        if (ocr.text.trim() === '') {
+          docx = {
+            text: '',
+            notes: [...docx.notes, `pictures: ${String(ocr.images)}, OCR read nothing`],
+          };
+        } else {
+          usedOcr = true;
+          docx = { text: ocr.text, notes: [...docx.notes, `read ${String(ocr.images)} pictures`] };
+        }
+      }
+
       const trimmed = docx.text.trim();
 
       // Diagnostics are reported for Word files too. Without them the caller
@@ -150,7 +178,7 @@ export const extractText = async (file: File): Promise<ExtractionResult> => {
         rawItems: trimmed === '' ? 0 : 1,
         textItems: trimmed === '' ? 0 : 1,
         characters: trimmed.length,
-        usedOcr: false,
+        usedOcr,
       };
 
       if (trimmed === '') {
@@ -268,35 +296,32 @@ const extractPdfByOcr = async (
   const doc = await loadPdf(file);
   const pageCount = Math.min(doc.numPages, OCR_PAGE_LIMIT);
 
-  const { createWorker } = await import('tesseract.js');
-  const worker = await createWorker('eng');
-
   const pages: string[] = [];
 
   try {
-    for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
-      const page = await doc.getPage(pageNumber);
-      const viewport = page.getViewport({ scale: OCR_SCALE });
+    await withOcrWorker(async (recognize) => {
+      for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
+        const page = await doc.getPage(pageNumber);
+        const viewport = page.getViewport({ scale: OCR_SCALE });
 
-      const canvas = document.createElement('canvas');
-      canvas.width = Math.ceil(viewport.width);
-      canvas.height = Math.ceil(viewport.height);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.ceil(viewport.width);
+        canvas.height = Math.ceil(viewport.height);
 
-      // `canvas` alone. Passing canvasContext alongside it is the documented
-      // invalid combination — pdfjs accepts one or the other, and supplying
-      // both leaves the render promise unsettled forever.
-      await page.render({ canvas, viewport }).promise;
+        // `canvas` alone. Passing canvasContext alongside it is the documented
+        // invalid combination — pdfjs accepts one or the other, and supplying
+        // both leaves the render promise unsettled forever.
+        await page.render({ canvas, viewport }).promise;
 
-      const { data } = await worker.recognize(canvas);
-      pages.push(data.text);
+        pages.push(await recognize(canvas));
 
-      // Release the bitmap straight away; five full pages at 2x is a lot of
-      // memory to hold at once.
-      canvas.width = 0;
-      canvas.height = 0;
-    }
+        // Release the bitmap straight away; five full pages at 2x is a lot of
+        // memory to hold at once.
+        canvas.width = 0;
+        canvas.height = 0;
+      }
+    });
   } finally {
-    await worker.terminate();
     await doc.cleanup();
   }
 
@@ -312,6 +337,34 @@ const extractPdfByOcr = async (
       usedOcr: true,
     },
   };
+};
+
+interface DocxOcrResult {
+  readonly text: string;
+  /** Pictures found, reported so a failure can say what was in the file. */
+  readonly images: number;
+}
+
+/**
+ * Reads a Word file whose text is stored as pictures.
+ *
+ * The fragments are composed into a single sheet and recognised in one pass;
+ * see composeFragments for why they are not read one by one.
+ */
+const extractDocxByOcr = async (file: File): Promise<DocxOcrResult> => {
+  const blobs = await extractDocxImages(file);
+  if (blobs.length === 0) return { text: '', images: 0 };
+
+  const sheet = await composeFragments(blobs);
+  if (sheet === undefined) return { text: '', images: blobs.length };
+
+  try {
+    return { text: await withOcrWorker((recognize) => recognize(sheet)), images: blobs.length };
+  } finally {
+    // Release the bitmap; a full sheet is a large allocation to leave behind.
+    sheet.width = 0;
+    sheet.height = 0;
+  }
 };
 
 interface DocxExtraction {
