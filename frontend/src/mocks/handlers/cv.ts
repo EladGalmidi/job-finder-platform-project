@@ -74,6 +74,7 @@ const uploadCv = async (context: HandlerContext): Promise<CV> => {
       rawItems: String(seen?.rawItems ?? 0),
       textItems: String(seen?.textItems ?? 0),
       characters: String(seen?.characters ?? 0),
+      usedOcr: String(seen?.usedOcr ?? false),
     });
   }
 

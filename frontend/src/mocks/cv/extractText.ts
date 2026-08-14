@@ -2,6 +2,39 @@ import { createLogger } from '@/lib/logger';
 
 const log = createLogger('cvExtract');
 
+/** Rendering scale for OCR. Below roughly 2x, small print stops resolving. */
+const OCR_SCALE = 2;
+
+/** OCR is slow. Past this a CV is not a CV, and the wait stops being reasonable. */
+const OCR_PAGE_LIMIT = 5;
+
+/**
+ * How long OCR gets before it is abandoned.
+ *
+ * It has to download a recognition model on first use and then work through
+ * full-page bitmaps, so it is slow by nature. What it must never be is
+ * open-ended: a spinner that never resolves is worse for the user than the
+ * plain message saying the file cannot be read.
+ */
+const OCR_TIMEOUT_MS = 60_000;
+
+const withTimeout = async <T,>(work: Promise<T>, ms: number, label: string): Promise<T> => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    return await Promise.race([
+      work,
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => {
+          reject(new Error(`${label} timed out after ${String(ms)}ms`));
+        }, ms);
+      }),
+    ]);
+  } finally {
+    if (timer !== undefined) clearTimeout(timer);
+  }
+};
+
 /**
  * Where pdfjs looks for its character maps and standard font data. Copied into
  * the build by vite-plugin-static-copy; see vite.config.ts.
@@ -13,9 +46,9 @@ const PDF_ASSETS = {
 } as const;
 
 export type ExtractionOutcome =
-  /** Text was read. */
+  /** Text was read, from the text layer or by OCR. */
   | 'ok'
-  /** Parsed cleanly, but the document carries no text layer. */
+  /** Nothing readable, by any method. */
   | 'empty'
   /** Format we cannot read at all, such as legacy binary .doc. */
   | 'unsupported'
@@ -29,6 +62,8 @@ export interface ExtractionDiagnostics {
   /** Runs that decoded to actual characters. */
   readonly textItems: number;
   readonly characters: number;
+  /** True when the characters came from OCR rather than a text layer. */
+  readonly usedOcr: boolean;
 }
 
 export interface ExtractionResult {
@@ -42,18 +77,19 @@ export interface ExtractionResult {
 /**
  * Pulls the plain text out of an uploaded CV.
  *
- * Two passes over the text layer: the default one, then again including marked
- * content, because some generators wrap every run in it and the default pass
- * skips those entirely.
+ * Three passes, cheapest first, because they fail for different reasons:
  *
- * A PDF with no text layer at all — a scan, or a design tool exporting pages as
- * images — cannot be read this way and is reported as such. Recovering those
- * needs OCR, which belongs on a server: in the browser it means a multi-megabyte
- * model fetched at runtime and tens of seconds per upload, for a result worse
- * than asking for the .docx.
+ * 1. The text layer. Instant, exact, and covers anything from a word processor.
+ * 2. The text layer again including marked content — some generators wrap every
+ *    run in it, and the default pass skips those entirely.
+ * 3. OCR. The only thing that reads a CV exported as images, which is what
+ *    design tools, CV builders and scanners produce. It costs a one-off model
+ *    download and a few seconds a page, so it is never attempted while a text
+ *    layer is available.
  *
  * This lives in the mock layer because it is the stand-in backend's job. A real
- * deployment does it server-side, where OCR is a reasonable thing to add.
+ * deployment does all of it server-side, where OCR is neither slow nor a
+ * download the user pays for.
  */
 export const extractText = async (file: File): Promise<ExtractionResult> => {
   const name = file.name.toLowerCase();
@@ -83,8 +119,24 @@ export const extractText = async (file: File): Promise<ExtractionResult> => {
     }
 
     if (result.diagnostics.characters === 0) {
-      log.warn('no readable text in PDF', { name: file.name, ...result.diagnostics });
-      return { text: '', outcome: 'empty', diagnostics: result.diagnostics };
+      log.warn('no text layer, falling back to OCR', { name: file.name, ...result.diagnostics });
+
+      const ocr = await withTimeout(
+        extractPdfByOcr(file, result.diagnostics),
+        OCR_TIMEOUT_MS,
+        'OCR',
+      ).catch((error: unknown) => {
+        log.warn('OCR abandoned', { name: file.name, error: String(error) });
+        return { text: '', diagnostics: { ...result.diagnostics, usedOcr: true } };
+      });
+
+      if (ocr.text.trim() !== '') {
+        log.debug('OCR succeeded', { name: file.name, ...ocr.diagnostics });
+        return { text: ocr.text, outcome: 'ok', diagnostics: ocr.diagnostics };
+      }
+
+      log.warn('OCR found nothing either', { name: file.name, ...ocr.diagnostics });
+      return { text: '', outcome: 'empty', diagnostics: ocr.diagnostics };
     }
 
     log.debug('extracted CV text', { name: file.name, ...result.diagnostics });
@@ -145,6 +197,68 @@ const extractPdfText = async (file: File, includeMarkedContent: boolean): Promis
       rawItems,
       textItems,
       characters: text.trim().length,
+      usedOcr: false,
+    },
+  };
+};
+
+/**
+ * Reads a PDF with no text layer by rendering each page and running OCR.
+ *
+ * English only: every extra language is another model download, and CVs in this
+ * market are overwhelmingly written in English even when the candidate is not.
+ * A Hebrew-language scan will come back poorly, which the caller reports rather
+ * than papers over.
+ */
+const extractPdfByOcr = async (
+  file: File,
+  previous: ExtractionDiagnostics,
+): Promise<PdfExtraction> => {
+  const doc = await loadPdf(file);
+  const pageCount = Math.min(doc.numPages, OCR_PAGE_LIMIT);
+
+  const { createWorker } = await import('tesseract.js');
+  const worker = await createWorker('eng');
+
+  const pages: string[] = [];
+
+  try {
+    for (let pageNumber = 1; pageNumber <= pageCount; pageNumber += 1) {
+      const page = await doc.getPage(pageNumber);
+      const viewport = page.getViewport({ scale: OCR_SCALE });
+
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.ceil(viewport.width);
+      canvas.height = Math.ceil(viewport.height);
+
+      // `canvas` alone. Passing canvasContext alongside it is the documented
+      // invalid combination — pdfjs accepts one or the other, and supplying
+      // both leaves the render promise unsettled forever.
+      await page.render({ canvas, viewport }).promise;
+
+      const { data } = await worker.recognize(canvas);
+      pages.push(data.text);
+
+      // Release the bitmap straight away; five full pages at 2x is a lot of
+      // memory to hold at once.
+      canvas.width = 0;
+      canvas.height = 0;
+    }
+  } finally {
+    await worker.terminate();
+    await doc.cleanup();
+  }
+
+  const text = pages.join('\n');
+
+  return {
+    text,
+    diagnostics: {
+      pages: doc.numPages,
+      rawItems: previous.rawItems,
+      textItems: previous.textItems,
+      characters: text.trim().length,
+      usedOcr: true,
     },
   };
 };
