@@ -18,6 +18,7 @@ import {
   selectUploadError,
   selectUploadStatus,
   uploadCv,
+  uploadErrorCleared,
 } from './cvSlice';
 import { useCvAnalysisRun } from './useCvAnalysisRun';
 import styles from './CvUpload.module.css';
@@ -128,7 +129,12 @@ export const CvUploadPage = (): React.JSX.Element => {
 
         <FileDrop
           file={file}
-          onSelect={setFile}
+          onSelect={(next) => {
+            // A new file means the previous failure no longer describes what is
+            // on screen.
+            dispatch(uploadErrorCleared());
+            setFile(next);
+          }}
           onClear={() => setFile(null)}
           disabled={isBusy}
           {...(uploadError === null

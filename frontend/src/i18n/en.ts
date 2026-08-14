@@ -66,6 +66,8 @@ export const en = {
   'error.VALIDATION_FAILED': 'Please check the highlighted fields.',
   'error.FILE_TOO_LARGE': 'That file is larger than 5 MB.',
   'error.UNSUPPORTED_FILE_TYPE': 'Only PDF and DOCX files are accepted.',
+  'error.CV_NO_TEXT':
+    'We could not read any text from that file. If it is a scanned or image-based PDF, export a text version and try again.',
   'error.CONFLICT': 'That action conflicts with the current state.',
   'error.RATE_LIMITED': 'Too many requests. Please wait a moment.',
   'error.SERVER_ERROR': 'The server ran into a problem.',

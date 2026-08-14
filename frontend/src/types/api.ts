@@ -36,6 +36,8 @@ export type ApiErrorCode =
   | 'VALIDATION_FAILED'
   | 'FILE_TOO_LARGE'
   | 'UNSUPPORTED_FILE_TYPE'
+  /** The file was a supported format but carried no readable text. */
+  | 'CV_NO_TEXT'
   | 'CONFLICT'
   | 'RATE_LIMITED'
   | 'SERVER_ERROR'

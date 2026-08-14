@@ -63,6 +63,8 @@ export const he: Catalog = {
   'error.VALIDATION_FAILED': 'יש לבדוק את השדות המסומנים.',
   'error.FILE_TOO_LARGE': 'הקובץ גדול מ-5 מגהבייט.',
   'error.UNSUPPORTED_FILE_TYPE': 'ניתן להעלות קבצי PDF או DOCX בלבד.',
+  'error.CV_NO_TEXT':
+    'לא הצלחנו לקרוא טקסט מהקובץ. אם מדובר בקובץ סרוק או מבוסס תמונה, ייצאו גרסה טקstualית ונסו שוב.',
   'error.CONFLICT': 'הפעולה מתנגשת עם המצב הנוכחי.',
   'error.RATE_LIMITED': 'יותר מדי בקשות. נסו שוב בעוד רגע.',
   'error.SERVER_ERROR': 'אירעה תקלה בשרת.',

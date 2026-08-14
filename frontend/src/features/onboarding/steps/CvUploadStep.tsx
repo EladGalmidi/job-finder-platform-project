@@ -9,6 +9,7 @@ import {
   selectUploadError,
   selectUploadStatus,
   uploadCv,
+  uploadErrorCleared,
 } from '@/features/cv/cvSlice';
 import { useTranslation } from '@/i18n/useTranslation';
 import type { TranslationKey } from '@/i18n/types';
@@ -69,7 +70,10 @@ export const CvUploadStep = (): React.JSX.Element => {
       <div className={styles.fieldGroup}>
         <FileDrop
           file={file}
-          onSelect={setFile}
+          onSelect={(next) => {
+            dispatch(uploadErrorCleared());
+            setFile(next);
+          }}
           onClear={() => setFile(null)}
           disabled={isBusy}
           {...(uploadError === null

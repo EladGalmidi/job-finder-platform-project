@@ -103,6 +103,11 @@ const cvSlice = createSlice({
   name: 'cv',
   initialState,
   reducers: {
+    /** Clears a previous upload failure, so picking a new file starts clean. */
+    uploadErrorCleared(state) {
+      state.uploadError = null;
+      state.uploadStatus = 'idle';
+    },
     analysisJobCleared(state) {
       state.analysisJob = null;
       state.analysisStatus = 'idle';
@@ -164,7 +169,7 @@ const cvSlice = createSlice({
   },
 });
 
-export const { analysisJobCleared } = cvSlice.actions;
+export const { analysisJobCleared, uploadErrorCleared } = cvSlice.actions;
 export const cvReducer = cvSlice.reducer;
 
 interface CvSliceRoot {

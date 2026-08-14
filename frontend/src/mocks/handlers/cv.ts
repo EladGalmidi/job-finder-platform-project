@@ -46,11 +46,30 @@ const uploadCv = async (context: HandlerContext): Promise<CV> => {
 
   // Read the document now, while the File is still in hand — by the time the
   // analysis job runs, only what is stored here remains.
-  const text = await extractText(file);
+  const extraction = await extractText(file);
+
+  // Refuse rather than analyse a document we could not read. Falling back to the
+  // sample analysis is what told a CV listing Kubernetes, Terraform and AWS that
+  // it was missing all three: the sample belongs to a fictional frontend
+  // engineer whose only overlap with it is Docker. A wrong answer delivered
+  // confidently is worse than no answer.
+  if (extraction.outcome === 'unsupported') {
+    throw new ApiError('UNSUPPORTED_FILE_TYPE', `Cannot read ${file.name}`, 415);
+  }
+
+  if (extraction.outcome === 'failed') {
+    throw new ApiError('SERVER_ERROR', `Could not parse ${file.name}`, 500, {
+      detail: extraction.detail ?? 'unknown',
+    });
+  }
+
+  if (extraction.outcome === 'empty') {
+    throw new ApiError('CV_NO_TEXT', `No readable text in ${file.name}`, 422);
+  }
 
   mockDb.mutate((draft) => {
     draft.cvs[cv.id] = cv;
-    draft.cvText[cv.id] = text;
+    draft.cvText[cv.id] = extraction.text;
     const user = draft.users[userId];
     if (user !== undefined) {
       draft.users[userId] = { ...user, activeCvId: cv.id };
@@ -121,10 +140,12 @@ const startAnalysis = (context: HandlerContext): { analysisJobId: string } => {
 /**
  * Builds the analysis for a CV.
  *
- * Derived from the text of the uploaded document. The seeded demo CV has no
- * file behind it, so it keeps its authored fixture — that one is a sample by
- * design, and it is the only case where the analysis is not read from a
- * document.
+ * Uploads are always derived from the document's own text — `uploadCv` rejects
+ * anything unreadable, so by the time a job runs there is text to work from.
+ *
+ * The two sample CVs are the exception and are explicitly samples: the seeded
+ * demo account, and the simulated LinkedIn import. Neither has a file behind it,
+ * and both are labelled as demonstrations in the UI.
  */
 const buildAnalysis = (cv: CV): CVAnalysis => {
   const text = mockDb.state.cvText[cv.id] ?? '';

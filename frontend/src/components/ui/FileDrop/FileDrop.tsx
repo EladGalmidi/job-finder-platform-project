@@ -102,6 +102,20 @@ export const FileDrop = ({
           </button>
         </div>
         <p className={styles.previewNote}>{t('onboarding.cv.previewNote')}</p>
+
+        {/*
+          Errors have to appear here too, not only on the empty drop zone.
+          Anything the server rejects — an unreadable PDF, a size limit enforced
+          server-side — arrives while a file is selected, and this branch used to
+          drop it silently: the user pressed Analyse and nothing whatsoever
+          happened.
+        */}
+        {errorMessage === undefined ? null : (
+          <p className={styles.error} role="alert">
+            <span aria-hidden="true">⚠</span>
+            {errorMessage}
+          </p>
+        )}
       </div>
     );
   }
