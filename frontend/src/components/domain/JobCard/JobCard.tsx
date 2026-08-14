@@ -19,6 +19,7 @@ export interface JobCardProps {
   readonly status: ApplicationStatus | null;
   readonly isMutating: boolean;
   readonly detailPath: string;
+  /** Toggles saved state. The caller owns which direction that means. */
   readonly onSave: () => void;
   readonly onApply: () => void;
   readonly onShare: () => void;
@@ -43,6 +44,11 @@ export const JobCard = ({
 
   const isSaved = status !== null;
   const isApplied = status !== null && status !== 'saved';
+
+  // Unsaving is only meaningful while the record is still just a save. Once the
+  // user has applied it carries a timeline and notes, and discarding that
+  // belongs behind the confirmation on the applications page.
+  const canToggleSave = status === null || status === 'saved';
 
   const matching = match?.matchingSkills ?? [];
   const missing = match?.missingSkills ?? [];
@@ -140,15 +146,21 @@ export const JobCard = ({
       </div>
 
       <div className={styles.actions}>
-        <Button
-          size="sm"
-          variant={isSaved ? 'secondary' : 'ghost'}
-          onClick={onSave}
-          disabled={isMutating || isSaved}
-          iconStart={<span aria-hidden="true">{isSaved ? '★' : '☆'}</span>}
-        >
-          {isSaved ? t('jobs.saved') : t('jobs.save')}
-        </Button>
+        {/* Once applied there is nothing left for this control to do, and a
+            permanently greyed star reads as a broken button rather than a
+            state. "Applied" already says the job is on the list. */}
+        {canToggleSave ? (
+          <Button
+            size="sm"
+            variant={isSaved ? 'secondary' : 'ghost'}
+            onClick={onSave}
+            disabled={isMutating}
+            aria-pressed={isSaved}
+            iconStart={<span aria-hidden="true">{isSaved ? '★' : '☆'}</span>}
+          >
+            {isSaved ? t('jobs.saved') : t('jobs.save')}
+          </Button>
+        ) : null}
 
         <Button
           size="sm"
@@ -161,7 +173,14 @@ export const JobCard = ({
 
         <span className={styles.spacer} />
 
-        <Button size="sm" onClick={onApply} disabled={isMutating || isApplied} isLoading={isMutating}>
+        <Button
+          size="sm"
+          onClick={onApply}
+          isComplete={isApplied}
+          disabled={isMutating}
+          isLoading={isMutating}
+          {...(isApplied ? { iconStart: <span aria-hidden="true">✓</span> } : {})}
+        >
           {isApplied ? t('jobs.applied') : t('jobs.apply')}
         </Button>
       </div>

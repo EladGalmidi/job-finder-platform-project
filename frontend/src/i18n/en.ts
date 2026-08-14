@@ -500,6 +500,7 @@ export const en = {
   'jobs.applicants_other': '{count} applicants',
   'jobs.salaryUndisclosed': 'Salary not listed',
   'jobs.toastSaved': 'Saved {title}',
+  'jobs.toastUnsaved': 'Removed {title} from saved',
   'jobs.toastApplied': 'Applied to {title}',
   'jobs.toastShared': 'Link copied to clipboard',
   'jobs.toastShareFailed': 'Could not copy the link',

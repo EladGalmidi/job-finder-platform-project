@@ -403,7 +403,13 @@ const DashboardJobCard = ({
       status={application?.status ?? null}
       isMutating={isMutating}
       detailPath={jobDetailPath(job.id)}
-      onSave={() => actions.save(job)}
+      onSave={() => {
+        if (application !== null && application.status === 'saved') {
+          actions.unsave(job, application.id);
+          return;
+        }
+        actions.save(job);
+      }}
       onApply={() => actions.apply(job)}
       onShare={() => actions.share(job)}
       compact

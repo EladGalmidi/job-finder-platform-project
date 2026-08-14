@@ -244,7 +244,13 @@ const ConnectedJobCard = ({
       status={application?.status ?? null}
       isMutating={isMutating}
       detailPath={`${jobDetailPath(job.id)}${search}`}
-      onSave={() => actions.save(job)}
+      onSave={() => {
+        if (application !== null && application.status === 'saved') {
+          actions.unsave(job, application.id);
+          return;
+        }
+        actions.save(job);
+      }}
       onApply={() => actions.apply(job)}
       onShare={() => actions.share(job)}
     />

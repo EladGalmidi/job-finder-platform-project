@@ -1,16 +1,18 @@
 import { useCallback } from 'react';
 
 import { useAppDispatch } from '@/app/hooks';
-import { applyToJob, saveJob } from '@/features/applications/applicationsSlice';
+import { applyToJob, removeApplication, saveJob } from '@/features/applications/applicationsSlice';
 import { toastPushed } from '@/features/ui/uiSlice';
 import { useTranslation } from '@/i18n/useTranslation';
 import { createLogger } from '@/lib/logger';
-import type { Job, JobId } from '@/types';
+import type { ApplicationId, Job, JobId } from '@/types';
 
 const log = createLogger('jobActions');
 
 export interface JobActions {
   save: (job: Job) => void;
+  /** Undoes a save. Only valid while the application is still `saved`. */
+  unsave: (job: Job, applicationId: ApplicationId) => void;
   apply: (job: Job) => void;
   share: (job: Job) => void;
 }
@@ -34,6 +36,30 @@ export const useJobActions = (): JobActions => {
         if (saveJob.fulfilled.match(result)) {
           dispatch(
             toastPushed({ severity: 'success', title: t('jobs.toastSaved', { title: job.title }) }),
+          );
+          return;
+        }
+        dispatch(toastPushed({ severity: 'danger', title: t('jobs.actionFailed') }));
+      });
+    },
+    [dispatch, t],
+  );
+
+  /**
+   * Saving is a toggle everywhere else in the product, so it is one here too.
+   * Leaving the button disabled after a save meant the only way to undo it was
+   * the applications page, which is a long way to walk back a misclick.
+   *
+   * Only reachable while the status is still `saved`; once the user has
+   * applied, the record carries a timeline and notes, and dropping it belongs
+   * behind the confirmation on the applications page.
+   */
+  const unsave = useCallback(
+    (job: Job, applicationId: ApplicationId) => {
+      void dispatch(removeApplication(applicationId)).then((result) => {
+        if (removeApplication.fulfilled.match(result)) {
+          dispatch(
+            toastPushed({ severity: 'info', title: t('jobs.toastUnsaved', { title: job.title }) }),
           );
           return;
         }
@@ -89,5 +115,5 @@ export const useJobActions = (): JobActions => {
     [dispatch, t],
   );
 
-  return { save, apply, share };
+  return { save, unsave, apply, share };
 };

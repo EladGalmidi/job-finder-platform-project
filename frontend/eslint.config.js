@@ -6,7 +6,10 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'node_modules'] },
+  // Mirrors the build and cache entries in .gitignore. `.vite` in particular is
+  // only present after the dev server has run, so leaving it out made `npm run
+  // validate` pass or fail depending on whether someone had started Vite.
+  { ignores: ['dist', 'dist-*', '.vite', 'coverage', 'node_modules'] },
 
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,

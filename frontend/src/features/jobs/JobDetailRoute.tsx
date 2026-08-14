@@ -23,7 +23,7 @@ import { useTranslation } from '@/i18n/useTranslation';
 import { cx } from '@/lib/cx';
 import { formatRelativeTime, formatSalaryRange } from '@/lib/format';
 import { JOB_TYPE_LABEL, REMOTE_LABEL, SENIORITY_LABEL } from '@/lib/labels';
-import { asJobId, type MatchReason } from '@/types';
+import { asJobId, type Job, type MatchReason } from '@/types';
 
 import { useJobActions } from './useJobActions';
 import styles from './JobDetail.module.css';
@@ -74,28 +74,42 @@ export const JobDetailRoute = (): React.JSX.Element => {
 
   const isSaved = application !== null;
   const isApplied = application !== null && application.status !== 'saved';
+  const canToggleSave = application === null || application.status === 'saved';
+
+  const onToggleSave = (target: Job): void => {
+    if (application !== null && application.status === 'saved') {
+      actions.unsave(target, application.id);
+      return;
+    }
+    actions.save(target);
+  };
 
   const contentDir = job?.contentLanguage === 'he' ? 'rtl' : 'ltr';
 
   const footer =
     job === null ? undefined : (
       <div className={styles.footerActions}>
-        <Button
-          variant="secondary"
-          onClick={() => actions.save(job)}
-          disabled={isMutating || isSaved}
-          iconStart={<span aria-hidden="true">{isSaved ? '★' : '☆'}</span>}
-        >
-          {isSaved ? t('jobs.saved') : t('jobs.save')}
-        </Button>
+        {canToggleSave ? (
+          <Button
+            variant="secondary"
+            onClick={() => onToggleSave(job)}
+            disabled={isMutating}
+            aria-pressed={isSaved}
+            iconStart={<span aria-hidden="true">{isSaved ? '★' : '☆'}</span>}
+          >
+            {isSaved ? t('jobs.saved') : t('jobs.save')}
+          </Button>
+        ) : null}
         <Button variant="ghost" onClick={() => actions.share(job)}>
           {t('jobs.share')}
         </Button>
         <Button
           fullWidth
           onClick={() => actions.apply(job)}
-          disabled={isMutating || isApplied}
+          isComplete={isApplied}
+          disabled={isMutating}
           isLoading={isMutating}
+          {...(isApplied ? { iconStart: <span aria-hidden="true">✓</span> } : {})}
         >
           {isApplied ? t('jobs.applied') : t('jobs.apply')}
         </Button>

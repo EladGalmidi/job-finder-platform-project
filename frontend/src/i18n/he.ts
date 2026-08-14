@@ -491,6 +491,7 @@ export const he: Catalog = {
   'jobs.applicants_other': '{count} מועמדים',
   'jobs.salaryUndisclosed': 'השכר לא צוין',
   'jobs.toastSaved': 'נשמרה המשרה {title}',
+  'jobs.toastUnsaved': 'המשרה {title} הוסרה מהשמורות',
   'jobs.toastApplied': 'הוגשה מועמדות ל-{title}',
   'jobs.toastShared': 'הקישור הועתק',
   'jobs.toastShareFailed': 'לא הצלחנו להעתיק את הקישור',
