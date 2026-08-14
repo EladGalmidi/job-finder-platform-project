@@ -105,10 +105,27 @@ export const extractText = async (file: File): Promise<ExtractionResult> => {
 
   try {
     if (isDocx) {
-      const text = await extractDocx(file);
-      return text.trim() === ''
-        ? { text: '', outcome: 'empty' }
-        : { text, outcome: 'ok' };
+      const docx = await extractDocx(file);
+      const trimmed = docx.text.trim();
+
+      // Diagnostics are reported for Word files too. Without them the caller
+      // fell back to zeroes and told the reader their Word document was a
+      // scanned PDF — a message about a format they had not used.
+      const diagnostics: ExtractionDiagnostics = {
+        pages: 0,
+        rawItems: trimmed === '' ? 0 : 1,
+        textItems: trimmed === '' ? 0 : 1,
+        characters: trimmed.length,
+        usedOcr: false,
+      };
+
+      if (trimmed === '') {
+        log.warn('docx contained no text', { name: file.name, notes: docx.notes });
+        return { text: '', outcome: 'empty', diagnostics, detail: docx.notes.join('; ') };
+      }
+
+      log.debug('extracted CV text', { name: file.name, ...diagnostics });
+      return { text: docx.text, outcome: 'ok', diagnostics };
     }
 
     let result = await extractPdfText(file, false);
@@ -263,8 +280,18 @@ const extractPdfByOcr = async (
   };
 };
 
-const extractDocx = async (file: File): Promise<string> => {
+interface DocxExtraction {
+  readonly text: string;
+  /** mammoth's own warnings, kept for logs when a document yields nothing. */
+  readonly notes: string[];
+}
+
+const extractDocx = async (file: File): Promise<DocxExtraction> => {
   const mammoth = await import('mammoth');
   const result = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
-  return result.value;
+
+  return {
+    text: result.value,
+    notes: result.messages.map((message) => `${message.type}: ${message.message}`),
+  };
 };

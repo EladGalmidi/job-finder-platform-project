@@ -5,13 +5,18 @@
 
 export const MAX_CV_BYTES = 5 * 1024 * 1024;
 
+/*
+ * `.doc` is deliberately absent. The legacy binary format needs a converter far
+ * heavier than anything here, so extraction rejects it — accepting it at the
+ * gate only meant offering a file type in the picker that failed a step later,
+ * with a message contradicting what the picker had just allowed.
+ */
 export const ACCEPTED_CV_MIME_TYPES: readonly string[] = [
   'application/pdf',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/msword',
 ];
 
-export const ACCEPTED_CV_EXTENSIONS: readonly string[] = ['.pdf', '.docx', '.doc'];
+export const ACCEPTED_CV_EXTENSIONS: readonly string[] = ['.pdf', '.docx'];
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 

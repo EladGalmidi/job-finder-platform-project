@@ -70,6 +70,7 @@ const uploadCv = async (context: HandlerContext): Promise<CV> => {
     // rather than guesswork: pages with no text items is a scan, text items
     // with no characters is a font without a Unicode mapping.
     throw new ApiError('CV_NO_TEXT', `No readable text in ${file.name}`, 422, {
+      format: file.name.toLowerCase().endsWith('.pdf') ? 'pdf' : 'docx',
       pages: String(seen?.pages ?? 0),
       rawItems: String(seen?.rawItems ?? 0),
       textItems: String(seen?.textItems ?? 0),

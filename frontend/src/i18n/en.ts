@@ -68,6 +68,8 @@ export const en = {
   'error.UNSUPPORTED_FILE_TYPE': 'Only PDF and DOCX files are accepted.',
   'error.CV_NO_TEXT':
     'We could not read any text from that file. If it is a scanned or image-based PDF, export a text version and try again.',
+  'cv.noTextDocx':
+    'We could not read any text from this Word file. If it was renamed from an older .doc, open it in Word and use Save As to store it as .docx, then upload again.',
   'cv.noTextScan':
     'This PDF has no text layer at all ({pages} pages, no text runs found). It is a scan or an image export, so there is nothing to extract. Upload the .docx, or re-save from Word or Google Docs with File then Download as PDF.',
   'cv.noTextEncoding':
