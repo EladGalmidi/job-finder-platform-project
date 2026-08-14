@@ -162,4 +162,33 @@ export const MARKET_SNAPSHOTS: Readonly<Partial<Record<RoleKey, MarketRoleSnapsh
     openPositions: 366,
     competitionIndex: 31.7,
   },
+
+  sales: {
+    roleKey: 'sales',
+    updatedAt: daysAgo(4),
+    sources: sources(2140),
+    topSkills: [
+      marketSkill('sk-b2b', 'sales', 91, 'stable', 1, 14, 688),
+      marketSkill('sk-crm', 'sales', 86, 'stable', 2, 6, 650),
+      marketSkill('sk-pipeline', 'sales', 78, 'up', 7, 11, 590),
+      marketSkill('sk-salesforce', 'sales', 71, 'stable', -1, 9, 537),
+      marketSkill('sk-closing', 'sales', 64, 'stable', 0, 16, 484),
+      marketSkill('sk-negotiation', 'sales', 59, 'up', 5, 12, 446),
+      marketSkill('sk-outreach', 'sales', 54, 'down', -6, 4, 408),
+      marketSkill('sk-forecasting', 'sales', 47, 'up', 8, 10, 355),
+      marketSkill('sk-accountmgmt', 'sales', 43, 'stable', 1, 7, 325),
+      marketSkill('sk-hubspot', 'sales', 31, 'up', 9, 3, 234),
+    ],
+    // Base salaries. Commission and OTE are excluded on purpose — mixing them in
+    // would make these bands incomparable with the engineering roles above.
+    salaryBySeniority: salaries({
+      junior: [9000, 12000, 15000],
+      mid: [16000, 21000, 26000],
+      senior: [24000, 30000, 37000],
+      lead: [32000, 39000, 47000],
+      principal: [42000, 50000, 60000],
+    }),
+    openPositions: 756,
+    competitionIndex: 38.4,
+  },
 };

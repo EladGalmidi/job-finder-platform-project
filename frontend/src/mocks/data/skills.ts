@@ -62,6 +62,36 @@ export const SKILLS: readonly Skill[] = [
   skill('sk-communication', 'Communication', 'soft'),
   skill('sk-mentoring', 'Mentoring', 'soft'),
   skill('sk-ownership', 'Ownership', 'soft'),
+
+  // Sales. Aliases matter more here than in engineering: the same competency is
+  // written a dozen ways across CVs, and "AE" or "BDR" on its own line is often
+  // the only signal a role was a sales role at all.
+  skill('sk-salesforce', 'Salesforce', 'tool', ['sfdc']),
+  skill('sk-hubspot', 'HubSpot', 'tool'),
+  skill('sk-crm', 'CRM', 'tool', ['customer relationship management']),
+  skill('sk-outreach', 'Outbound Prospecting', 'methodology', [
+    'outbound',
+    'prospecting',
+    'cold outreach',
+    'cold calling',
+    'cold email',
+  ]),
+  skill('sk-leadgen', 'Lead Generation', 'methodology', ['lead gen', 'demand generation']),
+  skill('sk-pipeline', 'Pipeline Management', 'methodology', ['pipeline', 'pipeline generation']),
+  skill('sk-negotiation', 'Negotiation', 'soft', ['negotiating', 'negotiated', 'contract negotiation']),
+  skill('sk-closing', 'Deal Closing', 'methodology', ['closing', 'closed deals', 'close rate']),
+  skill('sk-accountmgmt', 'Account Management', 'methodology', [
+    'account manager',
+    'key accounts',
+    'account executive',
+    'ae',
+  ]),
+  skill('sk-forecasting', 'Forecasting', 'methodology', ['sales forecasting', 'revenue forecasting']),
+  skill('sk-quota', 'Quota Attainment', 'methodology', ['quota', 'target attainment']),
+  skill('sk-b2b', 'B2B Sales', 'methodology', ['enterprise sales', 'saas sales', 'b2b']),
+  skill('sk-presentation', 'Presentation', 'soft', ['presenting', 'demos', 'product demo']),
+  skill('sk-stakeholder', 'Stakeholder Management', 'soft', ['stakeholder', 'stakeholders']),
+  skill('sk-territory', 'Territory Planning', 'methodology', ['territory', 'territory management']),
 ] as const;
 
 const SKILL_BY_ID = new Map(SKILLS.map((entry) => [entry.id, entry]));

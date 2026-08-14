@@ -344,6 +344,7 @@ export const he: Catalog = {
   'role.fullstack': 'Full Stack',
   'role.productManager': 'ניהול מוצר',
   'role.data': 'Data',
+  'role.sales': 'מכירות',
 
   'seniority.junior': 'ג׳וניור',
   'seniority.mid': 'דרג ביניים',

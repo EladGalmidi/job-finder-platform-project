@@ -351,6 +351,7 @@ export const en = {
   'role.fullstack': 'Full Stack',
   'role.productManager': 'Product Manager',
   'role.data': 'Data',
+  'role.sales': 'Sales',
 
   'seniority.junior': 'Junior',
   'seniority.mid': 'Mid-level',
