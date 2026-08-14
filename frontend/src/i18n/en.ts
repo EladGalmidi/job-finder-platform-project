@@ -69,9 +69,9 @@ export const en = {
   'error.CV_NO_TEXT':
     'We could not read any text from that file. If it is a scanned or image-based PDF, export a text version and try again.',
   'cv.noTextScan':
-    'No text found in this file ({pages} pages, {textItems} text blocks). That means it is a scan or an image export — there is nothing to extract. Save it as a text PDF, or upload the .docx instead.',
+    'This PDF has no text layer at all ({pages} pages, no text runs found). It is a scan or an image export, so there is nothing to extract. Upload the .docx, or re-save from Word or Google Docs with File then Download as PDF.',
   'cv.noTextEncoding':
-    'This file has text ({textItems} blocks across {pages} pages) but the characters carry no readable encoding. That is a gap on our side, not a problem with your CV — uploading the .docx works around it.',
+    'This file has {rawItems} text runs across {pages} pages but none carry a readable encoding. That is a gap on our side, not a problem with your CV — uploading the .docx works around it.',
   'error.CONFLICT': 'That action conflicts with the current state.',
   'error.RATE_LIMITED': 'Too many requests. Please wait a moment.',
   'error.SERVER_ERROR': 'The server ran into a problem.',

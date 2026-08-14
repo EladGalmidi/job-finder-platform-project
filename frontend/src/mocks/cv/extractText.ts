@@ -2,54 +2,61 @@ import { createLogger } from '@/lib/logger';
 
 const log = createLogger('cvExtract');
 
+/**
+ * Where pdfjs looks for its character maps and standard font data. Copied into
+ * the build by vite-plugin-static-copy; see vite.config.ts.
+ */
+const PDF_ASSETS = {
+  cMapUrl: '/pdfjs/cmaps/',
+  cMapPacked: true,
+  standardFontDataUrl: '/pdfjs/standard_fonts/',
+} as const;
+
 export type ExtractionOutcome =
   /** Text was read. */
   | 'ok'
-  /** Parsed cleanly, but the document carries no text — typically a scan. */
+  /** Parsed cleanly, but the document carries no text layer. */
   | 'empty'
   /** Format we cannot read at all, such as legacy binary .doc. */
   | 'unsupported'
   /** The parser itself failed. A defect on our side, not the user's file. */
   | 'failed';
 
+export interface ExtractionDiagnostics {
+  readonly pages: number;
+  /** Text runs pdfjs found, whether or not they decoded to anything. */
+  readonly rawItems: number;
+  /** Runs that decoded to actual characters. */
+  readonly textItems: number;
+  readonly characters: number;
+}
+
 export interface ExtractionResult {
   readonly text: string;
   readonly outcome: ExtractionOutcome;
   /** Parser error, kept for logs. Never shown to the user. */
   readonly detail?: string;
-  /**
-   * What the parser actually saw. "Nothing came out" is not diagnosable on its
-   * own: pages with zero text items means an image or a scan, whereas text
-   * items that yield no characters means the glyphs carry no Unicode mapping.
-   * Those need different answers, so both are measured.
-   */
-  readonly diagnostics?: {
-    readonly pages: number;
-    readonly textItems: number;
-    readonly characters: number;
-  };
+  readonly diagnostics?: ExtractionDiagnostics;
 }
 
 /**
  * Pulls the plain text out of an uploaded CV.
  *
- * This lives in the mock layer because it is the stand-in backend's job, not
- * the UI's. A real deployment does this server-side — the browser should not be
- * where a CV gets parsed, and the result has to be identical for every client.
- * Nothing outside `src/mocks` imports it, so when the real endpoint lands this
- * whole directory is deleted and no UI code changes.
+ * Two passes over the text layer: the default one, then again including marked
+ * content, because some generators wrap every run in it and the default pass
+ * skips those entirely.
  *
- * The outcome is reported rather than collapsed into an empty string. "This is a
- * scanned PDF" and "our parser broke" need different messages, and the caller
- * must never be able to mistake either for "this CV has no skills".
+ * A PDF with no text layer at all — a scan, or a design tool exporting pages as
+ * images — cannot be read this way and is reported as such. Recovering those
+ * needs OCR, which belongs on a server: in the browser it means a multi-megabyte
+ * model fetched at runtime and tens of seconds per upload, for a result worse
+ * than asking for the .docx.
  *
- * Both parsers are loaded on demand: they are large, they are only needed the
- * moment someone actually uploads, and a dynamic import keeps them out of the
- * initial payload entirely.
+ * This lives in the mock layer because it is the stand-in backend's job. A real
+ * deployment does it server-side, where OCR is a reasonable thing to add.
  */
 export const extractText = async (file: File): Promise<ExtractionResult> => {
   const name = file.name.toLowerCase();
-
   const isPdf = name.endsWith('.pdf');
   const isDocx = name.endsWith('.docx');
 
@@ -61,29 +68,21 @@ export const extractText = async (file: File): Promise<ExtractionResult> => {
   }
 
   try {
-    if (!isPdf) {
+    if (isDocx) {
       const text = await extractDocx(file);
-      const trimmed = text.trim();
-      if (trimmed === '') {
-        log.warn('docx contained no text', { name: file.name });
-        return { text: '', outcome: 'empty' };
-      }
-      return { text, outcome: 'ok' };
+      return text.trim() === ''
+        ? { text: '', outcome: 'empty' }
+        : { text, outcome: 'ok' };
     }
 
-    let result = await extractPdf(file, false);
+    let result = await extractPdfText(file, false);
 
-    // Some generators wrap every run in marked content, which the default pass
-    // skips entirely. Retrying with it included costs one more parse and
-    // recovers those files rather than calling them scans.
-    if (result.text.trim() === '' && result.diagnostics.textItems === 0) {
-      log.warn('no text on first pass, retrying with marked content', { name: file.name });
-      result = await extractPdf(file, true);
+    if (result.diagnostics.characters === 0 && result.diagnostics.rawItems === 0) {
+      log.warn('no text runs on first pass, retrying with marked content', { name: file.name });
+      result = await extractPdfText(file, true);
     }
 
-    const trimmed = result.text.trim();
-
-    if (trimmed === '') {
+    if (result.diagnostics.characters === 0) {
       log.warn('no readable text in PDF', { name: file.name, ...result.diagnostics });
       return { text: '', outcome: 'empty', diagnostics: result.diagnostics };
     }
@@ -98,20 +97,28 @@ export const extractText = async (file: File): Promise<ExtractionResult> => {
 
 interface PdfExtraction {
   readonly text: string;
-  readonly diagnostics: { pages: number; textItems: number; characters: number };
+  readonly diagnostics: ExtractionDiagnostics;
 }
 
-const extractPdf = async (file: File, includeMarkedContent: boolean): Promise<PdfExtraction> => {
+const loadPdf = async (file: File) => {
   const pdfjs = await import('pdfjs-dist');
   const workerUrl = (await import('pdfjs-dist/build/pdf.worker.min.mjs?url')).default;
   pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
 
   // The buffer is re-read on every call because pdfjs transfers it to the
-  // worker, which detaches it. Reusing one across the retry would hand the
-  // second parse an empty buffer.
-  const doc = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+  // worker, which detaches it. Reusing one would hand the next pass an empty
+  // buffer and produce a confident wrong answer.
+  return pdfjs.getDocument({
+    data: new Uint8Array(await file.arrayBuffer()),
+    ...PDF_ASSETS,
+  }).promise;
+};
+
+const extractPdfText = async (file: File, includeMarkedContent: boolean): Promise<PdfExtraction> => {
+  const doc = await loadPdf(file);
 
   const pages: string[] = [];
+  let rawItems = 0;
   let textItems = 0;
 
   for (let pageNumber = 1; pageNumber <= doc.numPages; pageNumber += 1) {
@@ -119,7 +126,12 @@ const extractPdf = async (file: File, includeMarkedContent: boolean): Promise<Pd
     const content = await page.getTextContent({ includeMarkedContent });
 
     const strings = content.items.map((item) => ('str' in item ? item.str : ''));
-    textItems += strings.filter((value) => value !== '').length;
+
+    // Counted apart on purpose. Runs that exist but decode to nothing mean a
+    // font without a usable encoding — our problem. No runs at all means there
+    // is genuinely no text on the page.
+    rawItems += content.items.length;
+    textItems += strings.filter((value) => value.trim() !== '').length;
     pages.push(strings.join(' '));
   }
 
@@ -128,7 +140,12 @@ const extractPdf = async (file: File, includeMarkedContent: boolean): Promise<Pd
 
   return {
     text,
-    diagnostics: { pages: doc.numPages, textItems, characters: text.trim().length },
+    diagnostics: {
+      pages: doc.numPages,
+      rawItems,
+      textItems,
+      characters: text.trim().length,
+    },
   };
 };
 

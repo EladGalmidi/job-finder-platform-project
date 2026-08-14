@@ -51,11 +51,13 @@ const uploadErrorMessage = (
   if (error.code !== 'CV_NO_TEXT') return t(`error.${error.code}` as TranslationKey);
 
   const pages = error.details?.['pages'] ?? '0';
-  const textItems = error.details?.['textItems'] ?? '0';
+  const rawItems = error.details?.['rawItems'] ?? '0';
 
-  return textItems === '0'
-    ? t('cv.noTextScan', { pages, textItems })
-    : t('cv.noTextEncoding', { pages, textItems });
+  // Runs present but undecodable is a font problem and ours to own. No runs at
+  // all means there was never any text, and OCR has already been tried.
+  return rawItems === '0'
+    ? t('cv.noTextScan', { pages, rawItems })
+    : t('cv.noTextEncoding', { pages, rawItems });
 };
 
 export const CvUploadPage = (): React.JSX.Element => {

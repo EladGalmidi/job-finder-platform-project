@@ -1,10 +1,26 @@
 import { fileURLToPath, URL } from 'node:url';
 
 import react from '@vitejs/plugin-react';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    /*
+     * pdfjs needs its character maps and standard font data as files at runtime.
+     * Without them, any PDF using CID fonts or relying on the standard 14 fonts
+     * decodes to empty strings — the document looks like a scan when it is
+     * perfectly readable. They are copied rather than bundled because pdfjs
+     * fetches them by URL.
+     */
+    viteStaticCopy({
+      targets: [
+        { src: 'node_modules/pdfjs-dist/cmaps/*', dest: 'pdfjs/cmaps' },
+        { src: 'node_modules/pdfjs-dist/standard_fonts/*', dest: 'pdfjs/standard_fonts' },
+      ],
+    }),
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
