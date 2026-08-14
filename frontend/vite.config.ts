@@ -19,9 +19,22 @@ export default defineConfig({
           : '[name]__[local]__[hash:base64:4]',
     },
   },
+  /*
+   * Fail rather than fall back to the next free port.
+   *
+   * The fallback is quiet and costs more than it saves: a second `npm run dev`
+   * comes up on 5174 looking identical, but the port is part of the origin, so
+   * it gets its own localStorage — a separate mock database and a separate
+   * session. Work done in one window silently fails to appear in the other.
+   * An "address already in use" error names the problem immediately.
+   */
   server: {
     port: 5173,
-    strictPort: false,
+    strictPort: true,
+  },
+  preview: {
+    port: 4173,
+    strictPort: true,
   },
   build: {
     outDir: 'dist',
