@@ -191,6 +191,10 @@ export const selectActiveAnalysis = (state: CvSliceRoot): CVAnalysis | null =>
 export const selectAnalysisForCv = (state: CvSliceRoot, cvId: CvId | null): CVAnalysis | null =>
   cvId === null ? null : (state.cv.analysesByCvId[cvId] ?? null);
 
+/** Looks a CV up by id, for the same reason selectAnalysisForCv exists. */
+export const selectCvById = (state: CvSliceRoot, cvId: CvId | null): CV | null =>
+  cvId === null ? null : (state.cv.cvs[cvId] ?? null);
+
 export const selectAnalysisJob = (state: CvSliceRoot): AnalysisJob | null => state.cv.analysisJob;
 export const selectUploadStatus = (state: CvSliceRoot): RequestStatus => state.cv.uploadStatus;
 export const selectUploadError = (state: CvSliceRoot): SerializedApiError | null =>

@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { selectAutoExportJson } from '@/features/ui/uiSlice';
 import type { AnalysisJob, AnalysisJobId, CvId } from '@/types';
 
 import {
   fetchCvAnalysis,
   pollCvAnalysis,
   selectAnalysisJob,
+  selectCvById,
   startCvAnalysis,
 } from './cvSlice';
+import { exportCvDocument } from './exportCvDocument';
 
 const POLL_INTERVAL_MS = 500;
 
@@ -50,6 +53,21 @@ export const useCvAnalysisRun = ({
 }: CvAnalysisRunOptions): CvAnalysisRun => {
   const dispatch = useAppDispatch();
   const job = useAppSelector(selectAnalysisJob);
+
+  /*
+   * The JSON export belongs to finishing an analysis, so it lives here with the
+   * rest of that sequence. It was previously wired into one caller, which meant
+   * replacing a CV from the dashboard produced a file and finishing the same
+   * analysis during onboarding silently did not — the exact drift this hook
+   * exists to prevent.
+   */
+  const autoExportJson = useAppSelector(selectAutoExportJson);
+  const cv = useAppSelector((state) => selectCvById(state, cvId));
+
+  // Read at completion time rather than listed as effect dependencies, so
+  // toggling the setting mid-analysis cannot restart the run.
+  const exportRef = useRef({ autoExportJson, fileName: cv?.fileName });
+  exportRef.current = { autoExportJson, fileName: cv?.fileName };
 
   /**
    * The id of the job this hook started.
@@ -104,7 +122,13 @@ export const useCvAnalysisRun = ({
     if (job?.status !== 'succeeded' || cvId === null || completedRef.current) return;
     completedRef.current = true;
 
-    void dispatch(fetchCvAnalysis(cvId)).then(() => {
+    void dispatch(fetchCvAnalysis(cvId)).then(async () => {
+      // Awaited before handing control back: onComplete navigates away, and the
+      // download has to be issued while this component is still mounted.
+      if (exportRef.current.autoExportJson) {
+        await exportCvDocument(cvId, exportRef.current.fileName ?? 'cv');
+      }
+
       onCompleteRef.current();
     });
   }, [job?.status, cvId, dispatch]);
