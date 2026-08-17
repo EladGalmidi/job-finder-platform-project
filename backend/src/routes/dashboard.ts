@@ -2,7 +2,7 @@ import { count, eq, gte } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 
 import { database } from '../db/client.js';
-import { cvAnalyses, jobs } from '../db/schema.js';
+import { applications, cvAnalyses, jobs } from '../db/schema.js';
 
 const NEW_JOB_WINDOW_DAYS = 7;
 
@@ -38,6 +38,19 @@ export const registerDashboardRoutes = (app: FastifyInstance): void => {
     const recent = await db.select({ value: count() }).from(jobs).where(gte(jobs.postedAt, cutoff));
 
     /*
+     * Counted from the applications table in one pass rather than three
+     * queries. "Sent" is anything past `saved`, which is what the label means:
+     * a saved job has not been applied to.
+     */
+    const mine = await db
+      .select({ status: applications.status })
+      .from(applications)
+      .where(eq(applications.userId, user.id));
+
+    const byStatus = (...wanted: readonly string[]): number =>
+      mine.filter((row) => wanted.includes(row.status)).length;
+
+    /*
      * Profile completion is the share of the things the product asks for that
      * the account has actually done, so the number moves for a real reason
      * rather than being a decorative percentage.
@@ -52,10 +65,9 @@ export const registerDashboardRoutes = (app: FastifyInstance): void => {
     return {
       matchedJobsCount: payload?.matchedJobsCount ?? 0,
       newMatchesThisWeek: recent[0]?.value ?? 0,
-      // No applications table yet. Zero is the honest answer.
-      activeApplications: 0,
-      interviewsScheduled: 0,
-      applicationsSent: 0,
+      activeApplications: byStatus('applied', 'interview', 'offer'),
+      interviewsScheduled: byStatus('interview'),
+      applicationsSent: byStatus('applied', 'interview', 'offer', 'rejected'),
       missingSkillsCount: payload?.missingSkills?.length ?? 0,
       cvScore: payload?.score ?? null,
       profileCompletionPercent: Math.round((done / 4) * 100),

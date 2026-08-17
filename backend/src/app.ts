@@ -8,6 +8,7 @@ import Fastify, { type FastifyInstance } from 'fastify';
 import { registerAuth } from './auth/plugin.js';
 import { env } from './config/env.js';
 import { registerErrorHandler } from './http/errorHandler.js';
+import { registerApplicationRoutes } from './routes/applications.js';
 import { registerAuthRoutes } from './routes/auth.js';
 import { registerCvRoutes } from './routes/cv.js';
 import { registerDashboardRoutes } from './routes/dashboard.js';
@@ -94,6 +95,7 @@ export const buildApp = async (): Promise<FastifyInstance> => {
   registerCvRoutes(app);
   registerDashboardRoutes(app);
   registerMarketRoutes(app);
+  registerApplicationRoutes(app);
 
   // Liveness only. It deliberately does not touch the database: a health check
   // that fails when Postgres blips causes the orchestrator to kill a server

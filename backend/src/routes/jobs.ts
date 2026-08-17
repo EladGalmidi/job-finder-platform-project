@@ -16,7 +16,7 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
 import { database } from '../db/client.js';
-import { companies, jobSkills, jobs, skills } from '../db/schema.js';
+import { applications, companies, jobSkills, jobs, skills } from '../db/schema.js';
 import { notFound } from '../http/errors.js';
 import { toJobJson, type SkillRefJson } from '../serializers/job.js';
 
@@ -153,12 +153,33 @@ export const registerJobRoutes = (app: FastifyInstance): void => {
     }
 
     /*
-     * The `fullMatch` and `saved` tabs are not filtered yet, and deliberately
-     * behave as `all` rather than silently returning nothing.
-     *
-     * `fullMatch` needs the scoring engine, which still lives in the frontend
-     * and moves server-side with the CV work. `saved` needs an applications
-     * table that does not exist yet. Both are tracked; neither is pretended.
+     * The saved tab shows anything the reader has engaged with, not only rows
+     * still sitting in the `saved` status. A job they have applied to has not
+     * stopped being saved.
+     */
+    if (query.tab === 'saved') {
+      const user = request.currentUser;
+
+      if (user === null) {
+        // Nothing is saved for someone who is not signed in, and returning the
+        // whole list would be a confusing answer to "show me my saved jobs".
+        conditions.push(sql`false`);
+      } else {
+        conditions.push(
+          exists(
+            db
+              .select({ one: sql`1` })
+              .from(applications)
+              .where(and(eq(applications.jobId, jobs.id), eq(applications.userId, user.id))),
+          ),
+        );
+      }
+    }
+
+    /*
+     * `fullMatch` still behaves as `all`. It needs per-job scoring, which is
+     * not this service's work — it belongs to the matching service — so it is
+     * left visibly unfiltered rather than silently returning nothing.
      */
 
     const where = conditions.length > 0 ? and(...conditions) : undefined;

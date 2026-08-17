@@ -240,6 +240,62 @@ export const jobSkills = pgTable(
   ],
 );
 
+/**
+ * "Saved" is an application in its first status, not a separate concept.
+ *
+ * One row is the single source of truth for a job's state, which is what stops
+ * a job being simultaneously saved and not-saved depending on which table you
+ * ask. It also gives the timeline a natural starting point.
+ */
+export const applicationStatusEnum = pgEnum('application_status', [
+  'saved',
+  'applied',
+  'interview',
+  'offer',
+  'rejected',
+]);
+
+export const applications = pgTable(
+  'applications',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    jobId: text('job_id')
+      .notNull()
+      .references(() => jobs.id, { onDelete: 'cascade' }),
+
+    status: applicationStatusEnum('status').notNull().default('saved'),
+
+    savedAt: timestamp('saved_at', { withTimezone: true }).notNull().defaultNow(),
+    /** Set when the status first reaches `applied`, and never moved after. */
+    appliedAt: timestamp('applied_at', { withTimezone: true }),
+    lastUpdatedAt: timestamp('last_updated_at', { withTimezone: true }).notNull().defaultNow(),
+
+    /*
+     * Notes and the status timeline are stored whole rather than as their own
+     * tables. They are only ever read with their application, never queried
+     * across applications, so separate tables would buy joins and nothing else.
+     */
+    notes: jsonb('notes').notNull().default([]),
+    timeline: jsonb('timeline').notNull().default([]),
+    nextStep: jsonb('next_step'),
+  },
+  (table) => [
+    /*
+     * One application per user per job, enforced by the database. Without it a
+     * double-click on Save creates two rows, and the job then appears twice in
+     * the list with two different statuses.
+     */
+    uniqueIndex('applications_user_job_unique').on(table.userId, table.jobId),
+    index('applications_user_id_idx').on(table.userId),
+    index('applications_status_idx').on(table.status),
+  ],
+);
+
+export type ApplicationRow = typeof applications.$inferSelect;
+
 export const analysisStatusEnum = pgEnum('analysis_status', [
   'queued',
   'running',

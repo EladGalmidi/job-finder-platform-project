@@ -30,19 +30,12 @@ services:
       timeout: 5s
       retries: 10
 
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-    ports:
-      - '6379:6379'
-    volumes:
-      - redis-data:/data
-    healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 5s
-      timeout: 5s
-      retries: 10
+# Redis is deliberately absent.
+#
+# It was here for a job queue, and the analysis job ended up running in the
+# server process instead, so nothing ever connected to it. Bring it back when
+# there is a real reason: analysis work that must survive a restart, or a slow
+# OCR run that must not occupy a request handler.
 
 volumes:
   postgres-data:
-  redis-data:
