@@ -1,0 +1,1949 @@
+[
+  {
+    "title": "Senior DevOps Engineer",
+    "roleKey": "devops",
+    "location": "Tel Aviv",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "senior",
+    "summary": "Own the Kubernetes platform behind a multi-region cloud product.",
+    "description": "Nimbus Grid runs workloads across three regions for customers who cannot tolerate downtime. You will own the platform layer end to end: cluster lifecycle, deployment pipelines, and the observability stack the whole engineering org depends on.",
+    "responsibilities": [
+      "Operate and scale production Kubernetes clusters across AWS regions",
+      "Own Terraform modules used by every product team",
+      "Reduce deployment lead time through CI/CD pipeline work",
+      "Lead incident response and drive blameless postmortems"
+    ],
+    "requirements": [
+      "5+ years in DevOps, SRE or platform engineering",
+      "Deep hands-on Kubernetes in production, not just managed defaults",
+      "Terraform at module-authoring level",
+      "Strong Linux and networking fundamentals"
+    ],
+    "niceToHave": [
+      "ArgoCD or Flux",
+      "Go for internal tooling",
+      "FinOps or cost-optimisation work"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-k8s",
+        "name": "Kubernetes"
+      },
+      {
+        "skillId": "sk-terraform",
+        "name": "Terraform"
+      },
+      {
+        "skillId": "sk-aws",
+        "name": "AWS"
+      },
+      {
+        "skillId": "sk-docker",
+        "name": "Docker"
+      },
+      {
+        "skillId": "sk-cicd",
+        "name": "CI/CD"
+      },
+      {
+        "skillId": "sk-prometheus",
+        "name": "Prometheus"
+      },
+      {
+        "skillId": "sk-bash",
+        "name": "Bash"
+      }
+    ],
+    "source": "linkedin",
+    "externalUrl": "https://example.com/jobs/nimbus-senior-devops",
+    "isPromoted": true,
+    "applicantsCount": 34,
+    "contentLanguage": "en",
+    "id": "job-001",
+    "companyId": "co-nimbus",
+    "postedDaysAgo": 2,
+    "salary": {
+      "min": 32000,
+      "max": 42000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Backend Engineer (Go)",
+    "roleKey": "backend",
+    "location": "Herzliya",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "mid",
+    "summary": "Build the settlement services that move money for fintech customers.",
+    "description": "SafeLedger processes settlement flows for regulated fintech clients. Correctness matters more than throughput here: every service is built around idempotency, auditability, and a hard requirement that money is never double-counted.",
+    "responsibilities": [
+      "Design and ship Go services handling payment settlement",
+      "Model event flows on Kafka with exactly-once semantics",
+      "Write the tests that keep a financial ledger honest",
+      "Partner with compliance on audit requirements"
+    ],
+    "requirements": [
+      "3+ years backend engineering",
+      "Production Go or a strong case for switching to it",
+      "Relational modelling and PostgreSQL at scale",
+      "Comfort with distributed-systems failure modes"
+    ],
+    "niceToHave": [
+      "Kafka",
+      "Payments or regulated-industry background",
+      "gRPC"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-go",
+        "name": "Go"
+      },
+      {
+        "skillId": "sk-postgres",
+        "name": "PostgreSQL"
+      },
+      {
+        "skillId": "sk-kafka",
+        "name": "Kafka"
+      },
+      {
+        "skillId": "sk-docker",
+        "name": "Docker"
+      },
+      {
+        "skillId": "sk-microservices",
+        "name": "Microservices"
+      }
+    ],
+    "source": "greenhouse",
+    "externalUrl": "https://example.com/jobs/safeledger-backend-go",
+    "isPromoted": false,
+    "applicantsCount": 61,
+    "contentLanguage": "en",
+    "id": "job-002",
+    "companyId": "co-safeledger",
+    "postedDaysAgo": 5,
+    "salary": {
+      "min": 26000,
+      "max": 34000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "מפתח/ת Frontend",
+    "roleKey": "frontend",
+    "location": "תל אביב",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "mid",
+    "summary": "בניית ממשקי ניתוח נתונים כבדים ב-React ו-TypeScript.",
+    "description": "ב-PulseMetric אנחנו בונים כלי אנליטיקה שמציגים מיליוני נקודות נתונים בזמן אמת. התפקיד דורש הבנה עמוקה בביצועים בדפדפן, ולא רק היכרות עם ספריות UI.",
+    "responsibilities": [
+      "פיתוח ממשקי משתמש מורכבים ב-React ו-TypeScript",
+      "אופטימיזציה של ביצועי רינדור בטבלאות וגרפים גדולים",
+      "עבודה צמודה עם צוות העיצוב על מערכת קומפוננטות משותפת",
+      "שיפור נגישות המוצר לרמת AA"
+    ],
+    "requirements": [
+      "שלוש שנות ניסיון ומעלה בפיתוח Frontend",
+      "שליטה ב-React ו-TypeScript",
+      "ניסיון מוכח באופטימיזציית ביצועים",
+      "הבנה של CSS מודרני ו-RTL"
+    ],
+    "niceToHave": [
+      "ניסיון עם D3 או ויזואליזציה",
+      "היכרות עם Next.js",
+      "ניסיון בנגישות"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-react",
+        "name": "React"
+      },
+      {
+        "skillId": "sk-ts",
+        "name": "TypeScript"
+      },
+      {
+        "skillId": "sk-js",
+        "name": "JavaScript"
+      },
+      {
+        "skillId": "sk-redux",
+        "name": "Redux"
+      },
+      {
+        "skillId": "sk-a11y",
+        "name": "Accessibility"
+      }
+    ],
+    "source": "comeet",
+    "externalUrl": "https://example.com/jobs/pulsemetric-frontend",
+    "isPromoted": false,
+    "applicantsCount": 18,
+    "contentLanguage": "he",
+    "id": "job-003",
+    "companyId": "co-pulsemetric",
+    "postedDaysAgo": 1,
+    "salary": {
+      "min": 24000,
+      "max": 31000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Platform Engineer",
+    "roleKey": "devops",
+    "location": "Remote (Israel)",
+    "remoteMode": "remote",
+    "jobType": "fullTime",
+    "seniority": "senior",
+    "summary": "Developer-experience work at a small, opinionated tooling company.",
+    "description": "KernelWorks is twenty-two people building developer tooling. The platform team is three of them. You will spend your time removing friction for other engineers rather than babysitting infrastructure.",
+    "responsibilities": [
+      "Own the internal developer platform and its golden paths",
+      "Cut CI times and keep the build pipeline fast",
+      "Automate environment provisioning end to end",
+      "Set the standards other teams build against"
+    ],
+    "requirements": [
+      "4+ years platform, DevOps or infrastructure engineering",
+      "Kubernetes and Helm in anger",
+      "CI/CD design, not just pipeline maintenance",
+      "A bias toward deleting complexity"
+    ],
+    "niceToHave": [
+      "Go",
+      "Backstage or similar portals",
+      "Open-source contributions"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-k8s",
+        "name": "Kubernetes"
+      },
+      {
+        "skillId": "sk-helm",
+        "name": "Helm"
+      },
+      {
+        "skillId": "sk-githubactions",
+        "name": "GitHub Actions"
+      },
+      {
+        "skillId": "sk-docker",
+        "name": "Docker"
+      },
+      {
+        "skillId": "sk-terraform",
+        "name": "Terraform"
+      },
+      {
+        "skillId": "sk-cicd",
+        "name": "CI/CD"
+      }
+    ],
+    "source": "company",
+    "externalUrl": "https://example.com/jobs/kernelworks-platform",
+    "isPromoted": false,
+    "applicantsCount": 27,
+    "contentLanguage": "en",
+    "id": "job-004",
+    "companyId": "co-kernelworks",
+    "postedDaysAgo": 9,
+    "salary": {
+      "min": 30000,
+      "max": 38000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Full Stack Engineer",
+    "roleKey": "fullstack",
+    "location": "Haifa",
+    "remoteMode": "onsite",
+    "jobType": "fullTime",
+    "seniority": "junior",
+    "summary": "First engineering hire on a clinical scheduling product.",
+    "description": "OrbitCare builds scheduling software used by clinics. This is a broad role with real ownership early: you will touch the React client, the Node services behind it, and the data model underneath.",
+    "responsibilities": [
+      "Ship features across the React client and Node API",
+      "Work directly with clinicians to shape requirements",
+      "Keep patient data handling correct and auditable",
+      "Grow the test suite alongside the product"
+    ],
+    "requirements": [
+      "1-2 years of professional experience or a strong portfolio",
+      "JavaScript or TypeScript across client and server",
+      "SQL fundamentals",
+      "Willingness to work onsite in Haifa"
+    ],
+    "niceToHave": [
+      "Health-tech exposure",
+      "React Testing Library",
+      "Hebrew and English fluency"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-js",
+        "name": "JavaScript"
+      },
+      {
+        "skillId": "sk-react",
+        "name": "React"
+      },
+      {
+        "skillId": "sk-node",
+        "name": "Node.js"
+      },
+      {
+        "skillId": "sk-sql",
+        "name": "SQL"
+      },
+      {
+        "skillId": "sk-git",
+        "name": "Git"
+      }
+    ],
+    "source": "linkedin",
+    "externalUrl": "https://example.com/jobs/orbitcare-fullstack",
+    "isPromoted": false,
+    "applicantsCount": 92,
+    "contentLanguage": "en",
+    "id": "job-005",
+    "companyId": "co-orbitcare",
+    "postedDaysAgo": 14,
+    "salary": {
+      "min": 17000,
+      "max": 23000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Product Manager, Growth",
+    "roleKey": "productManager",
+    "location": "Ramat Gan",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "senior",
+    "summary": "Own activation and retention for a logistics marketplace.",
+    "description": "Driftly connects carriers with shippers. Growth here is not a funnel-tuning exercise: supply and demand have to move together, and the product decisions that work on one side often break the other.",
+    "responsibilities": [
+      "Own the activation and retention roadmap end to end",
+      "Run experiments with clear hypotheses and honest readouts",
+      "Translate qualitative research into shipped product changes",
+      "Align engineering, design and ops around a single set of metrics"
+    ],
+    "requirements": [
+      "4+ years in product management, at least two on growth",
+      "Fluency with experiment design and analytics tooling",
+      "Track record shipping in a marketplace or two-sided product",
+      "Strong written communication"
+    ],
+    "niceToHave": [
+      "SQL",
+      "Logistics domain knowledge",
+      "B2B and B2C exposure"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-productstrategy",
+        "name": "Product Strategy"
+      },
+      {
+        "skillId": "sk-userresearch",
+        "name": "User Research"
+      },
+      {
+        "skillId": "sk-roadmapping",
+        "name": "Roadmapping"
+      },
+      {
+        "skillId": "sk-mixpanel",
+        "name": "Mixpanel"
+      },
+      {
+        "skillId": "sk-agile",
+        "name": "Agile"
+      }
+    ],
+    "source": "greenhouse",
+    "externalUrl": "https://example.com/jobs/driftly-pm-growth",
+    "isPromoted": true,
+    "applicantsCount": 47,
+    "contentLanguage": "en",
+    "id": "job-006",
+    "companyId": "co-driftly",
+    "postedDaysAgo": 4,
+    "salary": {
+      "min": 30000,
+      "max": 40000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "מנהל/ת מוצר",
+    "roleKey": "productManager",
+    "location": "ירושלים",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "mid",
+    "summary": "ניהול מוצר גיוס המשמש מאות מנהלי משאבי אנוש.",
+    "description": "ב-Tandem HQ אנחנו בונים מערכת גיוס שמשמשת צוותי HR בארגונים בינוניים. אנחנו מחפשים מנהל/ת מוצר שיודע/ת לעבוד מול משתמשים אמיתיים ולא רק מול דשבורדים.",
+    "responsibilities": [
+      "הובלת מפת הדרכים של מודול הגיוס",
+      "ראיונות משתמשים שוטפים והפיכתם לדרישות מוצר",
+      "עבודה יומיומית מול צוותי פיתוח ועיצוב",
+      "הגדרת מדדי הצלחה ומעקב אחריהם"
+    ],
+    "requirements": [
+      "שנתיים ומעלה בניהול מוצר B2B",
+      "ניסיון בעבודה עם צוותי פיתוח בשיטות אג׳יליות",
+      "יכולת כתיבה ותקשורת ברמה גבוהה",
+      "עברית ואנגלית ברמה גבוהה"
+    ],
+    "niceToHave": [
+      "רקע ב-HR Tech",
+      "היכרות עם SQL",
+      "ניסיון בעבודה מול לקוחות אנטרפרייז"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-productstrategy",
+        "name": "Product Strategy"
+      },
+      {
+        "skillId": "sk-agile",
+        "name": "Agile"
+      },
+      {
+        "skillId": "sk-userresearch",
+        "name": "User Research"
+      },
+      {
+        "skillId": "sk-jira",
+        "name": "Jira"
+      }
+    ],
+    "source": "comeet",
+    "externalUrl": "https://example.com/jobs/tandemhq-pm",
+    "isPromoted": false,
+    "applicantsCount": 39,
+    "contentLanguage": "he",
+    "id": "job-007",
+    "companyId": "co-tandemhq",
+    "postedDaysAgo": 7,
+    "salary": {
+      "min": 23000,
+      "max": 30000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Senior Frontend Engineer",
+    "roleKey": "frontend",
+    "location": "Tel Aviv",
+    "remoteMode": "remote",
+    "jobType": "fullTime",
+    "seniority": "senior",
+    "summary": "Design-system and performance work on an AI platform console.",
+    "description": "Verdant AI is building the console engineers use to run model pipelines. The surface is dense, stateful and heavily keyboard-driven, so component architecture and accessibility are first-order concerns rather than polish.",
+    "responsibilities": [
+      "Own the shared component library and its accessibility posture",
+      "Drive rendering performance on data-dense screens",
+      "Define frontend architecture standards across teams",
+      "Mentor mid-level engineers through code review"
+    ],
+    "requirements": [
+      "5+ years frontend, with real design-system ownership",
+      "Expert React and TypeScript",
+      "Demonstrated accessibility work to WCAG AA",
+      "Strong CSS architecture skills"
+    ],
+    "niceToHave": [
+      "Data-visualisation experience",
+      "RTL/i18n work",
+      "Open-source maintenance"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-react",
+        "name": "React"
+      },
+      {
+        "skillId": "sk-ts",
+        "name": "TypeScript"
+      },
+      {
+        "skillId": "sk-a11y",
+        "name": "Accessibility"
+      },
+      {
+        "skillId": "sk-graphql",
+        "name": "GraphQL"
+      },
+      {
+        "skillId": "sk-nextjs",
+        "name": "Next.js"
+      },
+      {
+        "skillId": "sk-mentoring",
+        "name": "Mentoring"
+      }
+    ],
+    "source": "linkedin",
+    "externalUrl": "https://example.com/jobs/verdantai-senior-frontend",
+    "isPromoted": false,
+    "applicantsCount": 55,
+    "contentLanguage": "en",
+    "id": "job-008",
+    "companyId": "co-verdantai",
+    "postedDaysAgo": 3,
+    "salary": {
+      "min": 30000,
+      "max": 39000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Frontend Engineer, Design System",
+    "roleKey": "frontend",
+    "location": "Tel Aviv",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "mid",
+    "summary": "Own the component library used by every product team.",
+    "description": "The design system is the surface every other team builds on. You will own its components, its documentation and its accessibility posture, working directly with two designers.",
+    "responsibilities": [
+      "Build and maintain shared React components",
+      "Keep the library accessible to WCAG AA",
+      "Write the documentation engineers actually read",
+      "Review usage across product teams"
+    ],
+    "requirements": [
+      "3+ years frontend engineering",
+      "Strong React and TypeScript",
+      "Real CSS architecture skills",
+      "Care about accessibility"
+    ],
+    "niceToHave": [
+      "Storybook",
+      "Design tooling",
+      "Figma literacy"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-react",
+        "name": "React"
+      },
+      {
+        "skillId": "sk-ts",
+        "name": "TypeScript"
+      },
+      {
+        "skillId": "sk-a11y",
+        "name": "Accessibility"
+      },
+      {
+        "skillId": "sk-figma",
+        "name": "Figma"
+      },
+      {
+        "skillId": "sk-git",
+        "name": "Git"
+      }
+    ],
+    "source": "company",
+    "externalUrl": "https://example.com/jobs/verdant-design-system",
+    "isPromoted": false,
+    "applicantsCount": 22,
+    "contentLanguage": "en",
+    "id": "job-009",
+    "companyId": "co-verdantai",
+    "postedDaysAgo": 1,
+    "salary": {
+      "min": 25000,
+      "max": 32000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Senior Backend Engineer",
+    "roleKey": "backend",
+    "location": "Tel Aviv",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "senior",
+    "summary": "Query engine work on a real-time analytics product.",
+    "description": "PulseMetric ingests millions of events an hour and has to answer arbitrary queries over them in under a second. This role sits on the query path.",
+    "responsibilities": [
+      "Design and optimise the query execution path",
+      "Own data modelling for time-series workloads",
+      "Profile and remove performance bottlenecks",
+      "Mentor mid-level engineers"
+    ],
+    "requirements": [
+      "5+ years backend engineering",
+      "Deep SQL and query optimisation",
+      "Python or Go in production",
+      "Experience with high-volume data"
+    ],
+    "niceToHave": [
+      "ClickHouse or similar",
+      "Kafka",
+      "Query planner internals"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-python",
+        "name": "Python"
+      },
+      {
+        "skillId": "sk-sql",
+        "name": "SQL"
+      },
+      {
+        "skillId": "sk-postgres",
+        "name": "PostgreSQL"
+      },
+      {
+        "skillId": "sk-kafka",
+        "name": "Kafka"
+      },
+      {
+        "skillId": "sk-redis",
+        "name": "Redis"
+      }
+    ],
+    "source": "linkedin",
+    "externalUrl": "https://example.com/jobs/pulsemetric-senior-backend",
+    "isPromoted": false,
+    "applicantsCount": 44,
+    "contentLanguage": "en",
+    "id": "job-010",
+    "companyId": "co-pulsemetric",
+    "postedDaysAgo": 6,
+    "salary": {
+      "min": 31000,
+      "max": 40000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "מהנדס/ת DevOps",
+    "roleKey": "devops",
+    "location": "רמת גן",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "mid",
+    "summary": "תשתיות ענן למערכת לוגיסטיקה בזמן אמת.",
+    "description": "ב-Driftly אנחנו מפעילים מערכת שמחברת מובילים ומשלחים בזמן אמת. התשתית צריכה להיות זמינה תמיד, וזה בדיוק התפקיד.",
+    "responsibilities": [
+      "תחזוקה ושדרוג של קלאסטרים ב-Kubernetes",
+      "בניית פייפליינים ל-CI/CD",
+      "ניטור והתראות על מערכות הפרודקשן",
+      "אוטומציה של תהליכי פריסה"
+    ],
+    "requirements": [
+      "שלוש שנות ניסיון ומעלה ב-DevOps",
+      "ניסיון מעשי ב-Kubernetes ו-Docker",
+      "היכרות עם AWS או GCP",
+      "שליטה ב-Bash או Python"
+    ],
+    "niceToHave": [
+      "Terraform",
+      "Prometheus ו-Grafana",
+      "ניסיון במערכות בזמן אמת"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-k8s",
+        "name": "Kubernetes"
+      },
+      {
+        "skillId": "sk-docker",
+        "name": "Docker"
+      },
+      {
+        "skillId": "sk-aws",
+        "name": "AWS"
+      },
+      {
+        "skillId": "sk-bash",
+        "name": "Bash"
+      },
+      {
+        "skillId": "sk-cicd",
+        "name": "CI/CD"
+      },
+      {
+        "skillId": "sk-jenkins",
+        "name": "Jenkins"
+      }
+    ],
+    "source": "comeet",
+    "externalUrl": "https://example.com/jobs/driftly-devops",
+    "isPromoted": false,
+    "applicantsCount": 31,
+    "contentLanguage": "he",
+    "id": "job-011",
+    "companyId": "co-driftly",
+    "postedDaysAgo": 3,
+    "salary": {
+      "min": 24000,
+      "max": 31000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Junior Frontend Developer",
+    "roleKey": "frontend",
+    "location": "Herzliya",
+    "remoteMode": "onsite",
+    "jobType": "fullTime",
+    "seniority": "junior",
+    "summary": "First frontend role on a regulated fintech product.",
+    "description": "You will join a team of four building the dashboards compliance officers use every day. Expect a lot of code review and a lot of learning.",
+    "responsibilities": [
+      "Build UI features in React and TypeScript",
+      "Fix bugs reported by internal users",
+      "Write component tests",
+      "Learn the domain from the people who know it"
+    ],
+    "requirements": [
+      "Some professional experience or a strong portfolio",
+      "JavaScript fundamentals",
+      "Basic React",
+      "Willingness to work onsite"
+    ],
+    "niceToHave": [
+      "TypeScript",
+      "Testing Library",
+      "Fintech curiosity"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-js",
+        "name": "JavaScript"
+      },
+      {
+        "skillId": "sk-react",
+        "name": "React"
+      },
+      {
+        "skillId": "sk-git",
+        "name": "Git"
+      },
+      {
+        "skillId": "sk-communication",
+        "name": "Communication"
+      }
+    ],
+    "source": "greenhouse",
+    "externalUrl": "https://example.com/jobs/safeledger-junior-frontend",
+    "isPromoted": false,
+    "applicantsCount": 118,
+    "contentLanguage": "en",
+    "id": "job-012",
+    "companyId": "co-safeledger",
+    "postedDaysAgo": 11,
+    "salary": {
+      "min": 15000,
+      "max": 20000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Full Stack Engineer",
+    "roleKey": "fullstack",
+    "location": "Remote (Israel)",
+    "remoteMode": "remote",
+    "jobType": "fullTime",
+    "seniority": "mid",
+    "summary": "Developer tooling, end to end, at a small company.",
+    "description": "Twenty-two people, one product, no handoffs. You will design a feature, build the API, build the UI and ship it yourself.",
+    "responsibilities": [
+      "Ship features across Node services and a React client",
+      "Own features from spec to production",
+      "Support the users, who are engineers like you",
+      "Keep the test suite meaningful"
+    ],
+    "requirements": [
+      "3+ years across frontend and backend",
+      "TypeScript on both sides",
+      "Comfortable owning a feature alone",
+      "Good written communication for a remote team"
+    ],
+    "niceToHave": [
+      "Go",
+      "CLI design",
+      "Open-source work"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-ts",
+        "name": "TypeScript"
+      },
+      {
+        "skillId": "sk-node",
+        "name": "Node.js"
+      },
+      {
+        "skillId": "sk-react",
+        "name": "React"
+      },
+      {
+        "skillId": "sk-postgres",
+        "name": "PostgreSQL"
+      },
+      {
+        "skillId": "sk-docker",
+        "name": "Docker"
+      },
+      {
+        "skillId": "sk-git",
+        "name": "Git"
+      }
+    ],
+    "source": "company",
+    "externalUrl": "https://example.com/jobs/kernelworks-fullstack",
+    "isPromoted": true,
+    "applicantsCount": 29,
+    "contentLanguage": "en",
+    "id": "job-013",
+    "companyId": "co-kernelworks",
+    "postedDaysAgo": 2,
+    "salary": {
+      "min": 26000,
+      "max": 33000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "מנהל/ת מוצר קליני",
+    "roleKey": "productManager",
+    "location": "חיפה",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "senior",
+    "summary": "ניהול מוצר מול צוותים רפואיים במרפאות.",
+    "description": "המוצר משמש מרפאות אמיתיות עם מטופלים אמיתיים. תצטרכו לשבת מול רופאים ואחיות, להבין את העבודה שלהם, ולתרגם אותה למוצר.",
+    "responsibilities": [
+      "הובלת מפת הדרכים של המוצר הקליני",
+      "עבודה שוטפת מול צוותים רפואיים",
+      "הגדרת דרישות מוצר ומדדי הצלחה",
+      "ניהול מחזור חיים של פיצ׳רים מקצה לקצה"
+    ],
+    "requirements": [
+      "ארבע שנות ניסיון ומעלה בניהול מוצר",
+      "ניסיון בעבודה מול משתמשים מקצועיים",
+      "יכולת לתרגם צרכים מורכבים לדרישות ברורות",
+      "עברית ואנגלית ברמה גבוהה"
+    ],
+    "niceToHave": [
+      "רקע רפואי או Health Tech",
+      "היכרות עם רגולציה",
+      "SQL"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-productstrategy",
+        "name": "Product Strategy"
+      },
+      {
+        "skillId": "sk-userresearch",
+        "name": "User Research"
+      },
+      {
+        "skillId": "sk-roadmapping",
+        "name": "Roadmapping"
+      },
+      {
+        "skillId": "sk-agile",
+        "name": "Agile"
+      },
+      {
+        "skillId": "sk-jira",
+        "name": "Jira"
+      }
+    ],
+    "source": "linkedin",
+    "externalUrl": "https://example.com/jobs/orbitcare-clinical-pm",
+    "isPromoted": false,
+    "applicantsCount": 26,
+    "contentLanguage": "he",
+    "id": "job-014",
+    "companyId": "co-orbitcare",
+    "postedDaysAgo": 8,
+    "salary": {
+      "min": 29000,
+      "max": 37000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Site Reliability Engineer",
+    "roleKey": "devops",
+    "location": "Tel Aviv",
+    "remoteMode": "remote",
+    "jobType": "fullTime",
+    "seniority": "lead",
+    "summary": "Set the reliability bar for a multi-region platform.",
+    "description": "This is a leadership role without direct reports. You will define SLOs, run the incident process, and decide where reliability work goes next.",
+    "responsibilities": [
+      "Define and own service level objectives",
+      "Lead the incident and postmortem process",
+      "Drive reliability work across product teams",
+      "Build the observability stack others depend on"
+    ],
+    "requirements": [
+      "7+ years in SRE or platform engineering",
+      "Deep Kubernetes and cloud networking",
+      "Track record leading incident response",
+      "Strong written communication"
+    ],
+    "niceToHave": [
+      "Go",
+      "Chaos engineering",
+      "Public speaking"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-k8s",
+        "name": "Kubernetes"
+      },
+      {
+        "skillId": "sk-prometheus",
+        "name": "Prometheus"
+      },
+      {
+        "skillId": "sk-grafana",
+        "name": "Grafana"
+      },
+      {
+        "skillId": "sk-terraform",
+        "name": "Terraform"
+      },
+      {
+        "skillId": "sk-aws",
+        "name": "AWS"
+      },
+      {
+        "skillId": "sk-go",
+        "name": "Go"
+      },
+      {
+        "skillId": "sk-ownership",
+        "name": "Ownership"
+      }
+    ],
+    "source": "linkedin",
+    "externalUrl": "https://example.com/jobs/nimbus-sre-lead",
+    "isPromoted": false,
+    "applicantsCount": 19,
+    "contentLanguage": "en",
+    "id": "job-015",
+    "companyId": "co-nimbus",
+    "postedDaysAgo": 4,
+    "salary": {
+      "min": 40000,
+      "max": 50000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Frontend Developer (Part Time)",
+    "roleKey": "frontend",
+    "location": "Jerusalem",
+    "remoteMode": "remote",
+    "jobType": "partTime",
+    "seniority": "mid",
+    "summary": "Part-time React work on an HR platform.",
+    "description": "Three days a week, fully remote. The work is steady feature development on an established React codebase rather than greenfield.",
+    "responsibilities": [
+      "Build features in an existing React application",
+      "Improve accessibility across the product",
+      "Work asynchronously with a small team"
+    ],
+    "requirements": [
+      "3+ years React",
+      "TypeScript",
+      "Comfortable with asynchronous collaboration"
+    ],
+    "niceToHave": [
+      "RTL and i18n experience",
+      "HR tech background"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-react",
+        "name": "React"
+      },
+      {
+        "skillId": "sk-ts",
+        "name": "TypeScript"
+      },
+      {
+        "skillId": "sk-a11y",
+        "name": "Accessibility"
+      },
+      {
+        "skillId": "sk-git",
+        "name": "Git"
+      }
+    ],
+    "source": "comeet",
+    "externalUrl": "https://example.com/jobs/tandem-frontend-parttime",
+    "isPromoted": false,
+    "applicantsCount": 37,
+    "contentLanguage": "en",
+    "id": "job-016",
+    "companyId": "co-tandemhq",
+    "postedDaysAgo": 5,
+    "salary": {
+      "min": 12000,
+      "max": 17000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Data Engineer",
+    "roleKey": "data",
+    "location": "Tel Aviv",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "senior",
+    "summary": "Build the pipelines feeding a model platform.",
+    "description": "Every model on the platform is only as good as the data reaching it. You will own the pipelines, the quality checks and the contracts between teams.",
+    "responsibilities": [
+      "Design and operate batch and streaming pipelines",
+      "Own data quality checks and alerting",
+      "Define schema contracts with consuming teams",
+      "Keep pipeline costs under control"
+    ],
+    "requirements": [
+      "5+ years data engineering",
+      "Strong Python and SQL",
+      "Streaming experience with Kafka or similar",
+      "Cloud data warehouse experience"
+    ],
+    "niceToHave": [
+      "dbt",
+      "Airflow",
+      "ML platform exposure"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-python",
+        "name": "Python"
+      },
+      {
+        "skillId": "sk-sql",
+        "name": "SQL"
+      },
+      {
+        "skillId": "sk-kafka",
+        "name": "Kafka"
+      },
+      {
+        "skillId": "sk-gcp",
+        "name": "GCP"
+      },
+      {
+        "skillId": "sk-docker",
+        "name": "Docker"
+      }
+    ],
+    "source": "greenhouse",
+    "externalUrl": "https://example.com/jobs/verdant-data-engineer",
+    "isPromoted": false,
+    "applicantsCount": 41,
+    "contentLanguage": "en",
+    "id": "job-017",
+    "companyId": "co-verdantai",
+    "postedDaysAgo": 10,
+    "salary": {
+      "min": 32000,
+      "max": 41000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "מפתח/ת Full Stack",
+    "roleKey": "fullstack",
+    "location": "תל אביב",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "senior",
+    "summary": "פיתוח מקצה לקצה במוצר אנליטיקה.",
+    "description": "התפקיד נוגע בכל השכבות: ממשק המשתמש, שכבת ה-API, והמודל שמאחוריהם. אנחנו מחפשים מישהו/י שנוח לו לנוע בין כולן.",
+    "responsibilities": [
+      "פיתוח פיצ׳רים מקצה לקצה ב-React ו-Node",
+      "תכנון סכמות נתונים ושאילתות",
+      "שיפור ביצועים בצד השרת ובצד הלקוח",
+      "ליווי מפתחים זוטרים"
+    ],
+    "requirements": [
+      "חמש שנות ניסיון ומעלה בפיתוח",
+      "שליטה ב-TypeScript",
+      "ניסיון עם React ו-Node.js",
+      "הבנה טובה של בסיסי נתונים יחסיים"
+    ],
+    "niceToHave": [
+      "GraphQL",
+      "ניסיון באנליטיקה",
+      "Docker"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-ts",
+        "name": "TypeScript"
+      },
+      {
+        "skillId": "sk-react",
+        "name": "React"
+      },
+      {
+        "skillId": "sk-node",
+        "name": "Node.js"
+      },
+      {
+        "skillId": "sk-postgres",
+        "name": "PostgreSQL"
+      },
+      {
+        "skillId": "sk-graphql",
+        "name": "GraphQL"
+      },
+      {
+        "skillId": "sk-docker",
+        "name": "Docker"
+      }
+    ],
+    "source": "company",
+    "externalUrl": "https://example.com/jobs/pulsemetric-fullstack",
+    "isPromoted": false,
+    "applicantsCount": 24,
+    "contentLanguage": "he",
+    "id": "job-018",
+    "companyId": "co-pulsemetric",
+    "postedDaysAgo": 2,
+    "salary": {
+      "min": 30000,
+      "max": 38000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Backend Engineer (Node.js)",
+    "roleKey": "backend",
+    "location": "Remote (Israel)",
+    "remoteMode": "remote",
+    "jobType": "fullTime",
+    "seniority": "mid",
+    "summary": "API work on a developer tooling platform.",
+    "description": "The API is used by other engineers, which raises the bar for consistency and error messages. Expect a lot of thought about interface design.",
+    "responsibilities": [
+      "Design and build REST and GraphQL endpoints",
+      "Keep the API contract stable and well documented",
+      "Improve error handling and observability"
+    ],
+    "requirements": [
+      "3+ years backend with Node.js",
+      "TypeScript",
+      "API design experience",
+      "PostgreSQL"
+    ],
+    "niceToHave": [
+      "GraphQL",
+      "OpenAPI",
+      "Developer tooling background"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-node",
+        "name": "Node.js"
+      },
+      {
+        "skillId": "sk-ts",
+        "name": "TypeScript"
+      },
+      {
+        "skillId": "sk-postgres",
+        "name": "PostgreSQL"
+      },
+      {
+        "skillId": "sk-graphql",
+        "name": "GraphQL"
+      },
+      {
+        "skillId": "sk-docker",
+        "name": "Docker"
+      }
+    ],
+    "source": "company",
+    "externalUrl": "https://example.com/jobs/kernelworks-backend-node",
+    "isPromoted": false,
+    "applicantsCount": 16,
+    "contentLanguage": "en",
+    "id": "job-019",
+    "companyId": "co-kernelworks",
+    "postedDaysAgo": 1,
+    "salary": {
+      "min": 25000,
+      "max": 32000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Student Software Developer",
+    "roleKey": "fullstack",
+    "location": "Ramat Gan",
+    "remoteMode": "hybrid",
+    "jobType": "student",
+    "seniority": "junior",
+    "summary": "Part-time development role alongside your degree.",
+    "description": "Two to three days a week during term. You will work on internal tools with a mentor, not on the critical path, which means room to learn.",
+    "responsibilities": [
+      "Build internal tools with guidance",
+      "Fix bugs in the admin interface",
+      "Write tests for what you ship"
+    ],
+    "requirements": [
+      "Currently studying computer science or similar",
+      "JavaScript fundamentals",
+      "Available 2-3 days a week"
+    ],
+    "niceToHave": [
+      "React",
+      "Git experience",
+      "Personal projects"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-js",
+        "name": "JavaScript"
+      },
+      {
+        "skillId": "sk-git",
+        "name": "Git"
+      },
+      {
+        "skillId": "sk-communication",
+        "name": "Communication"
+      }
+    ],
+    "source": "comeet",
+    "externalUrl": "https://example.com/jobs/driftly-student-dev",
+    "isPromoted": false,
+    "applicantsCount": 156,
+    "contentLanguage": "en",
+    "id": "job-020",
+    "companyId": "co-driftly",
+    "postedDaysAgo": 13,
+    "salary": {
+      "min": 8000,
+      "max": 12000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Principal Backend Architect",
+    "roleKey": "backend",
+    "location": "Herzliya",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "principal",
+    "summary": "Own the architecture of a regulated payments platform.",
+    "description": "A principal role with real scope: you will set the architectural direction for a platform moving money under regulatory scrutiny, and be accountable for it.",
+    "responsibilities": [
+      "Set architectural direction across backend teams",
+      "Own the hardest correctness and consistency decisions",
+      "Partner with compliance and security",
+      "Grow senior engineers into architects"
+    ],
+    "requirements": [
+      "10+ years backend engineering",
+      "Distributed systems at scale",
+      "Regulated or financial systems experience",
+      "Demonstrated technical leadership"
+    ],
+    "niceToHave": [
+      "Go",
+      "Formal methods",
+      "Public technical writing"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-go",
+        "name": "Go"
+      },
+      {
+        "skillId": "sk-microservices",
+        "name": "Microservices"
+      },
+      {
+        "skillId": "sk-postgres",
+        "name": "PostgreSQL"
+      },
+      {
+        "skillId": "sk-kafka",
+        "name": "Kafka"
+      },
+      {
+        "skillId": "sk-k8s",
+        "name": "Kubernetes"
+      },
+      {
+        "skillId": "sk-mentoring",
+        "name": "Mentoring"
+      },
+      {
+        "skillId": "sk-ownership",
+        "name": "Ownership"
+      }
+    ],
+    "source": "linkedin",
+    "externalUrl": "https://example.com/jobs/safeledger-principal-architect",
+    "isPromoted": true,
+    "applicantsCount": 12,
+    "contentLanguage": "en",
+    "id": "job-021",
+    "companyId": "co-safeledger",
+    "postedDaysAgo": 16,
+    "salary": {
+      "min": 48000,
+      "max": 62000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Frontend Engineer",
+    "roleKey": "frontend",
+    "location": "Haifa",
+    "remoteMode": "hybrid",
+    "jobType": "contract",
+    "seniority": "senior",
+    "summary": "Six-month contract rebuilding the scheduling interface.",
+    "description": "A defined piece of work with a clear end: rebuild the scheduling interface that clinics use daily. Extension is possible but not promised.",
+    "responsibilities": [
+      "Rebuild the scheduling UI in React",
+      "Improve performance on low-end clinic hardware",
+      "Hand over cleanly at the end of the contract"
+    ],
+    "requirements": [
+      "5+ years frontend",
+      "React and TypeScript",
+      "Performance optimisation experience",
+      "Available for a six-month engagement"
+    ],
+    "niceToHave": [
+      "Health tech",
+      "Accessibility",
+      "Hebrew"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-react",
+        "name": "React"
+      },
+      {
+        "skillId": "sk-ts",
+        "name": "TypeScript"
+      },
+      {
+        "skillId": "sk-redux",
+        "name": "Redux"
+      },
+      {
+        "skillId": "sk-a11y",
+        "name": "Accessibility"
+      }
+    ],
+    "source": "company",
+    "externalUrl": "https://example.com/jobs/orbitcare-frontend-contract",
+    "isPromoted": false,
+    "applicantsCount": 20,
+    "contentLanguage": "en",
+    "id": "job-022",
+    "companyId": "co-orbitcare",
+    "postedDaysAgo": 7,
+    "salary": {
+      "min": 33000,
+      "max": 42000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "DevOps Intern",
+    "roleKey": "devops",
+    "location": "Jerusalem",
+    "remoteMode": "onsite",
+    "jobType": "internship",
+    "seniority": "junior",
+    "summary": "Six-month internship on the infrastructure team.",
+    "description": "A structured internship with a named mentor. You will not be on call, and you will not be left alone with production.",
+    "responsibilities": [
+      "Automate repetitive infrastructure tasks",
+      "Help maintain CI pipelines",
+      "Document what you learn"
+    ],
+    "requirements": [
+      "Studying computer science or equivalent",
+      "Linux fundamentals",
+      "Some scripting experience"
+    ],
+    "niceToHave": [
+      "Docker",
+      "Any cloud exposure",
+      "Git"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-bash",
+        "name": "Bash"
+      },
+      {
+        "skillId": "sk-git",
+        "name": "Git"
+      },
+      {
+        "skillId": "sk-docker",
+        "name": "Docker"
+      }
+    ],
+    "source": "comeet",
+    "externalUrl": "https://example.com/jobs/tandem-devops-intern",
+    "isPromoted": false,
+    "applicantsCount": 94,
+    "contentLanguage": "en",
+    "id": "job-023",
+    "companyId": "co-tandemhq",
+    "postedDaysAgo": 20,
+    "salary": {
+      "min": 7000,
+      "max": 10000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "מנהל/ת מוצר תשתיות",
+    "roleKey": "productManager",
+    "location": "תל אביב",
+    "remoteMode": "remote",
+    "jobType": "fullTime",
+    "seniority": "lead",
+    "summary": "ניהול מוצר לפלטפורמת ענן שמשמשת מפתחים.",
+    "description": "המשתמשים שלכם הם מהנדסים, מה שאומר שאי אפשר להסתתר מאחורי סלוגנים. צריך להבין את המוצר לעומק ולדבר בשפה שלהם.",
+    "responsibilities": [
+      "הובלת אסטרטגיית המוצר לפלטפורמת התשתיות",
+      "עבודה צמודה עם צוותי הנדסה",
+      "תעדוף מול צרכים מתחרים של לקוחות פנימיים",
+      "הגדרת מדדים והצגתם להנהלה"
+    ],
+    "requirements": [
+      "שש שנות ניסיון ומעלה בניהול מוצר",
+      "ניסיון במוצרי תשתית או מוצרים למפתחים",
+      "רקע טכני שמאפשר שיחה עם מהנדסים",
+      "אנגלית ברמה גבוהה"
+    ],
+    "niceToHave": [
+      "רקע בהנדסה",
+      "היכרות עם Kubernetes",
+      "ניסיון ב-B2B"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-productstrategy",
+        "name": "Product Strategy"
+      },
+      {
+        "skillId": "sk-roadmapping",
+        "name": "Roadmapping"
+      },
+      {
+        "skillId": "sk-agile",
+        "name": "Agile"
+      },
+      {
+        "skillId": "sk-k8s",
+        "name": "Kubernetes"
+      },
+      {
+        "skillId": "sk-ownership",
+        "name": "Ownership"
+      }
+    ],
+    "source": "linkedin",
+    "externalUrl": "https://example.com/jobs/nimbus-platform-pm",
+    "isPromoted": false,
+    "applicantsCount": 18,
+    "contentLanguage": "he",
+    "id": "job-024",
+    "companyId": "co-nimbus",
+    "postedDaysAgo": 9,
+    "salary": {
+      "min": 38000,
+      "max": 47000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Enterprise Account Executive",
+    "roleKey": "sales",
+    "location": "Tel Aviv",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "senior",
+    "summary": "Close six-figure deals with banks and insurers across EMEA.",
+    "description": "SafeLedger sells compliance infrastructure to regulated finance. Deals are long, technical and committee-driven. You will own named enterprise accounts end to end, from first outbound touch to signed contract, with a solutions engineer alongside you. Base plus uncapped commission, OTE roughly double base.",
+    "responsibilities": [
+      "Own the full sales cycle for named enterprise accounts",
+      "Build pipeline through outbound prospecting, not just inbound leads",
+      "Run commercial and contract negotiation alongside legal",
+      "Forecast accurately and keep the CRM current"
+    ],
+    "requirements": [
+      "5+ years closing B2B SaaS deals, enterprise segment",
+      "Track record of quota attainment you can talk through",
+      "Comfortable selling to compliance and risk stakeholders",
+      "Fluent English and Hebrew"
+    ],
+    "niceToHave": [
+      "Fintech or regtech background",
+      "MEDDIC or Command of the Message",
+      "EMEA territory experience"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-b2b",
+        "name": "B2B Sales"
+      },
+      {
+        "skillId": "sk-closing",
+        "name": "Deal Closing"
+      },
+      {
+        "skillId": "sk-negotiation",
+        "name": "Negotiation"
+      },
+      {
+        "skillId": "sk-pipeline",
+        "name": "Pipeline Management"
+      },
+      {
+        "skillId": "sk-salesforce",
+        "name": "Salesforce"
+      },
+      {
+        "skillId": "sk-forecasting",
+        "name": "Forecasting"
+      },
+      {
+        "skillId": "sk-quota",
+        "name": "Quota Attainment"
+      }
+    ],
+    "source": "company",
+    "externalUrl": "https://example.com/jobs/safeledger-enterprise-ae",
+    "isPromoted": true,
+    "applicantsCount": 31,
+    "contentLanguage": "en",
+    "id": "job-025",
+    "companyId": "co-safeledger",
+    "postedDaysAgo": 2,
+    "salary": {
+      "min": 28000,
+      "max": 36000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "נציג/ת פיתוח עסקי (SDR)",
+    "roleKey": "sales",
+    "location": "תל אביב",
+    "remoteMode": "onsite",
+    "jobType": "fullTime",
+    "seniority": "junior",
+    "summary": "בניית פייפליין לצוות המכירות דרך פנייה יזומה.",
+    "description": "Driftly מוכרת תוכנה לניהול צי רכב לחברות לוגיסטיקה. התפקיד הוא הכניסה לעולם המכירות: פנייה יזומה, סינון לידים והעברת פגישות איכותיות לסוכני השטח. יש תוכנית הכשרה מסודרת ומסלול קידום ברור ל-AE תוך שנה עד שנתיים.",
+    "responsibilities": [
+      "פנייה יזומה בטלפון ובאימייל ליעדים מוגדרים",
+      "סינון לידים נכנסים לפי קריטריונים מוסכמים",
+      "קביעת פגישות עבור סוכני השטח",
+      "תיעוד מלא ומדויק ב-CRM"
+    ],
+    "requirements": [
+      "שנה ניסיון בפנייה יזומה או שירות לקוחות",
+      "עברית ואנגלית ברמה גבוהה",
+      "עמידה ביעדים שבועיים"
+    ],
+    "niceToHave": [
+      "ניסיון ב-HubSpot",
+      "רקע בלוגיסטיקה"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-outreach",
+        "name": "Outbound Prospecting"
+      },
+      {
+        "skillId": "sk-leadgen",
+        "name": "Lead Generation"
+      },
+      {
+        "skillId": "sk-crm",
+        "name": "CRM"
+      },
+      {
+        "skillId": "sk-communication",
+        "name": "Communication"
+      }
+    ],
+    "source": "comeet",
+    "externalUrl": "https://example.com/jobs/driftly-sdr",
+    "isPromoted": false,
+    "applicantsCount": 47,
+    "contentLanguage": "he",
+    "id": "job-026",
+    "companyId": "co-driftly",
+    "postedDaysAgo": 4,
+    "salary": {
+      "min": 12000,
+      "max": 16000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Account Manager, Mid-Market",
+    "roleKey": "sales",
+    "location": "Herzliya",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "mid",
+    "summary": "Grow and retain a book of 40 mid-market accounts.",
+    "description": "Tandem HQ sells HR software to companies between 100 and 1000 people. This role is retention and expansion rather than new logos: quarterly business reviews, renewal negotiation, and finding the upsell before the customer asks.",
+    "responsibilities": [
+      "Own renewals and expansion across a named book of accounts",
+      "Run quarterly business reviews with customer stakeholders",
+      "Spot churn risk early and act on it",
+      "Forecast renewal revenue each quarter"
+    ],
+    "requirements": [
+      "3+ years in account management or customer success with a number",
+      "Comfortable owning a revenue target",
+      "Strong stakeholder management"
+    ],
+    "niceToHave": [
+      "HR tech background",
+      "Salesforce reporting"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-accountmgmt",
+        "name": "Account Management"
+      },
+      {
+        "skillId": "sk-stakeholder",
+        "name": "Stakeholder Management"
+      },
+      {
+        "skillId": "sk-forecasting",
+        "name": "Forecasting"
+      },
+      {
+        "skillId": "sk-negotiation",
+        "name": "Negotiation"
+      },
+      {
+        "skillId": "sk-crm",
+        "name": "CRM"
+      }
+    ],
+    "source": "linkedin",
+    "externalUrl": "https://example.com/jobs/tandem-account-manager",
+    "isPromoted": false,
+    "applicantsCount": 24,
+    "contentLanguage": "en",
+    "id": "job-027",
+    "companyId": "co-tandemhq",
+    "postedDaysAgo": 6,
+    "salary": {
+      "min": 20000,
+      "max": 26000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Sales Manager",
+    "roleKey": "sales",
+    "location": "Tel Aviv",
+    "remoteMode": "onsite",
+    "jobType": "fullTime",
+    "seniority": "lead",
+    "summary": "Lead a team of six AEs selling analytics to product teams.",
+    "description": "PulseMetric is past product-market fit and scaling the commercial org. You will own the number for a team of six, coach on deal strategy, and build the forecasting discipline the company currently lacks.",
+    "responsibilities": [
+      "Own the team quota and the forecast that supports it",
+      "Coach AEs through live deals rather than reviewing them after",
+      "Hire and onboard as the team grows",
+      "Design territory and account allocation"
+    ],
+    "requirements": [
+      "2+ years managing a quota-carrying sales team",
+      "Personal track record closing B2B SaaS before managing",
+      "Rigour about pipeline hygiene and forecast accuracy"
+    ],
+    "niceToHave": [
+      "Analytics or developer-tools background",
+      "Experience scaling a team past ten"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-b2b",
+        "name": "B2B Sales"
+      },
+      {
+        "skillId": "sk-forecasting",
+        "name": "Forecasting"
+      },
+      {
+        "skillId": "sk-territory",
+        "name": "Territory Planning"
+      },
+      {
+        "skillId": "sk-pipeline",
+        "name": "Pipeline Management"
+      },
+      {
+        "skillId": "sk-mentoring",
+        "name": "Mentoring"
+      },
+      {
+        "skillId": "sk-quota",
+        "name": "Quota Attainment"
+      }
+    ],
+    "source": "company",
+    "externalUrl": "https://example.com/jobs/pulsemetric-sales-manager",
+    "isPromoted": false,
+    "applicantsCount": 19,
+    "contentLanguage": "en",
+    "id": "job-028",
+    "companyId": "co-pulsemetric",
+    "postedDaysAgo": 9,
+    "salary": {
+      "min": 34000,
+      "max": 44000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Developer Tools Sales Representative",
+    "roleKey": "sales",
+    "location": "Remote (Israel)",
+    "remoteMode": "remote",
+    "jobType": "fullTime",
+    "seniority": "mid",
+    "summary": "Sell to engineering leaders who dislike being sold to.",
+    "description": "KernelWorks sells build tooling to platform teams. The buyer is technical and allergic to conventional sales motion, so this role leans on product demos and credibility rather than pressure. You will work closely with the founders.",
+    "responsibilities": [
+      "Run product demos for engineering leaders",
+      "Convert self-serve accounts into team contracts",
+      "Feed product gaps back to engineering with evidence",
+      "Keep pipeline and forecast honest in the CRM"
+    ],
+    "requirements": [
+      "2+ years selling technical products",
+      "Able to hold a credible conversation with engineers",
+      "Comfortable with a short, high-volume cycle"
+    ],
+    "niceToHave": [
+      "Developer tools or infrastructure background",
+      "Technical enough to run your own demo"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-presentation",
+        "name": "Presentation"
+      },
+      {
+        "skillId": "sk-b2b",
+        "name": "B2B Sales"
+      },
+      {
+        "skillId": "sk-pipeline",
+        "name": "Pipeline Management"
+      },
+      {
+        "skillId": "sk-hubspot",
+        "name": "HubSpot"
+      },
+      {
+        "skillId": "sk-closing",
+        "name": "Deal Closing"
+      }
+    ],
+    "source": "comeet",
+    "externalUrl": "https://example.com/jobs/kernelworks-sales-rep",
+    "isPromoted": false,
+    "applicantsCount": 28,
+    "contentLanguage": "en",
+    "id": "job-029",
+    "companyId": "co-kernelworks",
+    "postedDaysAgo": 3,
+    "salary": {
+      "min": 18000,
+      "max": 24000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "מנהל/ת מכירות ארגוניות",
+    "roleKey": "sales",
+    "location": "חיפה",
+    "remoteMode": "hybrid",
+    "jobType": "fullTime",
+    "seniority": "senior",
+    "summary": "מכירת פתרונות דיגיטליים לקופות חולים ובתי חולים.",
+    "description": "OrbitCare מוכרת מערכות לניהול מטופלים למוסדות רפואיים. מחזורי המכירה ארוכים וכוללים ועדות רכש, אנשי מקצוע רפואיים ומחלקות רגולציה. התפקיד דורש סבלנות, דיוק והיכרות עם מכרזים ציבוריים.",
+    "responsibilities": [
+      "ניהול מחזור מכירה מלא מול מוסדות רפואיים",
+      "מענה למכרזים ותיאום מול גורמי רגולציה",
+      "בניית קשרים ארוכי טווח עם בעלי עניין",
+      "תחזית מכירות רבעונית מדויקת"
+    ],
+    "requirements": [
+      "5 שנות ניסיון במכירות ארגוניות",
+      "ניסיון מול המגזר הציבורי או הרפואי",
+      "עברית ואנגלית ברמת שפת אם"
+    ],
+    "niceToHave": [
+      "ניסיון במכרזים ציבוריים",
+      "רקע בתחום הבריאות"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-b2b",
+        "name": "B2B Sales"
+      },
+      {
+        "skillId": "sk-negotiation",
+        "name": "Negotiation"
+      },
+      {
+        "skillId": "sk-stakeholder",
+        "name": "Stakeholder Management"
+      },
+      {
+        "skillId": "sk-accountmgmt",
+        "name": "Account Management"
+      },
+      {
+        "skillId": "sk-forecasting",
+        "name": "Forecasting"
+      }
+    ],
+    "source": "linkedin",
+    "externalUrl": "https://example.com/jobs/orbitcare-enterprise-sales",
+    "isPromoted": false,
+    "applicantsCount": 16,
+    "contentLanguage": "he",
+    "id": "job-030",
+    "companyId": "co-orbitcare",
+    "postedDaysAgo": 11,
+    "salary": {
+      "min": 26000,
+      "max": 34000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  },
+  {
+    "title": "Sales Development Representative",
+    "roleKey": "sales",
+    "location": "Tel Aviv",
+    "remoteMode": "hybrid",
+    "jobType": "partTime",
+    "seniority": "junior",
+    "summary": "Part-time outbound role, suited to students.",
+    "description": "Verdant AI needs consistent top-of-funnel activity without a full-time hire. Four days a week, mornings, with a defined script and a target list. Genuine progression to full-time for anyone who hits target twice running.",
+    "responsibilities": [
+      "Cold email and cold calling against a defined target list",
+      "Qualify responses and book meetings",
+      "Log every touch in HubSpot"
+    ],
+    "requirements": [
+      "No prior sales experience required",
+      "Clear spoken and written English",
+      "Available four mornings a week"
+    ],
+    "niceToHave": [
+      "Student in a relevant field",
+      "Any customer-facing experience"
+    ],
+    "requiredSkills": [
+      {
+        "skillId": "sk-outreach",
+        "name": "Outbound Prospecting"
+      },
+      {
+        "skillId": "sk-leadgen",
+        "name": "Lead Generation"
+      },
+      {
+        "skillId": "sk-communication",
+        "name": "Communication"
+      },
+      {
+        "skillId": "sk-hubspot",
+        "name": "HubSpot"
+      }
+    ],
+    "source": "comeet",
+    "externalUrl": "https://example.com/jobs/verdant-sdr",
+    "isPromoted": false,
+    "applicantsCount": 52,
+    "contentLanguage": "en",
+    "id": "job-031",
+    "companyId": "co-verdantai",
+    "postedDaysAgo": 1,
+    "salary": {
+      "min": 9000,
+      "max": 12000,
+      "currency": "ILS",
+      "period": "month"
+    }
+  }
+]

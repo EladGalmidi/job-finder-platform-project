@@ -1,0 +1,462 @@
+[
+  {
+    "id": "sk-ts",
+    "name": "TypeScript",
+    "category": "language",
+    "aliases": [
+      "ts"
+    ]
+  },
+  {
+    "id": "sk-js",
+    "name": "JavaScript",
+    "category": "language",
+    "aliases": [
+      "js",
+      "ecmascript"
+    ]
+  },
+  {
+    "id": "sk-python",
+    "name": "Python",
+    "category": "language",
+    "aliases": [
+      "py"
+    ]
+  },
+  {
+    "id": "sk-go",
+    "name": "Go",
+    "category": "language",
+    "aliases": [
+      "golang"
+    ]
+  },
+  {
+    "id": "sk-java",
+    "name": "Java",
+    "category": "language",
+    "aliases": []
+  },
+  {
+    "id": "sk-csharp",
+    "name": "C#",
+    "category": "language",
+    "aliases": [
+      "dotnet"
+    ]
+  },
+  {
+    "id": "sk-sql",
+    "name": "SQL",
+    "category": "language",
+    "aliases": []
+  },
+  {
+    "id": "sk-bash",
+    "name": "Bash",
+    "category": "language",
+    "aliases": [
+      "shell"
+    ]
+  },
+  {
+    "id": "sk-react",
+    "name": "React",
+    "category": "framework",
+    "aliases": [
+      "reactjs"
+    ]
+  },
+  {
+    "id": "sk-nextjs",
+    "name": "Next.js",
+    "category": "framework",
+    "aliases": []
+  },
+  {
+    "id": "sk-node",
+    "name": "Node.js",
+    "category": "framework",
+    "aliases": [
+      "nodejs"
+    ]
+  },
+  {
+    "id": "sk-nestjs",
+    "name": "NestJS",
+    "category": "framework",
+    "aliases": []
+  },
+  {
+    "id": "sk-django",
+    "name": "Django",
+    "category": "framework",
+    "aliases": []
+  },
+  {
+    "id": "sk-spring",
+    "name": "Spring Boot",
+    "category": "framework",
+    "aliases": []
+  },
+  {
+    "id": "sk-redux",
+    "name": "Redux",
+    "category": "framework",
+    "aliases": []
+  },
+  {
+    "id": "sk-graphql",
+    "name": "GraphQL",
+    "category": "framework",
+    "aliases": []
+  },
+  {
+    "id": "sk-aws",
+    "name": "AWS",
+    "category": "cloud",
+    "aliases": []
+  },
+  {
+    "id": "sk-gcp",
+    "name": "GCP",
+    "category": "cloud",
+    "aliases": [
+      "google cloud"
+    ]
+  },
+  {
+    "id": "sk-azure",
+    "name": "Azure",
+    "category": "cloud",
+    "aliases": []
+  },
+  {
+    "id": "sk-k8s",
+    "name": "Kubernetes",
+    "category": "cloud",
+    "aliases": [
+      "k8s"
+    ]
+  },
+  {
+    "id": "sk-docker",
+    "name": "Docker",
+    "category": "cloud",
+    "aliases": [
+      "containers"
+    ]
+  },
+  {
+    "id": "sk-terraform",
+    "name": "Terraform",
+    "category": "cloud",
+    "aliases": [
+      "iac"
+    ]
+  },
+  {
+    "id": "sk-argocd",
+    "name": "ArgoCD",
+    "category": "cloud",
+    "aliases": []
+  },
+  {
+    "id": "sk-helm",
+    "name": "Helm",
+    "category": "cloud",
+    "aliases": []
+  },
+  {
+    "id": "sk-postgres",
+    "name": "PostgreSQL",
+    "category": "tool",
+    "aliases": [
+      "postgres"
+    ]
+  },
+  {
+    "id": "sk-mongo",
+    "name": "MongoDB",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-redis",
+    "name": "Redis",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-kafka",
+    "name": "Kafka",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-git",
+    "name": "Git",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-jenkins",
+    "name": "Jenkins",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-githubactions",
+    "name": "GitHub Actions",
+    "category": "tool",
+    "aliases": [
+      "gha"
+    ]
+  },
+  {
+    "id": "sk-prometheus",
+    "name": "Prometheus",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-grafana",
+    "name": "Grafana",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-datadog",
+    "name": "Datadog",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-figma",
+    "name": "Figma",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-jira",
+    "name": "Jira",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-mixpanel",
+    "name": "Mixpanel",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-agile",
+    "name": "Agile",
+    "category": "methodology",
+    "aliases": [
+      "scrum"
+    ]
+  },
+  {
+    "id": "sk-cicd",
+    "name": "CI/CD",
+    "category": "methodology",
+    "aliases": []
+  },
+  {
+    "id": "sk-microservices",
+    "name": "Microservices",
+    "category": "methodology",
+    "aliases": []
+  },
+  {
+    "id": "sk-tdd",
+    "name": "TDD",
+    "category": "methodology",
+    "aliases": []
+  },
+  {
+    "id": "sk-a11y",
+    "name": "Accessibility",
+    "category": "methodology",
+    "aliases": [
+      "a11y"
+    ]
+  },
+  {
+    "id": "sk-productstrategy",
+    "name": "Product Strategy",
+    "category": "methodology",
+    "aliases": []
+  },
+  {
+    "id": "sk-userresearch",
+    "name": "User Research",
+    "category": "methodology",
+    "aliases": []
+  },
+  {
+    "id": "sk-roadmapping",
+    "name": "Roadmapping",
+    "category": "methodology",
+    "aliases": []
+  },
+  {
+    "id": "sk-communication",
+    "name": "Communication",
+    "category": "soft",
+    "aliases": []
+  },
+  {
+    "id": "sk-mentoring",
+    "name": "Mentoring",
+    "category": "soft",
+    "aliases": []
+  },
+  {
+    "id": "sk-ownership",
+    "name": "Ownership",
+    "category": "soft",
+    "aliases": []
+  },
+  {
+    "id": "sk-salesforce",
+    "name": "Salesforce",
+    "category": "tool",
+    "aliases": [
+      "sfdc"
+    ]
+  },
+  {
+    "id": "sk-hubspot",
+    "name": "HubSpot",
+    "category": "tool",
+    "aliases": []
+  },
+  {
+    "id": "sk-crm",
+    "name": "CRM",
+    "category": "tool",
+    "aliases": [
+      "customer relationship management"
+    ]
+  },
+  {
+    "id": "sk-outreach",
+    "name": "Outbound Prospecting",
+    "category": "methodology",
+    "aliases": [
+      "outbound",
+      "prospecting",
+      "cold outreach",
+      "cold calling",
+      "cold email"
+    ]
+  },
+  {
+    "id": "sk-leadgen",
+    "name": "Lead Generation",
+    "category": "methodology",
+    "aliases": [
+      "lead gen",
+      "demand generation"
+    ]
+  },
+  {
+    "id": "sk-pipeline",
+    "name": "Pipeline Management",
+    "category": "methodology",
+    "aliases": [
+      "pipeline",
+      "pipeline generation"
+    ]
+  },
+  {
+    "id": "sk-negotiation",
+    "name": "Negotiation",
+    "category": "soft",
+    "aliases": [
+      "negotiating",
+      "negotiated",
+      "contract negotiation"
+    ]
+  },
+  {
+    "id": "sk-closing",
+    "name": "Deal Closing",
+    "category": "methodology",
+    "aliases": [
+      "closing",
+      "closed deals",
+      "close rate"
+    ]
+  },
+  {
+    "id": "sk-accountmgmt",
+    "name": "Account Management",
+    "category": "methodology",
+    "aliases": [
+      "account manager",
+      "key accounts",
+      "account executive",
+      "ae"
+    ]
+  },
+  {
+    "id": "sk-forecasting",
+    "name": "Forecasting",
+    "category": "methodology",
+    "aliases": [
+      "sales forecasting",
+      "revenue forecasting"
+    ]
+  },
+  {
+    "id": "sk-quota",
+    "name": "Quota Attainment",
+    "category": "methodology",
+    "aliases": [
+      "quota",
+      "target attainment"
+    ]
+  },
+  {
+    "id": "sk-b2b",
+    "name": "B2B Sales",
+    "category": "methodology",
+    "aliases": [
+      "enterprise sales",
+      "saas sales",
+      "b2b"
+    ]
+  },
+  {
+    "id": "sk-presentation",
+    "name": "Presentation",
+    "category": "soft",
+    "aliases": [
+      "presenting",
+      "demos",
+      "product demo"
+    ]
+  },
+  {
+    "id": "sk-stakeholder",
+    "name": "Stakeholder Management",
+    "category": "soft",
+    "aliases": [
+      "stakeholder",
+      "stakeholders"
+    ]
+  },
+  {
+    "id": "sk-territory",
+    "name": "Territory Planning",
+    "category": "methodology",
+    "aliases": [
+      "territory",
+      "territory management"
+    ]
+  }
+]
