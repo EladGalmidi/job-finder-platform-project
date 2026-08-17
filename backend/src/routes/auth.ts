@@ -209,6 +209,56 @@ export const registerAuthRoutes = (app: FastifyInstance): void => {
 
     return toUserJson(updated[0] ?? user);
   });
+
+  /**
+   * The preferences that drive match scoring.
+   *
+   * Validated against the same unions the jobs table uses as enums, so a value
+   * that could never match a listing is refused at the edge rather than stored
+   * and silently matching nothing.
+   */
+  const preferencesBody = z.object({
+    desiredRoles: z.array(
+      z.enum(['devops', 'backend', 'frontend', 'fullstack', 'productManager', 'data', 'sales']),
+    ),
+    seniority: z.enum(['junior', 'mid', 'senior', 'lead', 'principal']),
+    locations: z.array(z.string().trim().min(1)),
+    remoteMode: z.enum(['onsite', 'hybrid', 'remote', 'any']),
+    jobTypes: z.array(z.enum(['fullTime', 'partTime', 'contract', 'student', 'internship'])),
+    salary: z.object({
+      min: z.number().int().nonnegative(),
+      max: z.number().int().nonnegative(),
+      currency: z.enum(['ILS', 'USD']),
+      period: z.enum(['month', 'year']),
+    }),
+  });
+
+  app.patch('/users/me/preferences', async (request) => {
+    const user = request.requireUser();
+    const preferences = preferencesBody.parse(request.body);
+
+    const updated = await database()
+      .db.update(users)
+      .set({ preferences, updatedAt: new Date() })
+      .where(eq(users.id, user.id))
+      .returning();
+
+    return toUserJson(updated[0] ?? user);
+  });
+
+  app.post('/users/me/onboarding/complete', async (request) => {
+    const user = request.requireUser();
+
+    // Recorded as a timestamp rather than a flag: "when did they finish" is a
+    // question worth being able to answer, and it costs nothing to keep.
+    const updated = await database()
+      .db.update(users)
+      .set({ onboardingCompletedAt: new Date(), updatedAt: new Date() })
+      .where(eq(users.id, user.id))
+      .returning();
+
+    return toUserJson(updated[0] ?? user);
+  });
 };
 
 /**

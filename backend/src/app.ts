@@ -10,6 +10,7 @@ import { env } from './config/env.js';
 import { registerErrorHandler } from './http/errorHandler.js';
 import { registerAuthRoutes } from './routes/auth.js';
 import { registerCvRoutes } from './routes/cv.js';
+import { registerDashboardRoutes } from './routes/dashboard.js';
 import { registerJobRoutes } from './routes/jobs.js';
 
 /** JSON bodies larger than this are refused before they are buffered. */
@@ -52,6 +53,13 @@ export const buildApp = async (): Promise<FastifyInstance> => {
   await app.register(cors, {
     origin: config.CORS_ORIGIN,
     credentials: true,
+    /*
+     * Listed explicitly because the default is GET, HEAD and POST only.
+     * Without PATCH here the preflight for updating a profile or preferences
+     * is refused by the browser before the request is ever sent, which surfaces
+     * as a network error rather than anything naming CORS.
+     */
+    methods: ['GET', 'HEAD', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
   });
 
   await app.register(cookie, {
@@ -83,6 +91,7 @@ export const buildApp = async (): Promise<FastifyInstance> => {
   registerAuthRoutes(app);
   registerJobRoutes(app);
   registerCvRoutes(app);
+  registerDashboardRoutes(app);
 
   // Liveness only. It deliberately does not touch the database: a health check
   // that fails when Postgres blips causes the orchestrator to kill a server
