@@ -1,10 +1,9 @@
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 import { createAppAsyncThunk, toRejectValue } from '@/app/createAppAsyncThunk';
-import { STORAGE_KEYS, readJson, readString, remove, writeJson, writeString } from '@/lib/storage';
+import { STORAGE_KEYS, readJson, remove, writeJson } from '@/lib/storage';
 import { authApi } from '@/services/api/authApi';
 import type {
-  AuthSession,
   CvId,
   LoginPayload,
   RequestStatus,
@@ -18,9 +17,10 @@ import type { AnalysisJobId } from '@/types';
 /**
  * Four states, not a boolean.
  *
- * On a cold load a token exists in storage but the user is not hydrated yet.
- * With `isAuthenticated: boolean` every guard would redirect to /login for one
- * frame before the session resolves. `idle` and `loading` prevent that flash.
+ * On a cold load the session cookie may exist but the user is not hydrated yet,
+ * and the client cannot inspect an httpOnly cookie to find out. With
+ * `isAuthenticated: boolean` every guard would redirect to /login for one frame
+ * while /auth/me was still in flight. `idle` and `loading` prevent that flash.
  */
 export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'anonymous';
 
@@ -45,7 +45,6 @@ interface OnboardingState {
 interface AuthState {
   status: AuthStatus;
   user: User | null;
-  token: string | null;
   error: SerializedApiError | null;
   submitStatus: RequestStatus;
   onboarding: OnboardingState;
@@ -91,37 +90,32 @@ const clearOnboarding = (): OnboardingState => {
 const initialState: AuthState = {
   status: 'idle',
   user: null,
-  token: readString(STORAGE_KEYS.authToken),
   error: null,
   submitStatus: 'idle',
   onboarding: loadOnboarding(),
 };
 
 /**
- * Runs once at startup. Resolves the stored token into a user, or settles on
- * `anonymous`. AuthBootstrap renders a splash until this finishes.
+ * Runs once at startup, to find out whether a session exists.
+ *
+ * It always asks the server. The session is an httpOnly cookie, so there is
+ * nothing in storage to check first: the browser sends the cookie if it has
+ * one, and a 401 is the answer meaning "not signed in". AuthBootstrap renders
+ * a splash until this settles.
  */
 export const bootstrapAuth = createAppAsyncThunk('auth/bootstrap', async (_: void, thunkApi) => {
-  const token = readString(STORAGE_KEYS.authToken);
-  if (token === null) return null;
-
   try {
     return await authApi.me();
   } catch (error) {
-    // A stale token must not leave the app stuck in `loading`.
-    remove(STORAGE_KEYS.authToken);
+    // Expected for every signed-out visitor, so it has to settle the state
+    // rather than leave the app stuck in `loading`.
     return thunkApi.rejectWithValue(toRejectValue(error));
   }
 });
 
-const persistSession = (session: AuthSession): AuthSession => {
-  writeString(STORAGE_KEYS.authToken, session.token);
-  return session;
-};
-
 export const login = createAppAsyncThunk('auth/login', async (payload: LoginPayload, thunkApi) => {
   try {
-    return persistSession(await authApi.login(payload));
+    return await authApi.login(payload);
   } catch (error) {
     return thunkApi.rejectWithValue(toRejectValue(error));
   }
@@ -131,7 +125,7 @@ export const signup = createAppAsyncThunk(
   'auth/signup',
   async (payload: SignupPayload, thunkApi) => {
     try {
-      return persistSession(await authApi.signup(payload));
+      return await authApi.signup(payload);
     } catch (error) {
       return thunkApi.rejectWithValue(toRejectValue(error));
     }
@@ -142,7 +136,7 @@ export const socialLogin = createAppAsyncThunk(
   'auth/socialLogin',
   async (provider: 'google' | 'linkedin', thunkApi) => {
     try {
-      return persistSession(await authApi.socialLogin(provider));
+      return await authApi.socialLogin(provider);
     } catch (error) {
       return thunkApi.rejectWithValue(toRejectValue(error));
     }
@@ -150,12 +144,10 @@ export const socialLogin = createAppAsyncThunk(
 );
 
 export const logout = createAppAsyncThunk('auth/logout', async (_: void) => {
-  try {
-    await authApi.logout();
-  } finally {
-    // The token is cleared regardless of whether the server call succeeded.
-    remove(STORAGE_KEYS.authToken);
-  }
+  // The cookie is cleared by the server's response. A failure here is still
+  // followed by the reducer dropping the user, so the UI never keeps showing a
+  // signed-in state the server has already ended.
+  await authApi.logout();
 });
 
 export const savePreferences = createAppAsyncThunk(
@@ -241,7 +233,6 @@ const authSlice = createSlice({
       .addCase(bootstrapAuth.rejected, (state) => {
         state.status = 'anonymous';
         state.user = null;
-        state.token = null;
       });
 
     for (const thunk of [login, signup, socialLogin]) {
@@ -254,7 +245,6 @@ const authSlice = createSlice({
           state.submitStatus = 'succeeded';
           state.status = 'authenticated';
           state.user = action.payload.user;
-          state.token = action.payload.token;
           state.onboarding = clearOnboarding();
         })
         .addCase(thunk.rejected, (state, action) => {
@@ -266,7 +256,6 @@ const authSlice = createSlice({
     builder.addCase(logout.fulfilled, (state) => {
       state.status = 'anonymous';
       state.user = null;
-      state.token = null;
       state.error = null;
       state.submitStatus = 'idle';
       state.onboarding = clearOnboarding();

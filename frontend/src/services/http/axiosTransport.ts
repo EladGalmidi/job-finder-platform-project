@@ -1,6 +1,5 @@
 import axios, { type AxiosInstance } from 'axios';
 
-import { STORAGE_KEYS, readString } from '@/lib/storage';
 import type { ApiResponse, HttpTransport, RequestConfig } from '@/types';
 
 import { normalizeError } from './errors';
@@ -17,14 +16,18 @@ export const createAxiosTransport = (baseURL: string): HttpTransport => {
     baseURL,
     timeout: REQUEST_TIMEOUT_MS,
     headers: { Accept: 'application/json' },
-  });
-
-  instance.interceptors.request.use((config) => {
-    const token = readString(STORAGE_KEYS.authToken);
-    if (token !== null) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+    /*
+     * Sends the session cookie on cross-origin requests, which is the whole
+     * mechanism now that there is no token to attach by hand.
+     *
+     * The frontend and the API are different origins in development — 5173 and
+     * 3000 — so without this the browser omits the cookie and every request
+     * arrives unauthenticated. It also requires the server to answer with an
+     * explicit Access-Control-Allow-Origin; the spec forbids pairing
+     * credentials with a wildcard, which is why CORS_ORIGIN is configured
+     * rather than defaulted to `*`.
+     */
+    withCredentials: true,
   });
 
   return {

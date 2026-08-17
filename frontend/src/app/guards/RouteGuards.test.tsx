@@ -30,7 +30,6 @@ const authState = (
   auth: {
     status,
     user: status === 'authenticated' ? user(onboarded) : null,
-    token: status === 'authenticated' ? 'token' : null,
     error: null,
     submitStatus: 'idle',
     onboarding: {

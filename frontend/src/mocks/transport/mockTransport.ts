@@ -13,9 +13,12 @@ import { createQueryAccess, findRoute } from './router';
 const log = createLogger('mockTransport');
 
 /**
- * Resolves the caller from the stored token, mirroring what the axios request
- * interceptor sends as an Authorization header. Keeping both transports on the
- * same token source is what makes auth behave identically in either mode.
+ * Resolves the caller from the token the mock's own auth handler stored.
+ *
+ * This stands in for the httpOnly session cookie the real server sets. The mock
+ * cannot set a cookie, so it keeps the equivalent in localStorage — and owns it
+ * entirely: nothing outside the mock layer reads or writes it, exactly as
+ * nothing outside the browser can read the real cookie.
  */
 const resolveUserId = (): string | null => {
   const token = readString(STORAGE_KEYS.authToken);

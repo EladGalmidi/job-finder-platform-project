@@ -1,4 +1,5 @@
 import { nowIso } from '@/lib/dates';
+import { STORAGE_KEYS, remove, writeString } from '@/lib/storage';
 import { isValidEmail, isValidFullName, isValidPassword } from '@/lib/validation';
 import { ApiError, asUserId } from '@/types';
 import type { AuthSession, AuthProvider, User, UserPreferences } from '@/types';
@@ -22,13 +23,22 @@ const readString = (body: unknown, key: string): string => {
   return typeof value === 'string' ? value : '';
 };
 
+/**
+ * Stands in for the session cookie the real server sets.
+ *
+ * The token is written here rather than returned for a caller to persist,
+ * because the live API returns no token at all — the browser holds an httpOnly
+ * cookie it cannot read. Keeping the mock's session inside the mock means the
+ * app behaves the same either way: it learns who it is by calling /auth/me.
+ */
 const issueSession = (user: User): AuthSession => {
   const token = `mock-token-${user.id}-${String(Date.now())}`;
   mockDb.mutate((draft) => {
     draft.sessions[token] = user.id;
     draft.users[user.id] = user;
   });
-  return { token, user };
+  writeString(STORAGE_KEYS.authToken, token);
+  return { user };
 };
 
 const requireUser = (context: HandlerContext): User => {
@@ -138,6 +148,8 @@ export const authRoutes: readonly MockRoute[] = [
           if (owner === userId) delete draft.sessions[token];
         }
       });
+      // Mirrors the real server clearing the cookie in its response.
+      remove(STORAGE_KEYS.authToken);
       return { ok: true };
     },
   },
