@@ -165,6 +165,35 @@ describe.skipIf(!databaseReachable)('auth routes', () => {
     ).toBe(401);
   });
 
+  it('signs in through the development social stand-in', async () => {
+    const response = await app.inject({ method: 'POST', url: '/auth/social/google' });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json<{ user: { provider: string } }>().user.provider).toBe('google');
+    expect(String(response.headers['set-cookie'])).toContain('HttpOnly');
+  });
+
+  it('refuses a provider it does not know', async () => {
+    const response = await app.inject({ method: 'POST', url: '/auth/social/facebook' });
+
+    expect(response.statusCode).toBe(422);
+  });
+
+  it('never lets a social account be signed into with a password', async () => {
+    // The account exists after the test above and has no password hash. Login
+    // must reject it rather than treat "no password" as "any password".
+    await app.inject({ method: 'POST', url: '/auth/social/linkedin' });
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/auth/login',
+      payload: { email: 'linkedin.user@jobmatch.ai', password: 'anything-at-all' },
+    });
+
+    expect(response.statusCode).toBe(401);
+    expect(response.json()).toMatchObject({ code: 'INVALID_CREDENTIALS' });
+  });
+
   it('reports invalid fields individually so a form can mark them', async () => {
     const response = await app.inject({
       method: 'POST',
@@ -176,6 +205,43 @@ describe.skipIf(!databaseReachable)('auth routes', () => {
     const body = response.json<{ code: string; details: Record<string, string> }>();
     expect(body.code).toBe('VALIDATION_FAILED');
     expect(Object.keys(body.details).sort()).toEqual(['email', 'fullName', 'password']);
+  });
+});
+
+describe.skipIf(!databaseReachable)('the social sign-in backdoor in production', () => {
+  let app: FastifyInstance;
+
+  beforeAll(async () => {
+    // The one thing that must be proven about a route that issues a session
+    // without checking anything: that it does not exist in production.
+    __setEnv({ ...testEnv, NODE_ENV: 'production' });
+    app = await buildApp();
+    await app.ready();
+  });
+
+  afterAll(async () => {
+    await app.close();
+    await closeDatabase();
+    __setEnv(undefined);
+  });
+
+  it('is not registered at all', async () => {
+    const response = await app.inject({ method: 'POST', url: '/auth/social/google' });
+
+    expect(response.statusCode).toBe(404);
+    expect(response.json()).toMatchObject({ code: 'NOT_FOUND' });
+  });
+
+  it('still allows a normal password login', async () => {
+    // Guards against the gate accidentally disabling real authentication too.
+    const response = await app.inject({
+      method: 'POST',
+      url: '/auth/login',
+      payload: { email: 'nobody@example.com', password: 'a-long-enough-password' },
+    });
+
+    expect(response.statusCode).toBe(401);
+    expect(response.json()).toMatchObject({ code: 'INVALID_CREDENTIALS' });
   });
 });
 

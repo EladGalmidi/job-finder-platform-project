@@ -4,6 +4,7 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
 import { clearSessionCookie, setSessionCookie } from '../auth/cookies.js';
+import { env } from '../config/env.js';
 import { hashPassword, verifyPassword } from '../auth/passwords.js';
 import { createSession, revokeSession } from '../auth/sessions.js';
 import { database } from '../db/client.js';
@@ -113,6 +114,67 @@ export const registerAuthRoutes = (app: FastifyInstance): void => {
 
     return reply.send({ user: toUserJson(user) });
   });
+
+  /*
+   * A stand-in for Google and LinkedIn sign-in, for development only.
+   *
+   * This is a backdoor: it issues a session for a fixed account without
+   * verifying anything at all. It exists so the demo's social buttons work
+   * before OAuth credentials exist, and it is registered only outside
+   * production — in production the route is absent and the request 404s, which
+   * fails closed rather than depending on a check inside the handler that a
+   * later edit could remove.
+   *
+   * Real OAuth replaces this entirely: a redirect to the provider, a callback
+   * carrying a code, a server-side token exchange, and account linking by
+   * verified email. None of that is simulated here, and none of it should be
+   * inferred from this working.
+   */
+  if (env().NODE_ENV !== 'production') {
+    app.post('/auth/social/:provider', async (request, reply) => {
+      const { provider } = z
+        .object({ provider: z.enum(['google', 'linkedin']) })
+        .parse(request.params);
+
+      const { db } = database();
+      const email = `${provider}.user@jobmatch.ai`;
+
+      const existing = await db
+        .select()
+        .from(users)
+        .where(sql`lower(${users.email}) = ${email}`)
+        .limit(1);
+
+      // Password stays null: there is no password of ours for a social account,
+      // and the login route already refuses to authenticate one.
+      const user =
+        existing[0] ??
+        (
+          await db
+            .insert(users)
+            .values({
+              id: randomUUID(),
+              fullName: provider === 'google' ? 'Google Demo User' : 'LinkedIn Demo User',
+              email,
+              provider,
+              passwordHash: null,
+            })
+            .returning()
+        )[0];
+
+      if (user === undefined) throw conflict('Could not create the demo account');
+
+      const session = await createSession(db, user.id, {
+        userAgent: request.headers['user-agent'],
+        ip: request.ip,
+      });
+
+      setSessionCookie(reply, session.token, session.expiresAt);
+      request.log.warn({ provider }, 'development social sign-in used; not real OAuth');
+
+      return reply.send({ user: toUserJson(user) });
+    });
+  }
 
   app.post('/auth/logout', async (request, reply) => {
     if (request.sessionToken !== null) {
