@@ -4,8 +4,11 @@ import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import Fastify, { type FastifyInstance } from 'fastify';
 
+import { registerAuth } from './auth/plugin.js';
 import { env } from './config/env.js';
 import { registerErrorHandler } from './http/errorHandler.js';
+import { registerAuthRoutes } from './routes/auth.js';
+import { registerJobRoutes } from './routes/jobs.js';
 
 /** Bodies larger than this are refused before they are buffered. */
 const MAX_BODY_BYTES = 1_000_000;
@@ -62,6 +65,10 @@ export const buildApp = async (): Promise<FastifyInstance> => {
   });
 
   registerErrorHandler(app);
+  registerAuth(app);
+
+  registerAuthRoutes(app);
+  registerJobRoutes(app);
 
   // Liveness only. It deliberately does not touch the database: a health check
   // that fails when Postgres blips causes the orchestrator to kill a server

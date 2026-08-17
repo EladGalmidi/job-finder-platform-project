@@ -40,6 +40,11 @@ export default defineConfig(
   },
   {
     files: ['**/*.test.ts'],
-    rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
+    rules: {
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      // Tests read DATABASE_URL directly so CI can point them at its own
+      // instance without going through the server's startup validation.
+      'no-restricted-properties': 'off',
+    },
   },
 );
