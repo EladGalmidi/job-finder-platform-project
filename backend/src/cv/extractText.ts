@@ -1,4 +1,5 @@
 import { extractDocxXml } from './extractDocxXml.js';
+import { ocrDocx, ocrPdf } from './ocr.js';
 
 /**
  * Pulls the plain text out of an uploaded CV.
@@ -7,9 +8,12 @@ import { extractDocxXml } from './extractDocxXml.js';
  * belongs here: the parsers are large, the work is slow, and a client-side
  * result is something the server would have to trust.
  *
- * PDF text extraction uses pdfjs's legacy build, which runs under Node without
- * a canvas because reading a text layer never rasterises anything. Rendering —
- * which OCR needs — does, and is deliberately not part of this step.
+ * Two passes, cheapest first, because they fail for different reasons:
+ *
+ * 1. The text layer. Instant, exact, and covers anything from a word processor.
+ * 2. OCR. The only thing that reads a CV stored as pictures, which is what
+ *    design tools, CV builders, scanners and PDF-to-Word converters produce.
+ *    It costs seconds a page, so it is never attempted while text is available.
  */
 export type ExtractionOutcome = 'ok' | 'empty' | 'unsupported' | 'failed';
 
@@ -92,6 +96,24 @@ const readDocx = async (bytes: Buffer): Promise<ExtractionResult> => {
     }
   }
 
+  /*
+   * Still nothing, so the document holds no text in any form. Its words may
+   * still be there as pictures — which is exactly what a Word file converted
+   * from a PDF looks like.
+   */
+  let usedOcr = false;
+  if (text.trim() === '') {
+    const recognised = await ocrDocx(bytes);
+    images = recognised.images;
+
+    if (recognised.text.trim() === '') {
+      notes.push(`OCR read nothing from ${String(recognised.images)} pictures`);
+    } else {
+      text = recognised.text;
+      usedOcr = true;
+    }
+  }
+
   const trimmed = text.trim();
 
   const diagnostics: ExtractionDiagnostics = {
@@ -99,7 +121,7 @@ const readDocx = async (bytes: Buffer): Promise<ExtractionResult> => {
     rawItems: trimmed === '' ? 0 : 1,
     textItems: trimmed === '' ? 0 : 1,
     characters: trimmed.length,
-    usedOcr: false,
+    usedOcr,
     images,
     format: 'docx',
   };
@@ -140,19 +162,42 @@ const readPdf = async (bytes: Buffer): Promise<ExtractionResult> => {
     pages.push(strings.join(' '));
   }
 
-  const text = pages.join('\n');
-  const diagnostics: ExtractionDiagnostics = {
-    pages: doc.numPages,
-    rawItems,
-    textItems,
-    characters: text.trim().length,
-    usedOcr: false,
-    format: 'pdf',
-  };
-
+  const layerText = pages.join('\n');
+  const pageCount = doc.numPages;
   await doc.cleanup();
 
+  const base = { pages: pageCount, rawItems, textItems, format: 'pdf' as const };
+
+  if (layerText.trim() !== '') {
+    return {
+      text: layerText,
+      outcome: 'ok',
+      diagnostics: { ...base, characters: layerText.trim().length, usedOcr: false },
+    };
+  }
+
+  /*
+   * No text layer at all, so every page is a picture and rendering it is the
+   * only way to read it. This is the case a scanner, a design tool or a CV
+   * builder produces, and the one the browser version could never afford.
+   */
+  const recognised = await ocrPdf(bytes);
+  const text = recognised.text;
+
   return text.trim() === ''
-    ? { text: '', outcome: 'empty', diagnostics }
-    : { text, outcome: 'ok', diagnostics };
+    ? {
+        text: '',
+        outcome: 'empty',
+        diagnostics: { ...base, characters: 0, usedOcr: true, images: recognised.images },
+      }
+    : {
+        text,
+        outcome: 'ok',
+        diagnostics: {
+          ...base,
+          characters: text.trim().length,
+          usedOcr: true,
+          images: recognised.images,
+        },
+      };
 };
