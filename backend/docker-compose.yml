@@ -12,7 +12,14 @@ services:
       POSTGRES_PASSWORD: jobmatch
       POSTGRES_DB: jobmatch
     ports:
-      - '5432:5432'
+      # 5433 on the host, not 5432.
+      #
+      # A natively installed PostgreSQL already listens on 5432 on this machine.
+      # Windows lets Docker's proxy bind the same port without error, and the
+      # native server then answers the connections — so the container looks
+      # healthy while every query goes somewhere else entirely. Publishing on a
+      # free port removes the ambiguity and leaves the existing install alone.
+      - '5433:5432'
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
