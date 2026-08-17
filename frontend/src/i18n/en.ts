@@ -650,7 +650,9 @@ export const en = {
   'market.trendDelta_two': '{delta} points this quarter',
   'market.trendDelta_many': '{delta} points this quarter',
   'market.trendDelta_other': '{delta} points this quarter',
-  'market.salaryImpact': '+{percent}% pay impact',
+  // The sign travels with the value: pay impact can be negative, and a
+  // hardcoded plus rendered it as "+-39%".
+  'market.salaryImpact': '{percent}% pay impact',
   'market.openPositions_one': '{count} open role',
   'market.openPositions_two': '{count} open roles',
   'market.openPositions_many': '{count} open roles',

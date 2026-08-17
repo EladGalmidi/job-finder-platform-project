@@ -186,7 +186,14 @@ export const MarketPage = (): React.JSX.Element => {
                                         : String(skill.trendDelta),
                                   })}`}
                             </span>
-                            <span>{t('market.salaryImpact', { percent: skill.avgSalaryImpactPercent })}</span>
+                            <span>
+                              {t('market.salaryImpact', {
+                                percent:
+                                  skill.avgSalaryImpactPercent > 0
+                                    ? `+${String(skill.avgSalaryImpactPercent)}`
+                                    : String(skill.avgSalaryImpactPercent),
+                              })}
+                            </span>
                             <span>{tPlural('market.openPositions', skill.openPositions)}</span>
                           </div>
                         </div>

@@ -12,6 +12,7 @@ import { registerAuthRoutes } from './routes/auth.js';
 import { registerCvRoutes } from './routes/cv.js';
 import { registerDashboardRoutes } from './routes/dashboard.js';
 import { registerJobRoutes } from './routes/jobs.js';
+import { registerMarketRoutes } from './routes/market.js';
 
 /** JSON bodies larger than this are refused before they are buffered. */
 const MAX_BODY_BYTES = 1_000_000;
@@ -92,6 +93,7 @@ export const buildApp = async (): Promise<FastifyInstance> => {
   registerJobRoutes(app);
   registerCvRoutes(app);
   registerDashboardRoutes(app);
+  registerMarketRoutes(app);
 
   // Liveness only. It deliberately does not touch the database: a health check
   // that fails when Postgres blips causes the orchestrator to kill a server

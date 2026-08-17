@@ -640,7 +640,7 @@ export const he: Catalog = {
   'market.trendDelta_two': '{delta} נקודות ברבעון',
   'market.trendDelta_many': '{delta} נקודות ברבעון',
   'market.trendDelta_other': '{delta} נקודות ברבעון',
-  'market.salaryImpact': 'השפעה על השכר: {percent}%+',
+  'market.salaryImpact': 'השפעה על השכר: {percent}%',
   'market.openPositions_one': 'משרה פתוחה אחת',
   'market.openPositions_two': 'שתי משרות פתוחות',
   'market.openPositions_many': '{count} משרות פתוחות',
