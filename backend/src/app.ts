@@ -2,16 +2,21 @@ import cookie from '@fastify/cookie';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
+import multipart from '@fastify/multipart';
 import Fastify, { type FastifyInstance } from 'fastify';
 
 import { registerAuth } from './auth/plugin.js';
 import { env } from './config/env.js';
 import { registerErrorHandler } from './http/errorHandler.js';
 import { registerAuthRoutes } from './routes/auth.js';
+import { registerCvRoutes } from './routes/cv.js';
 import { registerJobRoutes } from './routes/jobs.js';
 
-/** Bodies larger than this are refused before they are buffered. */
+/** JSON bodies larger than this are refused before they are buffered. */
 const MAX_BODY_BYTES = 1_000_000;
+
+/** Upload ceiling, matching the frontend's MAX_CV_BYTES. */
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 
 /**
  * Builds the server without starting it, so tests can drive it over
@@ -53,6 +58,14 @@ export const buildApp = async (): Promise<FastifyInstance> => {
     secret: config.SESSION_SECRET,
   });
 
+  /*
+   * File uploads. The limit is enforced while streaming, so an oversized file
+   * is rejected before it is ever fully buffered in memory.
+   */
+  await app.register(multipart, {
+    limits: { fileSize: MAX_UPLOAD_BYTES, files: 1 },
+  });
+
   await app.register(rateLimit, {
     max: 300,
     timeWindow: '1 minute',
@@ -69,6 +82,7 @@ export const buildApp = async (): Promise<FastifyInstance> => {
 
   registerAuthRoutes(app);
   registerJobRoutes(app);
+  registerCvRoutes(app);
 
   // Liveness only. It deliberately does not touch the database: a health check
   // that fails when Postgres blips causes the orchestrator to kill a server

@@ -240,6 +240,104 @@ export const jobSkills = pgTable(
   ],
 );
 
+export const analysisStatusEnum = pgEnum('analysis_status', [
+  'queued',
+  'running',
+  'succeeded',
+  'failed',
+]);
+
+export const cvs = pgTable(
+  'cvs',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+
+    fileName: text('file_name').notNull(),
+    fileSize: integer('file_size').notNull(),
+    mimeType: text('mime_type').notNull(),
+
+    /*
+     * Where the bytes live, not the bytes themselves. Files belong in object
+     * storage: they are large, immutable, and want lifecycle rules that a
+     * relational table cannot express. This is a key, so swapping the local
+     * disk for S3 later changes one module rather than the schema.
+     */
+    storageKey: text('storage_key').notNull(),
+
+    /** Text pulled out of the file. Null until extraction has run. */
+    extractedText: text('extracted_text'),
+    /** How the text was obtained, and what was found. Kept for diagnostics. */
+    extraction: jsonb('extraction'),
+
+    uploadedAt: timestamp('uploaded_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index('cvs_user_id_idx').on(table.userId)],
+);
+
+export const cvAnalyses = pgTable(
+  'cv_analyses',
+  {
+    cvId: text('cv_id')
+      .primaryKey()
+      .references(() => cvs.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+
+    /*
+     * The whole analysis document, stored as one value.
+     *
+     * It is read and written whole by the UI and never queried field by field,
+     * so splitting it into columns would buy nothing and cost a migration every
+     * time the report gains a section.
+     */
+    payload: jsonb('payload').notNull(),
+
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index('cv_analyses_user_id_idx').on(table.userId)],
+);
+
+/**
+ * One row per analysis run.
+ *
+ * The work is asynchronous because extraction and OCR take seconds, and the
+ * frontend already polls for progress. Persisting the job is what lets a
+ * refresh mid-analysis rejoin the same run instead of starting a second one.
+ */
+export const analysisJobs = pgTable(
+  'analysis_jobs',
+  {
+    id: text('id').primaryKey(),
+    cvId: text('cv_id')
+      .notNull()
+      .references(() => cvs.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+
+    status: analysisStatusEnum('status').notNull().default('queued'),
+    currentStep: text('current_step').notNull().default('parsing'),
+    completedSteps: text('completed_steps').array().notNull().default([]),
+    progressPercent: integer('progress_percent').notNull().default(0),
+
+    /** Machine-readable reason a run failed, for the UI to branch on. */
+    errorCode: text('error_code'),
+    errorDetail: text('error_detail'),
+
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    finishedAt: timestamp('finished_at', { withTimezone: true }),
+  },
+  (table) => [index('analysis_jobs_cv_id_idx').on(table.cvId)],
+);
+
+export type CvRow = typeof cvs.$inferSelect;
+export type CvAnalysisRow = typeof cvAnalyses.$inferSelect;
+export type AnalysisJobRow = typeof analysisJobs.$inferSelect;
+
 export type UserRow = typeof users.$inferSelect;
 export type NewUserRow = typeof users.$inferInsert;
 export type SessionRow = typeof sessions.$inferSelect;
