@@ -70,6 +70,8 @@ export const en = {
     'We could not read any text from that file. If it is a scanned or image-based PDF, export a text version and try again.',
   'cv.noTextDocxDetail':
     'We could not read any text from this Word file. What we found inside it: {notes}. Send this line back and it will identify the problem.',
+  'cv.analysisFailedHint':
+    'We could not read any text from that file. Try a different export, or a version whose text is selectable rather than a picture.',
   'cv.noTextDocx':
     'We could not read any text from this Word file. If it was renamed from an older .doc, open it in Word and use Save As to store it as .docx, then upload again.',
   'cv.noTextScan':

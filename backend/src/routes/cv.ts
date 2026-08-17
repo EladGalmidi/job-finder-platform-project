@@ -15,8 +15,22 @@ const MAX_CV_BYTES = 5 * 1024 * 1024;
 
 const ACCEPTED = /\.(pdf|docx)$/i;
 
-/** The stages the frontend's progress ring renders, in order. */
-const STEPS = ['parsing', 'extracting', 'scoring', 'matching'] as const;
+/*
+ * The stages the progress list renders, in the order it renders them.
+ *
+ * These keys are the frontend's ANALYSIS_STEPS verbatim. They have to match
+ * exactly: the UI ticks a step by looking for its own key in completedSteps, so
+ * a server that reports "extracting" where the UI expects "extractingSkills"
+ * leaves every stage after the first permanently unticked.
+ */
+const STEPS = [
+  'parsing',
+  'extractingSkills',
+  'scoringStructure',
+  'comparingMarket',
+  'matchingJobs',
+  'buildingRecommendations',
+] as const;
 
 const serializeCv = (row: typeof cvs.$inferSelect) => ({
   id: row.id,
@@ -234,7 +248,7 @@ const runAnalysis = async (jobId: string, cvId: string): Promise<void> => {
     const cv = rows[0];
     if (cv === undefined) throw new ApiError('NOT_FOUND', `CV ${cvId} disappeared`, 404);
 
-    await advance(jobId, 'extracting');
+    await advance(jobId, 'extractingSkills');
 
     const bytes = await getFile(cv.storageKey);
     const extraction = await extractText(bytes, cv.fileName);
@@ -251,7 +265,9 @@ const runAnalysis = async (jobId: string, cvId: string): Promise<void> => {
           status: 'failed',
           errorCode: extraction.outcome === 'unsupported' ? 'UNSUPPORTED_FILE_TYPE' : 'CV_NO_TEXT',
           errorDetail: extraction.detail ?? null,
-          progressPercent: 100,
+          // Progress is left where it stopped. Reporting 100 drew a full ring
+          // over a run that had failed, which reads as "done" and explains
+          // nothing.
           finishedAt: new Date(),
         })
         .where(eq(analysisJobs.id, jobId));
@@ -264,7 +280,7 @@ const runAnalysis = async (jobId: string, cvId: string): Promise<void> => {
       .set({ extractedText: extraction.text, extraction: extraction.diagnostics })
       .where(eq(cvs.id, cvId));
 
-    await advance(jobId, 'scoring');
+    await advance(jobId, 'scoringStructure');
 
     const catalogue = await db
       .select({ id: skills.id, name: skills.name, aliases: skills.aliases })
@@ -286,7 +302,7 @@ const runAnalysis = async (jobId: string, cvId: string): Promise<void> => {
       byJob.set(row.jobId, [...(byJob.get(row.jobId) ?? []), row.skillId]);
     }
 
-    await advance(jobId, 'matching');
+    await advance(jobId, 'comparingMarket');
 
     const analysis = buildAnalysis({
       cvId,
@@ -309,7 +325,7 @@ const runAnalysis = async (jobId: string, cvId: string): Promise<void> => {
       .update(analysisJobs)
       .set({
         status: 'succeeded',
-        currentStep: 'matching',
+        currentStep: 'buildingRecommendations',
         completedSteps: [...STEPS],
         progressPercent: 100,
         finishedAt: new Date(),
@@ -322,7 +338,6 @@ const runAnalysis = async (jobId: string, cvId: string): Promise<void> => {
         status: 'failed',
         errorCode: 'SERVER_ERROR',
         errorDetail: String(error),
-        progressPercent: 100,
         finishedAt: new Date(),
       })
       .where(eq(analysisJobs.id, jobId));

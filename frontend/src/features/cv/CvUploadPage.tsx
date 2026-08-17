@@ -118,6 +118,43 @@ export const CvUploadPage = (): React.JSX.Element => {
     const currentStep = job?.currentStep ?? 'parsing';
     const completed = job?.completedSteps ?? [];
 
+    /*
+     * A failed run has to end the screen.
+     *
+     * Without this branch the page waited for a `succeeded` that was never
+     * coming: the ring sat there, the steps stayed unticked, and nothing said
+     * why. The onboarding step has handled this since it was built; this page
+     * was written later and never got it.
+     */
+    if (job?.status === 'failed') {
+      return (
+        <div className={styles.page}>
+          <section className={cx(styles.panel, styles.analysing)}>
+            <h2 className={styles.title}>{t('onboarding.analyzing.failed')}</h2>
+            <p className={styles.subtitle}>{t('cv.analysisFailedHint')}</p>
+
+            <div className={styles.actions}>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  // Back to the picker with the file cleared, so the retry is a
+                  // deliberate new choice rather than a resubmission of the
+                  // file that just failed.
+                  setAnalysingCvId(null);
+                  setFile(null);
+                }}
+              >
+                {t('common.retry')}
+              </Button>
+              <Button variant="ghost" onClick={() => navigate('/dashboard/cv')}>
+                {t('common.cancel')}
+              </Button>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
     return (
       <div className={styles.page}>
         <section className={cx(styles.panel, styles.analysing)}>
