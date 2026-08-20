@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+# A newer push to the same branch makes the older run irrelevant.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+
+    # The database-backed tests skip themselves when Postgres is unreachable,
+    # which keeps `validate` usable on a laptop with Docker closed. CI is where
+    # they must actually run, so it provides a real one.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: jobmatch
+          POSTGRES_PASSWORD: jobmatch
+          POSTGRES_DB: jobmatch
+        ports: ['5433:5432']
+        options: >-
+          --health-cmd "pg_isready -U jobmatch -d jobmatch"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgres://jobmatch:jobmatch@localhost:5433/jobmatch
+      SESSION_SECRET: ci-secret-that-is-long-enough-to-satisfy-validation
+      NODE_ENV: test
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - run: npm ci
+
+      - name: Apply migrations
+        run: npx tsx src/db/migrate.ts
+
+      - name: Seed reference data
+        run: npx tsx src/db/seed.ts
+
+      # typecheck, lint, test, build — the same command used locally, so CI
+      # cannot pass on something that fails on a developer's machine.
+      - name: Validate
+        run: npm run validate
+
+      - name: Fail on known vulnerabilities
+        # Advisories in build-time tooling do not ship; a high severity one in a
+        # runtime dependency does, and that is what this catches.
+        run: npm audit --omit=dev --audit-level=high
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Validate
+        run: npm run validate
+
+  image:
+    name: Backend image
+    runs-on: ubuntu-latest
+    # Only worth building once the code is known good.
+    needs: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Builds but does not publish. Pushing to a registry needs credentials
+      # that do not exist yet, and a build that succeeds is already the useful
+      # signal: it catches a Dockerfile that drifted from the source.
+      - name: Build image
+        run: docker build -t jobmatch-backend:${{ github.sha }} backend

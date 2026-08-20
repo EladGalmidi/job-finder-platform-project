@@ -1,0 +1,18 @@
+node_modules
+dist
+coverage
+uploads
+drizzle.config.ts
+vitest.config.ts
+eslint.config.js
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Never let a local .env reach an image. Configuration comes from the platform.
+.env
+.env.*
+!.env.example
+
+**/*.test.ts
+*.log
