@@ -8,8 +8,9 @@ import { env } from '../config/env.js';
 import { hashPassword, verifyPassword } from '../auth/passwords.js';
 import { createSession, revokeSession } from '../auth/sessions.js';
 import { database } from '../db/client.js';
-import { users } from '../db/schema.js';
+import { applications, cvAnalyses, cvs, users } from '../db/schema.js';
 import { conflict, invalidCredentials } from '../http/errors.js';
+import { deleteFile } from '../storage/files.js';
 import { toUserJson } from '../serializers/user.js';
 
 /**
@@ -20,6 +21,22 @@ import { toUserJson } from '../serializers/user.js';
  * away from long passphrases.
  */
 const MIN_PASSWORD_LENGTH = 8;
+
+/*
+ * Credential endpoints get their own limit, far below the global one.
+ *
+ * The global allowance is 300 requests a minute, which is fine for browsing and
+ * absurd for password guessing — it permits roughly 300 attempts a minute from
+ * one address. Ten attempts per fifteen minutes leaves a forgetful person
+ * plenty of room and makes online brute force pointless.
+ *
+ * This limits by IP, which is the standard first line and not a complete
+ * answer: a distributed attacker rotates addresses. Per-account lockout is the
+ * companion control, and is worth adding once there are real accounts to lock.
+ */
+const CREDENTIAL_LIMIT = {
+  config: { rateLimit: { max: 10, timeWindow: '15 minutes' } },
+} as const;
 
 const credentials = {
   email: z.email().max(320),
@@ -37,7 +54,7 @@ const loginBody = z.object(credentials);
 const normalizeEmail = (email: string): string => email.trim().toLowerCase();
 
 export const registerAuthRoutes = (app: FastifyInstance): void => {
-  app.post('/auth/signup', async (request, reply) => {
+  app.post('/auth/signup', CREDENTIAL_LIMIT, async (request, reply) => {
     const body = signupBody.parse(request.body);
     const email = normalizeEmail(body.email);
     const { db } = database();
@@ -76,7 +93,7 @@ export const registerAuthRoutes = (app: FastifyInstance): void => {
     return reply.status(201).send({ user: toUserJson(user) });
   });
 
-  app.post('/auth/login', async (request, reply) => {
+  app.post('/auth/login', CREDENTIAL_LIMIT, async (request, reply) => {
     const body = loginBody.parse(request.body);
     const { db } = database();
 
@@ -244,6 +261,69 @@ export const registerAuthRoutes = (app: FastifyInstance): void => {
       .returning();
 
     return toUserJson(updated[0] ?? user);
+  });
+
+  /**
+   * Everything we hold about the caller, as one document.
+   *
+   * A person is entitled to their data in a portable form, and building it now
+   * costs an hour where retrofitting it later means reconstructing what was
+   * stored across five tables.
+   */
+  app.get('/users/me/export', async (request) => {
+    const user = request.requireUser();
+    const { db } = database();
+
+    const [myCvs, myAnalyses, myApplications] = await Promise.all([
+      db.select().from(cvs).where(eq(cvs.userId, user.id)),
+      db.select().from(cvAnalyses).where(eq(cvAnalyses.userId, user.id)),
+      db.select().from(applications).where(eq(applications.userId, user.id)),
+    ]);
+
+    return {
+      exportedAt: new Date().toISOString(),
+      account: toUserJson(user),
+      cvs: myCvs.map((cv) => ({
+        id: cv.id,
+        fileName: cv.fileName,
+        uploadedAt: cv.uploadedAt.toISOString(),
+        extraction: cv.extraction,
+        text: cv.extractedText,
+      })),
+      analyses: myAnalyses.map((row) => row.payload),
+      applications: myApplications,
+    };
+  });
+
+  /**
+   * Deletes the account and everything belonging to it.
+   *
+   * Real deletion, not a flag. The database cascades the rows; the uploaded
+   * files have to be removed explicitly because object storage knows nothing
+   * about foreign keys, and a CV left behind after "delete my account" is the
+   * exact failure the obligation exists to prevent.
+   */
+  app.delete('/users/me', async (request, reply) => {
+    const user = request.requireUser();
+    const { db } = database();
+
+    const mine = await db
+      .select({ storageKey: cvs.storageKey })
+      .from(cvs)
+      .where(eq(cvs.userId, user.id));
+
+    // Files first. A failure here leaves the account intact and retryable,
+    // whereas deleting the rows first would orphan the files with nothing left
+    // pointing at them.
+    for (const row of mine) {
+      await deleteFile(row.storageKey);
+    }
+
+    await db.delete(users).where(eq(users.id, user.id));
+
+    clearSessionCookie(reply);
+
+    return { ok: true };
   });
 
   app.post('/users/me/onboarding/complete', async (request) => {

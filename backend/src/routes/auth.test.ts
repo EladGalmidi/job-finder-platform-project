@@ -194,6 +194,27 @@ describe.skipIf(!databaseReachable)('auth routes', () => {
     expect(response.json()).toMatchObject({ code: 'INVALID_CREDENTIALS' });
   });
 
+  it('refuses repeated wrong passwords with RATE_LIMITED, not a server error', async () => {
+    const email = unique();
+    await signup(email);
+
+    const codes: string[] = [];
+    for (let attempt = 0; attempt < 14; attempt += 1) {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/auth/login',
+        payload: { email, password: 'definitely-not-it' },
+      });
+      codes.push(response.json<{ code: string }>().code);
+    }
+
+    // Online brute force has to become pointless, and the refusal has to be
+    // legible: this returned SERVER_ERROR at first, which told the caller the
+    // server was broken when it had deliberately refused them.
+    expect(codes).toContain('RATE_LIMITED');
+    expect(codes).not.toContain('SERVER_ERROR');
+  });
+
   it('reports invalid fields individually so a form can mark them', async () => {
     const response = await app.inject({
       method: 'POST',

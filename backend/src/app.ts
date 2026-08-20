@@ -79,9 +79,18 @@ export const buildApp = async (): Promise<FastifyInstance> => {
   await app.register(rateLimit, {
     max: 300,
     timeWindow: '1 minute',
-    // Answered through the standard error shape so the UI's RATE_LIMITED branch
-    // sees the same body as every other failure.
+    /*
+     * Answered through the standard error shape so the UI's RATE_LIMITED branch
+     * sees the same body as every other failure.
+     *
+     * statusCode is part of the returned object on purpose. This value is
+     * handed to the error handler as a plain object, not as an Error, and
+     * without a status on it the handler has nothing to map — a tripped limit
+     * reached callers as a 500 SERVER_ERROR, which reported a broken server for
+     * a request the system had deliberately refused.
+     */
     errorResponseBuilder: () => ({
+      statusCode: 429,
       code: 'RATE_LIMITED',
       message: 'Too many requests. Try again shortly.',
     }),

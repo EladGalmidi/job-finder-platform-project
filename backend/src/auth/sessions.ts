@@ -4,8 +4,18 @@ import { and, eq, isNull } from 'drizzle-orm';
 import type { Database } from '../db/client.js';
 import { sessions, users, type UserRow } from '../db/schema.js';
 
-/** How long a session cookie stays valid without being refreshed. */
+/** Absolute lifetime. A session is dead at this point however active it was. */
 export const SESSION_TTL_DAYS = 30;
+
+/**
+ * How old a token gets before it is exchanged for a fresh one.
+ *
+ * Rotation limits the value of a stolen cookie: a token copied today stops
+ * working once the real browser next rotates, rather than lasting the full
+ * thirty days. It also gives us reuse detection, which is the part that
+ * actually catches theft — see userForToken.
+ */
+const ROTATE_AFTER_HOURS = 24;
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
@@ -31,6 +41,7 @@ const newToken = (): string => randomBytes(TOKEN_BYTES).toString('base64url');
 const digest = (token: string): string => createHash('sha256').update(token).digest('hex');
 
 export interface IssuedSession {
+  readonly id: string;
   /** Returned to the caller once, to be set as a cookie. Never stored. */
   readonly token: string;
   readonly expiresAt: Date;
@@ -45,12 +56,14 @@ export const createSession = async (
   db: Database['db'],
   userId: string,
   context: SessionContext = {},
+  /** Carried over by rotation, so a rotated session keeps its original expiry. */
+  expiresAt = new Date(Date.now() + SESSION_TTL_DAYS * MS_PER_DAY),
 ): Promise<IssuedSession> => {
   const token = newToken();
-  const expiresAt = new Date(Date.now() + SESSION_TTL_DAYS * MS_PER_DAY);
+  const id = randomUUID();
 
   await db.insert(sessions).values({
-    id: randomUUID(),
+    id,
     userId,
     tokenHash: digest(token),
     expiresAt,
@@ -58,7 +71,7 @@ export const createSession = async (
     ip: context.ip ?? null,
   });
 
-  return { token, expiresAt };
+  return { id, token, expiresAt };
 };
 
 /**
@@ -67,25 +80,71 @@ export const createSession = async (
  * Expiry and revocation are both checked in the query rather than after it, so
  * there is no window where a revoked session is briefly treated as valid.
  */
+export interface ResolvedSession {
+  readonly user: UserRow;
+  /** Set when the token was rotated, and must be written back as a cookie. */
+  readonly rotated?: IssuedSession;
+}
+
 export const userForToken = async (
   db: Database['db'],
   token: string,
-): Promise<UserRow | null> => {
+  context: SessionContext = {},
+): Promise<ResolvedSession | null> => {
+  const hash = digest(token);
+
   const rows = await db
-    .select({ user: users, expiresAt: sessions.expiresAt })
+    .select({
+      user: users,
+      sessionId: sessions.id,
+      expiresAt: sessions.expiresAt,
+      revokedAt: sessions.revokedAt,
+      replacedById: sessions.replacedById,
+      createdAt: sessions.createdAt,
+    })
     .from(sessions)
     .innerJoin(users, eq(users.id, sessions.userId))
-    .where(and(eq(sessions.tokenHash, digest(token)), isNull(sessions.revokedAt)))
+    .where(eq(sessions.tokenHash, hash))
     .limit(1);
 
   const row = rows[0];
   if (row === undefined) return null;
 
+  /*
+   * A spent token being presented again is the signal that one was stolen.
+   *
+   * After rotation the old token is revoked and points at its replacement. The
+   * legitimate browser holds the new cookie and never sends the old one again,
+   * so a second use means two parties hold it — and we cannot tell which is
+   * the impostor. Ending every session for the account is the safe answer: the
+   * real user signs in again, the thief is locked out.
+   */
+  if (row.replacedById !== null) {
+    await revokeAllSessions(db, row.user.id);
+    return null;
+  }
+
+  if (row.revokedAt !== null) return null;
+
   // Expiry is compared here rather than in SQL so the clock that decides is the
   // application's, the same one that issued the timestamp.
   if (row.expiresAt.getTime() <= Date.now()) return null;
 
-  return row.user;
+  const age = Date.now() - row.createdAt.getTime();
+  if (age < ROTATE_AFTER_HOURS * 60 * 60 * 1000) return { user: row.user };
+
+  /*
+   * Rotate. The absolute expiry is deliberately not extended: a session still
+   * dies thirty days after sign-in, so rotation cannot keep one alive forever.
+   */
+  const replacement = await createSession(db, row.user.id, context, row.expiresAt);
+
+  await db
+    .update(sessions)
+    .set({ revokedAt: new Date(), replacedById: replacement.id })
+    .where(eq(sessions.id, row.sessionId));
+
+  return { user: row.user, rotated: replacement };
 };
 
 /** Ends one session. Used by logout, so a shared computer stays signed out. */

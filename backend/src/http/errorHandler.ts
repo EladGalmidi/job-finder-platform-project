@@ -55,22 +55,38 @@ export const registerErrorHandler = (app: FastifyInstance): void => {
       return reply.status(422).send(body);
     }
 
-    // Fastify's own errors for malformed bodies and payloads too large, which
-    // arrive before any handler runs.
+    /*
+     * Failures raised by Fastify itself and by plugins, before any handler
+     * runs: a malformed body, an oversized upload, a tripped rate limit.
+     *
+     * These carry a status but not one of our codes, so they are mapped here.
+     * Leaving the mapping incomplete is not a cosmetic bug: an unmapped client
+     * error fell through to 500, which told the caller the server had broken
+     * when it had in fact refused them on purpose — and the UI branches on the
+     * code, so it could not react correctly either. The rate limiter's 429
+     * reached users as SERVER_ERROR for exactly this reason.
+     */
     const status = typeof (error as { statusCode?: number }).statusCode === 'number'
       ? (error as { statusCode: number }).statusCode
       : 500;
 
-    if (status === 413) {
-      return reply
-        .status(413)
-        .send({ code: 'FILE_TOO_LARGE', message: 'That file is too large' } satisfies ApiErrorBody);
-    }
+    const FROM_STATUS: Readonly<Record<number, ApiErrorBody>> = {
+      400: { code: 'VALIDATION_FAILED', message: 'The request was not valid' },
+      401: { code: 'UNAUTHORIZED', message: 'Authentication required' },
+      403: { code: 'FORBIDDEN', message: 'You do not have access to that' },
+      404: { code: 'NOT_FOUND', message: 'That was not found' },
+      409: { code: 'CONFLICT', message: 'That conflicts with something that already exists' },
+      413: { code: 'FILE_TOO_LARGE', message: 'That file is too large' },
+      415: { code: 'UNSUPPORTED_FILE_TYPE', message: 'That file type is not supported' },
+      422: { code: 'VALIDATION_FAILED', message: 'The request was not valid' },
+      429: { code: 'RATE_LIMITED', message: 'Too many requests. Try again shortly.' },
+    };
 
-    if (status === 400) {
-      return reply
-        .status(400)
-        .send({ code: 'VALIDATION_FAILED', message: 'The request was not valid' } satisfies ApiErrorBody);
+    const mapped = FROM_STATUS[status];
+    if (mapped !== undefined) {
+      // Logged at warn: the system refusing a request is it working, not failing.
+      request.log.warn({ status, route: request.url }, mapped.code);
+      return reply.status(status).send(mapped);
     }
 
     request.log.error({ err: error, route: request.url }, 'unhandled error');
