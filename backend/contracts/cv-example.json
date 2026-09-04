@@ -1,0 +1,119 @@
+{
+  "dbId": 1,
+  "timestamp": null,
+  "personalInformation": {
+    "fullName": "Some Some",
+    "phone": "050-xxxxxxx",
+    "email": "afsfw@fsdfs.com"
+  },
+  "technicalExperience": [
+    {
+      "skill": "Selenium",
+      "period": {
+        "startDate": "2022-05-20",
+        "endDate": null,
+        "isCurrent": true
+      },
+      "experienceDuration": {
+        "unit": "years",
+        "value": 5
+      },
+      "usageDepth": {
+        "level": "deep",
+        "activities": [
+          "use",
+          "modify",
+          "develop"
+        ]
+      },
+      "evidence": [
+        {
+          "sourceExcerpt": "CV mentioned UI tests as part of 5 years experience in ZoomInfo. Selenium is mentioned in the skills section.",
+          "employer": "ZoomInfo",
+          "role": null
+        }
+      ]
+    },
+    {
+      "skill": "Jenkins",
+      "period": {
+        "startDate": "2022",
+        "endDate": null,
+        "isCurrent": null
+      },
+      "experienceDuration": {
+        "unit": "years",
+        "value": null
+      },
+      "usageDepth": {
+        "level": "mentioned_only",
+        "activities": []
+      },
+      "evidence": [
+        {
+          "sourceExcerpt": "CV mentioned Jenkins as a skill without information about its usage.",
+          "employer": null,
+          "role": null
+        }
+      ]
+    }
+  ],
+  "nonTechnicalExperience": [
+    {
+      "skill": "Mentoring",
+      "period": {
+        "startDate": "2021",
+        "endDate": "2026",
+        "isCurrent": false
+      },
+      "experienceDuration": {
+        "unit": "years",
+        "value": 6
+      },
+      "usageDepth": {
+        "level": "deep",
+        "activities": [
+          "automation strategy",
+          "test design",
+          "debugging",
+          "coding best practices"
+        ]
+      },
+      "evidence": [
+        {
+          "sourceExcerpt": "Mentored team members on automation strategy, test design, debugging, and coding best practices.",
+          "employer": null,
+          "role": null
+        }
+      ]
+    }
+  ],
+  "achievements": [
+    {
+      "type": "recognition",
+      "date": "2023",
+      "content": "Employee of the Year",
+      "location": null
+    },
+    {
+      "type": "education",
+      "startDate": "2014",
+      "endDate": "2018",
+      "content": "Practical Software Engineering Diploma",
+      "institution": "Ort Braude College"
+    }
+  ],
+  "other": {
+    "title": "SDET | Automation Tech Lead",
+    "languages": [
+      {
+        "language": "Arabic",
+        "proficiency": "native"
+      },
+      {
+        "language": "English",
+        "proficiency": "fluent"
+      }
+    ]
+  }
+}
