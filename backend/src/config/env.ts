@@ -25,6 +25,21 @@ const schema = z.object({
   CORS_ORIGIN: z.url().default('http://localhost:5173'),
 
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
+
+  /*
+   * Credential for the Gemini API.
+   *
+   * Rejected when present but blank, because an empty string is a
+   * misconfiguration that would otherwise surface as a confusing 401 from the
+   * model rather than as a startup failure.
+   *
+   * Optional rather than required only because nothing in the running server
+   * calls Gemini yet — a standalone script does. Making it mandatory here would
+   * stop the API booting, and every test and CI run, over a credential none of
+   * them use. It should become required in the same change that puts Gemini on
+   * a real request path.
+   */
+  GEMINI_API_KEY: z.string().min(1, 'GEMINI_API_KEY must not be empty').optional(),
 });
 
 export type Env = Readonly<z.infer<typeof schema>>;
