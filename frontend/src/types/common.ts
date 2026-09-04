@@ -40,7 +40,14 @@ export type Theme = 'light' | 'dark';
 export type Seniority = 'junior' | 'mid' | 'senior' | 'lead' | 'principal';
 export type JobType = 'fullTime' | 'partTime' | 'contract' | 'student' | 'internship';
 export type RemoteMode = 'onsite' | 'hybrid' | 'remote';
-export type RoleKey = 'devops' | 'backend' | 'frontend' | 'fullstack' | 'productManager' | 'data';
+export type RoleKey =
+  | 'devops'
+  | 'backend'
+  | 'frontend'
+  | 'fullstack'
+  | 'productManager'
+  | 'data'
+  | 'sales';
 
 export const SENIORITIES: readonly Seniority[] = [
   'junior',
@@ -67,6 +74,7 @@ export const ROLE_KEYS: readonly RoleKey[] = [
   'fullstack',
   'productManager',
   'data',
+  'sales',
 ] as const;
 
 /** Roles offered by the market analysis page. */
@@ -75,6 +83,7 @@ export const MARKET_ROLE_KEYS: readonly RoleKey[] = [
   'backend',
   'frontend',
   'productManager',
+  'sales',
 ] as const;
 
 export type Currency = 'ILS' | 'USD';

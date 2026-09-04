@@ -66,6 +66,18 @@ export const en = {
   'error.VALIDATION_FAILED': 'Please check the highlighted fields.',
   'error.FILE_TOO_LARGE': 'That file is larger than 5 MB.',
   'error.UNSUPPORTED_FILE_TYPE': 'Only PDF and DOCX files are accepted.',
+  'error.CV_NO_TEXT':
+    'We could not read any text from that file. If it is a scanned or image-based PDF, export a text version and try again.',
+  'cv.noTextDocxDetail':
+    'We could not read any text from this Word file. What we found inside it: {notes}. Send this line back and it will identify the problem.',
+  'cv.analysisFailedHint':
+    'We could not read any text from that file. Try a different export, or a version whose text is selectable rather than a picture.',
+  'cv.noTextDocx':
+    'We could not read any text from this Word file. If it was renamed from an older .doc, open it in Word and use Save As to store it as .docx, then upload again.',
+  'cv.noTextScan':
+    'This PDF has no text layer at all ({pages} pages, no text runs found). It is a scan or an image export, so there is nothing to extract. Upload the .docx, or re-save from Word or Google Docs with File then Download as PDF.',
+  'cv.noTextEncoding':
+    'This file has {rawItems} text runs across {pages} pages but none carry a readable encoding. That is a gap on our side, not a problem with your CV — uploading the .docx works around it.',
   'error.CONFLICT': 'That action conflicts with the current state.',
   'error.RATE_LIMITED': 'Too many requests. Please wait a moment.',
   'error.SERVER_ERROR': 'The server ran into a problem.',
@@ -351,6 +363,7 @@ export const en = {
   'role.fullstack': 'Full Stack',
   'role.productManager': 'Product Manager',
   'role.data': 'Data',
+  'role.sales': 'Sales',
 
   'seniority.junior': 'Junior',
   'seniority.mid': 'Mid-level',
@@ -500,6 +513,7 @@ export const en = {
   'jobs.applicants_other': '{count} applicants',
   'jobs.salaryUndisclosed': 'Salary not listed',
   'jobs.toastSaved': 'Saved {title}',
+  'jobs.toastUnsaved': 'Removed {title} from saved',
   'jobs.toastApplied': 'Applied to {title}',
   'jobs.toastShared': 'Link copied to clipboard',
   'jobs.toastShareFailed': 'Could not copy the link',
@@ -532,8 +546,16 @@ export const en = {
   'cv.analysedAt': 'Analysed {when}',
   'cv.fileMeta': '{name} · {size}',
   'cv.uploadNew': 'Upload new CV',
+  'cv.replaceTitle': 'Upload a new CV',
+  'cv.replaceSubtitle':
+    'The new file replaces the current one and everything is scored again against it.',
+  'cv.replaceCurrent': 'Currently using {name}.',
+  'cv.replaceDone': 'CV replaced — your matches have been rescored',
   'cv.importLinkedin': 'Import from LinkedIn',
   'cv.downloadReport': 'Download report',
+  'cv.exportJson': 'Export JSON',
+  'cv.exportJsonDone': 'CV exported as JSON',
+  'cv.exportJsonFailed': 'Could not export this CV',
   'cv.shareLink': 'Share CV link',
   'cv.reportDownloaded': 'Report downloaded',
   'cv.linkCopied': 'CV link copied to clipboard',
@@ -628,7 +650,9 @@ export const en = {
   'market.trendDelta_two': '{delta} points this quarter',
   'market.trendDelta_many': '{delta} points this quarter',
   'market.trendDelta_other': '{delta} points this quarter',
-  'market.salaryImpact': '+{percent}% pay impact',
+  // The sign travels with the value: pay impact can be negative, and a
+  // hardcoded plus rendered it as "+-39%".
+  'market.salaryImpact': '{percent}% pay impact',
   'market.openPositions_one': '{count} open role',
   'market.openPositions_two': '{count} open roles',
   'market.openPositions_many': '{count} open roles',
@@ -682,6 +706,12 @@ export const en = {
   'settings.themeDark': 'Dark',
   'settings.language': 'Language',
 
+  'settings.dataTitle': 'Data export',
+  'settings.dataBody':
+    'For moving CVs into another system. The file contains the extracted text and the fields we detect from it.',
+  'settings.autoExportJson': 'Export JSON automatically after each analysis',
+  'settings.autoExportJsonHint':
+    'Saves the document to your downloads folder as soon as an analysis finishes, without opening the CV page.',
   'settings.accountTitle': 'Account',
   'settings.accountBody': 'Signed in as {email}.',
   'settings.signOutConfirmTitle': 'Sign out?',

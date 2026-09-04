@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -8,12 +7,7 @@ import {
   onboardingAnalysisJobSet,
   selectOnboarding,
 } from '@/features/auth/authSlice';
-import {
-  fetchCvAnalysis,
-  pollCvAnalysis,
-  selectAnalysisJob,
-  startCvAnalysis,
-} from '@/features/cv/cvSlice';
+import { useCvAnalysisRun } from '@/features/cv/useCvAnalysisRun';
 import { useTranslation } from '@/i18n/useTranslation';
 import { ANALYSIS_STEP_LABEL } from '@/lib/labels';
 import { cx } from '@/lib/cx';
@@ -22,73 +16,27 @@ import { ANALYSIS_STEPS } from '@/types';
 import { stepPath, useOnboardingSteps } from '../useOnboardingSteps';
 import styles from '../Onboarding.module.css';
 
-const POLL_INTERVAL_MS = 500;
-
 export const AnalyzingStep = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { goTo } = useOnboardingSteps();
 
   const onboarding = useAppSelector(selectOnboarding);
-  const job = useAppSelector(selectAnalysisJob);
 
   const { cvId, analysisJobId } = onboarding;
 
-  // StrictMode double-invokes effects in development; without this guard two
-  // analyses would be queued for a single upload.
-  const startedRef = useRef(false);
-
-  useEffect(() => {
-    if (cvId === null || startedRef.current) return;
-    startedRef.current = true;
-
-    void dispatch(startCvAnalysis(cvId)).then((result) => {
-      if (startCvAnalysis.fulfilled.match(result)) {
-        dispatch(onboardingAnalysisJobSet(result.payload.analysisJobId));
-      }
-    });
-  }, [cvId, dispatch]);
-
-  const isSettled = job?.status === 'succeeded' || job?.status === 'failed';
-
-  /**
-   * Polls the analysis job until it settles.
-   *
-   * Deliberately depends only on values that are stable for the life of the
-   * poll. An earlier version also depended on the navigation callback, and any
-   * change in its identity tore the interval down and restarted it, so the timer
-   * rarely fired. The interval is cleared on unmount, so navigating away
-   * mid-analysis stops the requests rather than leaving a timer running.
-   */
-  useEffect(() => {
-    if (analysisJobId === null || isSettled) return;
-
-    const timer = setInterval(() => {
-      void dispatch(pollCvAnalysis(analysisJobId));
-    }, POLL_INTERVAL_MS);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [analysisJobId, isSettled, dispatch]);
-
-  /**
-   * Advances once the job reports success.
-   *
-   * Completion is driven by rendered state rather than from inside the poll
-   * callback: gating navigation on a closure flag meant a re-render triggered by
-   * the very poll that succeeded could cancel the transition before it ran.
-   */
-  const completedRef = useRef(false);
-
-  useEffect(() => {
-    if (job?.status !== 'succeeded' || cvId === null || completedRef.current) return;
-    completedRef.current = true;
-
-    void dispatch(fetchCvAnalysis(cvId)).then(() => {
+  // Start, poll and completion all live in the shared hook, so onboarding and
+  // the replace-CV page cannot drift apart. The job id is persisted into
+  // onboarding state, which is what lets a refresh mid-analysis resume the same
+  // run rather than queueing a second one.
+  const { job } = useCvAnalysisRun({
+    cvId,
+    existingJobId: analysisJobId,
+    onJobStarted: (id) => dispatch(onboardingAnalysisJobSet(id)),
+    onComplete: () => {
       goTo('results');
-    });
-  }, [job?.status, cvId, dispatch, goTo]);
+    },
+  });
 
   // Reaching this step without a CV means the user skipped upload; results is
   // the only sensible destination.

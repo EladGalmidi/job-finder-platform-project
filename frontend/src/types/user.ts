@@ -34,8 +34,16 @@ export interface User {
   activeCvId: CvId | null;
 }
 
+/**
+ * What a successful login returns.
+ *
+ * No token. The session lives in an httpOnly cookie the browser stores and
+ * sends by itself, which script cannot read — that is the point, since an XSS
+ * on the page then has nothing to steal. It also means the client cannot tell
+ * whether it is signed in by looking at storage: it has to ask the server,
+ * which is what bootstrapAuth does on every load.
+ */
 export interface AuthSession {
-  token: string;
   user: User;
 }
 

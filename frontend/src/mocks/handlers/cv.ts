@@ -1,10 +1,11 @@
 import { nowIso } from '@/lib/dates';
-import { seededInt } from '@/lib/random';
-import { clampScore } from '@/lib/scoring';
 import { checkCvFile } from '@/lib/validation';
 import { ANALYSIS_STEPS, ApiError, asAnalysisJobId, asCvId, asUserId } from '@/types';
-import type { AnalysisJob, CV, CVAnalysis } from '@/types';
+import type { AnalysisJob, CV, CVAnalysis, CvDocument } from '@/types';
 
+import { buildAnalysisFromText } from '../cv/buildAnalysis';
+import { buildCvDocument } from '../cv/buildDocument';
+import { extractText } from '../cv/extractText';
 import { DEMO_CV_ANALYSIS } from '../data/cv';
 import { mockDb } from '../db/mockDb';
 import type { HandlerContext, MockRoute } from '../transport/router';
@@ -19,7 +20,7 @@ const requireUserId = (context: HandlerContext): string => {
   return context.userId;
 };
 
-const uploadCv = (context: HandlerContext): CV => {
+const uploadCv = async (context: HandlerContext): Promise<CV> => {
   const userId = requireUserId(context);
   const file = context.file;
 
@@ -44,8 +45,46 @@ const uploadCv = (context: HandlerContext): CV => {
     status: 'pending',
   };
 
+  // Read the document now, while the File is still in hand — by the time the
+  // analysis job runs, only what is stored here remains.
+  const extraction = await extractText(file);
+
+  // Refuse rather than analyse a document we could not read. Falling back to the
+  // sample analysis is what told a CV listing Kubernetes, Terraform and AWS that
+  // it was missing all three: the sample belongs to a fictional frontend
+  // engineer whose only overlap with it is Docker. A wrong answer delivered
+  // confidently is worse than no answer.
+  if (extraction.outcome === 'unsupported') {
+    throw new ApiError('UNSUPPORTED_FILE_TYPE', `Cannot read ${file.name}`, 415);
+  }
+
+  if (extraction.outcome === 'failed') {
+    throw new ApiError('SERVER_ERROR', `Could not parse ${file.name}`, 500, {
+      detail: extraction.detail ?? 'unknown',
+    });
+  }
+
+  if (extraction.outcome === 'empty') {
+    const seen = extraction.diagnostics;
+    // The counts ride along so a support conversation starts from evidence
+    // rather than guesswork: pages with no text items is a scan, text items
+    // with no characters is a font without a Unicode mapping.
+    throw new ApiError('CV_NO_TEXT', `No readable text in ${file.name}`, 422, {
+      format: file.name.toLowerCase().endsWith('.pdf') ? 'pdf' : 'docx',
+      pages: String(seen?.pages ?? 0),
+      rawItems: String(seen?.rawItems ?? 0),
+      textItems: String(seen?.textItems ?? 0),
+      characters: String(seen?.characters ?? 0),
+      usedOcr: String(seen?.usedOcr ?? false),
+      // The parser's own complaints, so a failure explains itself instead of
+      // living only in a console line nobody should have to go looking for.
+      notes: extraction.detail ?? '',
+    });
+  }
+
   mockDb.mutate((draft) => {
     draft.cvs[cv.id] = cv;
+    draft.cvText[cv.id] = extraction.text;
     const user = draft.users[userId];
     if (user !== undefined) {
       draft.users[userId] = { ...user, activeCvId: cv.id };
@@ -113,18 +152,24 @@ const startAnalysis = (context: HandlerContext): { analysisJobId: string } => {
   return { analysisJobId: job.id };
 };
 
+/**
+ * Builds the analysis for a CV.
+ *
+ * Uploads are always derived from the document's own text — `uploadCv` rejects
+ * anything unreadable, so by the time a job runs there is text to work from.
+ *
+ * The two sample CVs are the exception and are explicitly samples: the seeded
+ * demo account, and the simulated LinkedIn import. Neither has a file behind it,
+ * and both are labelled as demonstrations in the UI.
+ */
 const buildAnalysis = (cv: CV): CVAnalysis => {
-  // Seeded on file identity so re-analysing the same CV is reproducible.
-  const seed = `${cv.fileName}:${String(cv.fileSizeBytes)}`;
-  const drift = seededInt(seed, -8, 12);
+  const text = mockDb.state.cvText[cv.id] ?? '';
 
-  return {
-    ...DEMO_CV_ANALYSIS,
-    id: `analysis-${cv.id}`,
-    cvId: cv.id,
-    score: clampScore(DEMO_CV_ANALYSIS.score + drift),
-    analyzedAt: nowIso(),
-  };
+  if (text.trim() === '') {
+    return { ...DEMO_CV_ANALYSIS, id: `analysis-${cv.id}`, cvId: cv.id, analyzedAt: nowIso() };
+  }
+
+  return buildAnalysisFromText(cv, text).analysis;
 };
 
 const pollAnalysisJob = (context: HandlerContext): AnalysisJob => {
@@ -170,6 +215,27 @@ const pollAnalysisJob = (context: HandlerContext): AnalysisJob => {
   });
 
   return updated;
+};
+
+/**
+ * The CV as a machine-readable document, for export into another system.
+ *
+ * Served from the endpoint rather than assembled in the UI: the raw text lives
+ * here and never crosses into the client otherwise, and a real backend would
+ * produce this from the same text it parsed.
+ */
+const getDocument = (context: HandlerContext): CvDocument => {
+  const userId = requireUserId(context);
+  const cvId = context.params['cvId'] ?? '';
+
+  const cv = ownedCv(userId, cvId);
+  const text = mockDb.state.cvText[cvId] ?? '';
+
+  if (text.trim() === '') {
+    throw new ApiError('CV_NO_TEXT', `No stored text for ${cvId}`, 422);
+  }
+
+  return buildCvDocument(cv, text);
 };
 
 const getAnalysis = (context: HandlerContext): CVAnalysis => {
@@ -234,6 +300,13 @@ export const cvRoutes: readonly MockRoute[] = [
     latency: 'fast',
     auth: true,
     handler: pollAnalysisJob,
+  },
+  {
+    method: 'GET',
+    pattern: '/cv/:cvId/document',
+    latency: 'fast',
+    auth: true,
+    handler: getDocument,
   },
   {
     method: 'GET',

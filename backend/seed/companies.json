@@ -1,0 +1,74 @@
+[
+  {
+    "id": "co-nimbus",
+    "name": "Nimbus Grid",
+    "logoText": "NG",
+    "logoColor": "#5c4ee5",
+    "industry": "Cloud Infrastructure",
+    "sizeRange": "200-500",
+    "website": "https://nimbusgrid.example.com"
+  },
+  {
+    "id": "co-safeledger",
+    "name": "SafeLedger",
+    "logoText": "SL",
+    "logoColor": "#0f766e",
+    "industry": "Fintech",
+    "sizeRange": "500-1000",
+    "website": "https://safeledger.example.com"
+  },
+  {
+    "id": "co-pulsemetric",
+    "name": "PulseMetric",
+    "logoText": "PM",
+    "logoColor": "#b45309",
+    "industry": "Analytics",
+    "sizeRange": "80-200",
+    "website": "https://pulsemetric.example.com"
+  },
+  {
+    "id": "co-orbitcare",
+    "name": "OrbitCare",
+    "logoText": "OC",
+    "logoColor": "#be123c",
+    "industry": "Health Tech",
+    "sizeRange": "50-80",
+    "website": "https://orbitcare.example.com"
+  },
+  {
+    "id": "co-driftly",
+    "name": "Driftly",
+    "logoText": "DR",
+    "logoColor": "#7c3aed",
+    "industry": "Logistics",
+    "sizeRange": "200-500",
+    "website": "https://driftly.example.com"
+  },
+  {
+    "id": "co-kernelworks",
+    "name": "KernelWorks",
+    "logoText": "KW",
+    "logoColor": "#1d4ed8",
+    "industry": "Developer Tools",
+    "sizeRange": "20-50",
+    "website": "https://kernelworks.example.com"
+  },
+  {
+    "id": "co-verdantai",
+    "name": "Verdant AI",
+    "logoText": "VA",
+    "logoColor": "#15803d",
+    "industry": "AI Platform",
+    "sizeRange": "80-200",
+    "website": "https://verdantai.example.com"
+  },
+  {
+    "id": "co-tandemhq",
+    "name": "Tandem HQ",
+    "logoText": "TH",
+    "logoColor": "#c2410c",
+    "industry": "HR Tech",
+    "sizeRange": "50-80",
+    "website": "https://tandemhq.example.com"
+  }
+]

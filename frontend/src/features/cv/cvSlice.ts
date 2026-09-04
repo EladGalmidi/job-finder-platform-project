@@ -103,6 +103,11 @@ const cvSlice = createSlice({
   name: 'cv',
   initialState,
   reducers: {
+    /** Clears a previous upload failure, so picking a new file starts clean. */
+    uploadErrorCleared(state) {
+      state.uploadError = null;
+      state.uploadStatus = 'idle';
+    },
     analysisJobCleared(state) {
       state.analysisJob = null;
       state.analysisStatus = 'idle';
@@ -164,7 +169,7 @@ const cvSlice = createSlice({
   },
 });
 
-export const { analysisJobCleared } = cvSlice.actions;
+export const { analysisJobCleared, uploadErrorCleared } = cvSlice.actions;
 export const cvReducer = cvSlice.reducer;
 
 interface CvSliceRoot {
@@ -185,6 +190,10 @@ export const selectActiveAnalysis = (state: CvSliceRoot): CVAnalysis | null =>
  */
 export const selectAnalysisForCv = (state: CvSliceRoot, cvId: CvId | null): CVAnalysis | null =>
   cvId === null ? null : (state.cv.analysesByCvId[cvId] ?? null);
+
+/** Looks a CV up by id, for the same reason selectAnalysisForCv exists. */
+export const selectCvById = (state: CvSliceRoot, cvId: CvId | null): CV | null =>
+  cvId === null ? null : (state.cv.cvs[cvId] ?? null);
 
 export const selectAnalysisJob = (state: CvSliceRoot): AnalysisJob | null => state.cv.analysisJob;
 export const selectUploadStatus = (state: CvSliceRoot): RequestStatus => state.cv.uploadStatus;

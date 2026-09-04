@@ -26,6 +26,7 @@ export const ROLE_LABEL: Record<RoleKey, TranslationKey> = {
   fullstack: 'role.fullstack',
   productManager: 'role.productManager',
   data: 'role.data',
+  sales: 'role.sales',
 };
 
 export const SENIORITY_LABEL: Record<Seniority, TranslationKey> = {

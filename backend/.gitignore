@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+
+# Never commit real configuration. .env.example documents the shape instead.
+.env
+.env.*
+!.env.example
+
+*.log
+.DS_Store
+uploads/

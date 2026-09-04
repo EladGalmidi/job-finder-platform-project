@@ -108,3 +108,20 @@
     padding-inline: var(--space-4);
   }
 }
+
+/*
+ * A finished action, not an unavailable one.
+ *
+ * `:disabled` fades to 55% because an unavailable control should recede. A
+ * button reading "Applied" or "Saved" is the opposite: it is confirming the
+ * user succeeded, so it keeps full contrast and takes the success colour. It
+ * still carries the disabled attribute, so it is skipped by Tab and announced
+ * as unavailable — there is nothing left to activate.
+ */
+.complete:disabled {
+  color: var(--color-success);
+  cursor: default;
+  background-color: var(--color-success-soft);
+  border-color: var(--color-success);
+  opacity: 1;
+}

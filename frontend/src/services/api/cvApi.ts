@@ -1,4 +1,4 @@
-import type { AnalysisJob, AnalysisJobId, CV, CVAnalysis, CvId } from '@/types';
+import type { AnalysisJob, AnalysisJobId, CV, CVAnalysis, CvDocument, CvId } from '@/types';
 
 import { api } from '../http/client';
 
@@ -19,6 +19,10 @@ export const cvApi = {
       `/analysis-jobs/${analysisJobId}`,
       signal === undefined ? undefined : { signal },
     ),
+
+  /** The CV as a machine-readable document, for export into another system. */
+  document: (cvId: CvId, signal?: AbortSignal): Promise<CvDocument> =>
+    api.get<CvDocument>(`/cv/${cvId}/document`, signal === undefined ? undefined : { signal }),
 
   analysis: (cvId: CvId, signal?: AbortSignal): Promise<CVAnalysis> =>
     api.get<CVAnalysis>(`/cv/${cvId}/analysis`, signal === undefined ? undefined : { signal }),

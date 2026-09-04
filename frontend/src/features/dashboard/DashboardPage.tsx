@@ -134,7 +134,7 @@ export const DashboardPage = (): React.JSX.Element => {
               {t('dashboard.ctaViewCv')}
             </LinkButton>
           ) : (
-            <LinkButton to="/onboarding/cv" variant="secondary">
+            <LinkButton to="/dashboard/cv/upload" variant="secondary">
               {t('dashboard.ctaUploadCv')}
             </LinkButton>
           )}
@@ -280,7 +280,7 @@ export const DashboardPage = (): React.JSX.Element => {
                 title={t('dashboard.cvEmptyTitle')}
                 body={t('dashboard.cvEmptyBody')}
                 action={
-                  <LinkButton to="/onboarding/cv" variant="secondary">
+                  <LinkButton to="/dashboard/cv/upload" variant="secondary">
                     {t('dashboard.ctaUploadCv')}
                   </LinkButton>
                 }
@@ -403,7 +403,13 @@ const DashboardJobCard = ({
       status={application?.status ?? null}
       isMutating={isMutating}
       detailPath={jobDetailPath(job.id)}
-      onSave={() => actions.save(job)}
+      onSave={() => {
+        if (application !== null && application.status === 'saved') {
+          actions.unsave(job, application.id);
+          return;
+        }
+        actions.save(job);
+      }}
       onApply={() => actions.apply(job)}
       onShare={() => actions.share(job)}
       compact

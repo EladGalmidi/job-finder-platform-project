@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { STORAGE_KEYS, writeString } from '@/lib/storage';
 import { applicationsApi } from '@/services/api/applicationsApi';
 import { authApi } from '@/services/api/authApi';
 import { cvApi } from '@/services/api/cvApi';
@@ -23,19 +22,22 @@ const baseQuery: JobQuery = {
   page: 1,
 };
 
+/*
+ * No token is stored here any more. The mock's auth handler records its own
+ * session when login succeeds, standing in for the httpOnly cookie the real
+ * server sets — which the client equally cannot see or persist itself.
+ */
 const signIn = async (): Promise<void> => {
-  const session = await authApi.login({ email: 'demo@jobmatch.ai', password: 'demo1234' });
-  writeString(STORAGE_KEYS.authToken, session.token);
+  await authApi.login({ email: 'demo@jobmatch.ai', password: 'demo1234' });
 };
 
 /** A fresh account, which owns none of the seeded demo data. */
 const signUpNewUser = async (): Promise<void> => {
-  const session = await authApi.signup({
+  await authApi.signup({
     fullName: 'Dana Levi',
     email: 'dana@example.com',
     password: 'Str0ngPass!23',
   });
-  writeString(STORAGE_KEYS.authToken, session.token);
 };
 
 /**

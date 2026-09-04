@@ -63,6 +63,18 @@ export const he: Catalog = {
   'error.VALIDATION_FAILED': 'יש לבדוק את השדות המסומנים.',
   'error.FILE_TOO_LARGE': 'הקובץ גדול מ-5 מגהבייט.',
   'error.UNSUPPORTED_FILE_TYPE': 'ניתן להעלות קבצי PDF או DOCX בלבד.',
+  'error.CV_NO_TEXT':
+    'לא הצלחנו לקרוא טקסט מהקובץ. אם מדובר בקובץ סרוק או מבוסס תמונה, ייצאו גרסה טקstualית ונסו שוב.',
+  'cv.noTextDocxDetail':
+    'לא הצלחנו לקרוא טקסט מקובץ ה-Word הזה. מה שנמצא בתוכו: {notes}. שלחו את השורה הזו בחזרה והיא תזהה את הבעיה.',
+  'cv.analysisFailedHint':
+    'לא הצלחנו לקרוא טקסט מהקובץ. נסו ייצוא אחר, או גרסה שבה אפשר לסמן את הטקסט ולא תמונה שלו.',
+  'cv.noTextDocx':
+    'לא הצלחנו לקרוא טקסט מקובץ ה-Word הזה. אם שמו שונה מקובץ doc ישן, פתחו אותו ב-Word ושמרו בשם כקובץ docx, ואז העלו שוב.',
+  'cv.noTextScan':
+    'ל-PDF הזה אין שכבת טקסט כלל ({pages} עמודים, לא נמצאו רצפי טקסט). זהו קובץ סרוק או ייצוא כתמונה, ואין ממה לחלץ. העלו את קובץ ה-docx, או שמרו מחדש מ-Word או Google Docs דרך קובץ ואז הורדה כ-PDF.',
+  'cv.noTextEncoding':
+    'בקובץ יש {rawItems} רצפי טקסט ב-{pages} עמודים, אך לאף אחד אין קידוד קריא. זו מגבלה אצלנו ולא בעיה בקורות החיים — העלאת קובץ docx עוקפת אותה.',
   'error.CONFLICT': 'הפעולה מתנגשת עם המצב הנוכחי.',
   'error.RATE_LIMITED': 'יותר מדי בקשות. נסו שוב בעוד רגע.',
   'error.SERVER_ERROR': 'אירעה תקלה בשרת.',
@@ -344,6 +356,7 @@ export const he: Catalog = {
   'role.fullstack': 'Full Stack',
   'role.productManager': 'ניהול מוצר',
   'role.data': 'Data',
+  'role.sales': 'מכירות',
 
   'seniority.junior': 'ג׳וניור',
   'seniority.mid': 'דרג ביניים',
@@ -491,6 +504,7 @@ export const he: Catalog = {
   'jobs.applicants_other': '{count} מועמדים',
   'jobs.salaryUndisclosed': 'השכר לא צוין',
   'jobs.toastSaved': 'נשמרה המשרה {title}',
+  'jobs.toastUnsaved': 'המשרה {title} הוסרה מהשמורות',
   'jobs.toastApplied': 'הוגשה מועמדות ל-{title}',
   'jobs.toastShared': 'הקישור הועתק',
   'jobs.toastShareFailed': 'לא הצלחנו להעתיק את הקישור',
@@ -523,8 +537,15 @@ export const he: Catalog = {
   'cv.analysedAt': 'נותח {when}',
   'cv.fileMeta': '{name} · {size}',
   'cv.uploadNew': 'העלאת קורות חיים חדשים',
+  'cv.replaceTitle': 'העלאת קורות חיים חדשים',
+  'cv.replaceSubtitle': 'הקובץ החדש מחליף את הנוכחי, והכול מדורג מחדש מולו.',
+  'cv.replaceCurrent': 'כרגע בשימוש {name}.',
+  'cv.replaceDone': 'קורות החיים הוחלפו — ההתאמות דורגו מחדש',
   'cv.importLinkedin': 'ייבוא מ-LinkedIn',
   'cv.downloadReport': 'הורדת דוח',
+  'cv.exportJson': 'ייצוא JSON',
+  'cv.exportJsonDone': 'קורות החיים יוצאו כ-JSON',
+  'cv.exportJsonFailed': 'לא הצלחנו לייצא את קורות החיים',
   'cv.shareLink': 'שיתוף קישור',
   'cv.reportDownloaded': 'הדוח הורד',
   'cv.linkCopied': 'הקישור הועתק',
@@ -619,7 +640,7 @@ export const he: Catalog = {
   'market.trendDelta_two': '{delta} נקודות ברבעון',
   'market.trendDelta_many': '{delta} נקודות ברבעון',
   'market.trendDelta_other': '{delta} נקודות ברבעון',
-  'market.salaryImpact': 'השפעה על השכר: {percent}%+',
+  'market.salaryImpact': 'השפעה על השכר: {percent}%',
   'market.openPositions_one': 'משרה פתוחה אחת',
   'market.openPositions_two': 'שתי משרות פתוחות',
   'market.openPositions_many': '{count} משרות פתוחות',
@@ -673,6 +694,12 @@ export const he: Catalog = {
   'settings.themeDark': 'כהה',
   'settings.language': 'שפה',
 
+  'settings.dataTitle': 'ייצוא נתונים',
+  'settings.dataBody':
+    'להעברת קורות חיים למערכת אחרת. הקובץ מכיל את הטקסט שחולץ ואת השדות שזוהו ממנו.',
+  'settings.autoExportJson': 'ייצוא JSON אוטומטי בסיום כל ניתוח',
+  'settings.autoExportJsonHint':
+    'שומר את הקובץ לתיקיית ההורדות מיד עם סיום הניתוח, בלי לפתוח את עמוד קורות החיים.',
   'settings.accountTitle': 'חשבון',
   'settings.accountBody': 'מחוברים כ-{email}.',
   'settings.signOutConfirmTitle': 'להתנתק?',

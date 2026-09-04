@@ -1,0 +1,116 @@
+import cookie from '@fastify/cookie';
+import cors from '@fastify/cors';
+import helmet from '@fastify/helmet';
+import rateLimit from '@fastify/rate-limit';
+import multipart from '@fastify/multipart';
+import Fastify, { type FastifyInstance } from 'fastify';
+
+import { registerAuth } from './auth/plugin.js';
+import { env } from './config/env.js';
+import { registerErrorHandler } from './http/errorHandler.js';
+import { registerApplicationRoutes } from './routes/applications.js';
+import { registerAuthRoutes } from './routes/auth.js';
+import { registerCvRoutes } from './routes/cv.js';
+import { registerDashboardRoutes } from './routes/dashboard.js';
+import { registerJobRoutes } from './routes/jobs.js';
+import { registerMarketRoutes } from './routes/market.js';
+
+/** JSON bodies larger than this are refused before they are buffered. */
+const MAX_BODY_BYTES = 1_000_000;
+
+/** Upload ceiling, matching the frontend's MAX_CV_BYTES. */
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
+
+/**
+ * Builds the server without starting it, so tests can drive it over
+ * `app.inject()` with no port and no sockets.
+ */
+export const buildApp = async (): Promise<FastifyInstance> => {
+  const config = env();
+
+  const app = Fastify({
+    logger: {
+      level: config.LOG_LEVEL,
+      // Structured logs throughout. Pretty-printing is a local concern and is
+      // piped in by the dev script rather than compiled into the server.
+      redact: {
+        paths: ['req.headers.cookie', 'req.headers.authorization', 'req.body.password'],
+        censor: '[redacted]',
+      },
+    },
+    bodyLimit: MAX_BODY_BYTES,
+    // Trusting the proxy is what makes req.ip the real client address behind a
+    // load balancer, which the rate limiter keys on.
+    trustProxy: config.NODE_ENV === 'production',
+  });
+
+  await app.register(helmet);
+
+  /*
+   * Credentialed CORS. `credentials: true` is what allows the browser to send
+   * the session cookie, and it is only legal against an explicit origin — the
+   * spec forbids pairing it with a wildcard, so CORS_ORIGIN is configuration
+   * rather than a default.
+   */
+  await app.register(cors, {
+    origin: config.CORS_ORIGIN,
+    credentials: true,
+    /*
+     * Listed explicitly because the default is GET, HEAD and POST only.
+     * Without PATCH here the preflight for updating a profile or preferences
+     * is refused by the browser before the request is ever sent, which surfaces
+     * as a network error rather than anything naming CORS.
+     */
+    methods: ['GET', 'HEAD', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+  });
+
+  await app.register(cookie, {
+    secret: config.SESSION_SECRET,
+  });
+
+  /*
+   * File uploads. The limit is enforced while streaming, so an oversized file
+   * is rejected before it is ever fully buffered in memory.
+   */
+  await app.register(multipart, {
+    limits: { fileSize: MAX_UPLOAD_BYTES, files: 1 },
+  });
+
+  await app.register(rateLimit, {
+    max: 300,
+    timeWindow: '1 minute',
+    /*
+     * Answered through the standard error shape so the UI's RATE_LIMITED branch
+     * sees the same body as every other failure.
+     *
+     * statusCode is part of the returned object on purpose. This value is
+     * handed to the error handler as a plain object, not as an Error, and
+     * without a status on it the handler has nothing to map — a tripped limit
+     * reached callers as a 500 SERVER_ERROR, which reported a broken server for
+     * a request the system had deliberately refused.
+     */
+    errorResponseBuilder: () => ({
+      statusCode: 429,
+      code: 'RATE_LIMITED',
+      message: 'Too many requests. Try again shortly.',
+    }),
+  });
+
+  registerErrorHandler(app);
+  registerAuth(app);
+
+  registerAuthRoutes(app);
+  registerJobRoutes(app);
+  registerCvRoutes(app);
+  registerDashboardRoutes(app);
+  registerMarketRoutes(app);
+  registerApplicationRoutes(app);
+
+  // Liveness only. It deliberately does not touch the database: a health check
+  // that fails when Postgres blips causes the orchestrator to kill a server
+  // that was working fine. Dependency checks belong on a separate readiness
+  // endpoint, added when there is an orchestrator to read it.
+  app.get('/health', () => ({ status: 'ok', uptime: process.uptime() }));
+
+  return app;
+};

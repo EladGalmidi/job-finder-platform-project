@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/cv-analysis.schema.json",
+  "title": "Skills-First CV Analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "personalInformation",
+    "technicalExperience",
+    "nonTechnicalExperience",
+    "achievements",
+    "other"
+  ],
+  "properties": {
+    "dbId": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "timestamp": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "personalInformation": {
+      "type": "object",
+      "description": "Dynamic section for personal and contact details, such as fullName, email, phone, location, LinkedIn, GitHub, portfolio, workAuthorization, or any other relevant information.",
+      "additionalProperties": true
+    },
+    "technicalExperience": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/skillExperience"
+      }
+    },
+    "nonTechnicalExperience": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/skillExperience"
+      }
+    },
+    "achievements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/achievement"
+      }
+    },
+    "other": {
+      "type": "object",
+      "description": "Dynamic section for relevant information that does not fit another category, such as title, languages, availability, interests, publications, volunteer work, or security clearance.",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "partialDate": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^\\d{4}(-\\d{2}(-\\d{2})?)?$",
+      "description": "A known year, year-month, or full ISO date. Use null when the CV does not provide a value."
+    },
+    "period": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "startDate",
+        "endDate",
+        "isCurrent"
+      ],
+      "properties": {
+        "startDate": {
+          "$ref": "#/$defs/partialDate"
+        },
+        "endDate": {
+          "$ref": "#/$defs/partialDate"
+        },
+        "isCurrent": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "True only when the CV explicitly indicates a current or present role. Null means unknown."
+        }
+      }
+    },
+    "experienceDuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit",
+        "value"
+      ],
+      "properties": {
+        "unit": {
+          "type": "string",
+          "enum": [
+            "months",
+            "years"
+          ]
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "usageDepth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "level",
+        "activities"
+      ],
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": [
+            "mentioned_only",
+            "basic",
+            "working",
+            "deep"
+          ]
+        },
+        "activities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceExcerpt",
+        "employer",
+        "role"
+      ],
+      "properties": {
+        "sourceExcerpt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "employer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "skillExperience": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skill",
+        "period",
+        "experienceDuration",
+        "usageDepth",
+        "evidence"
+      ],
+      "properties": {
+        "skill": {
+          "type": "string",
+          "minLength": 1
+        },
+        "period": {
+          "$ref": "#/$defs/period"
+        },
+        "experienceDuration": {
+          "$ref": "#/$defs/experienceDuration"
+        },
+        "usageDepth": {
+          "$ref": "#/$defs/usageDepth"
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        }
+      }
+    },
+    "achievement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "content"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "education",
+            "certification",
+            "recognition",
+            "award",
+            "publication",
+            "project",
+            "other"
+          ]
+        },
+        "date": {
+          "$ref": "#/$defs/partialDate"
+        },
+        "startDate": {
+          "$ref": "#/$defs/partialDate"
+        },
+        "endDate": {
+          "$ref": "#/$defs/partialDate"
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1
+        },
+        "institution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "location": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

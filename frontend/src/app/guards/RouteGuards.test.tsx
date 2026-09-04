@@ -30,7 +30,6 @@ const authState = (
   auth: {
     status,
     user: status === 'authenticated' ? user(onboarded) : null,
-    token: status === 'authenticated' ? 'token' : null,
     error: null,
     submitStatus: 'idle',
     onboarding: {
@@ -54,6 +53,7 @@ const renderAt = (path: string, preloadedState: Partial<RootState>): void => {
         <Route element={<ProtectedRoute />}>
           <Route element={<OnboardingGuard expectComplete />}>
             <Route path="/dashboard" element={<p>dashboard screen</p>} />
+            <Route path="/dashboard/cv/upload" element={<p>cv upload screen</p>} />
           </Route>
           <Route element={<OnboardingGuard expectComplete={false} />}>
             <Route path="/onboarding" element={<p>onboarding screen</p>} />
@@ -89,6 +89,19 @@ describe('route guards', () => {
   it('keeps an un-onboarded user inside onboarding', () => {
     renderAt('/onboarding', authState('authenticated', false));
     expect(screen.getByText('onboarding screen')).toBeInTheDocument();
+  });
+
+  /**
+   * Replacing a CV has to live outside /onboarding.
+   *
+   * Every "Upload new CV" control used to point at /onboarding/cv, which this
+   * guard bounces back to the dashboard for anyone who has finished onboarding.
+   * The buttons therefore did nothing, and there was no way to change your CV
+   * at all — the product's central feature, unreachable.
+   */
+  it('lets an onboarded user reach the CV upload page', () => {
+    renderAt('/dashboard/cv/upload', authState('authenticated', true));
+    expect(screen.getByText('cv upload screen')).toBeInTheDocument();
   });
 
   it('keeps signed-in users off public-only routes', () => {

@@ -4,6 +4,7 @@ import type { Job } from '@/types';
 
 import { findCompany } from './companies';
 import { EXTRA_JOB_SEEDS } from './jobsExtra';
+import { SALES_JOB_SEEDS } from './jobsSales';
 import { skillRefs } from './skills';
 
 type JobSeed = Omit<Job, 'id' | 'company'> & { readonly id: string; readonly companyId: string };
@@ -322,7 +323,11 @@ const SEEDS: readonly JobSeed[] = [
   },
 ] as const;
 
-const ALL_SEEDS: readonly JobSeed[] = [...SEEDS, ...(EXTRA_JOB_SEEDS as readonly JobSeed[])];
+const ALL_SEEDS: readonly JobSeed[] = [
+  ...SEEDS,
+  ...(EXTRA_JOB_SEEDS as readonly JobSeed[]),
+  ...(SALES_JOB_SEEDS as readonly JobSeed[]),
+];
 
 export const JOBS: readonly Job[] = ALL_SEEDS.map(({ companyId, id, ...rest }) => ({
   ...rest,

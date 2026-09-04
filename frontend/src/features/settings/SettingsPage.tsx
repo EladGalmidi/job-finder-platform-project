@@ -3,13 +3,22 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { Button } from '@/components/ui/Button/Button';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
+import { Checkbox } from '@/components/ui/Checkbox/Checkbox';
 import { Input } from '@/components/ui/Input/Input';
 import { OptionCard } from '@/components/ui/OptionCard/OptionCard';
 import { RadioCardGroup } from '@/components/ui/OptionCard/RadioCardGroup';
 import { logout, savePreferences, saveProfile, selectCurrentUser } from '@/features/auth/authSlice';
 import { PreferencesFields } from '@/features/preferences/PreferencesFields';
 import { DEFAULT_PREFERENCES, usePreferencesForm } from '@/features/preferences/preferencesForm';
-import { localeSet, selectLocale, selectTheme, themeSet, toastPushed } from '@/features/ui/uiSlice';
+import {
+  autoExportJsonSet,
+  localeSet,
+  selectAutoExportJson,
+  selectLocale,
+  selectTheme,
+  themeSet,
+  toastPushed,
+} from '@/features/ui/uiSlice';
 import { useTranslation } from '@/i18n/useTranslation';
 import { isValidFullName } from '@/lib/validation';
 import type { Locale, Theme } from '@/types';
@@ -23,6 +32,7 @@ export const SettingsPage = (): React.JSX.Element => {
   const user = useAppSelector(selectCurrentUser);
   const theme = useAppSelector(selectTheme);
   const locale = useAppSelector(selectLocale);
+  const autoExportJson = useAppSelector(selectAutoExportJson);
 
   const [fullName, setFullName] = useState(user?.fullName ?? '');
   const [headline, setHeadline] = useState(user?.headline ?? '');
@@ -186,6 +196,20 @@ export const SettingsPage = (): React.JSX.Element => {
             ))}
           </RadioCardGroup>
         </div>
+      </section>
+
+      <section className={styles.panel} aria-labelledby="settings-data">
+        <h3 id="settings-data" className={styles.panelTitle}>
+          {t('settings.dataTitle')}
+        </h3>
+        <p className={styles.panelBody}>{t('settings.dataBody')}</p>
+
+        <Checkbox
+          label={t('settings.autoExportJson')}
+          checked={autoExportJson}
+          onChange={(event) => dispatch(autoExportJsonSet(event.target.checked))}
+        />
+        <p className={styles.hint}>{t('settings.autoExportJsonHint')}</p>
       </section>
 
       <section className={styles.panel} aria-labelledby="settings-account">

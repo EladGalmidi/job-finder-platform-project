@@ -4,6 +4,8 @@ import { useAppDispatch } from '@/app/hooks';
 import { toastPushed } from '@/features/ui/uiSlice';
 import { useTranslation } from '@/i18n/useTranslation';
 import { createLogger } from '@/lib/logger';
+
+import { exportCvDocument } from './exportCvDocument';
 import type { CV, CVAnalysis } from '@/types';
 
 const log = createLogger('cvReport');
@@ -19,6 +21,8 @@ const escapeHtml = (value: string): string =>
 export interface CvReportActions {
   download: () => void;
   share: () => void;
+  /** Saves the CV as a machine-readable JSON document. */
+  exportJson: () => Promise<void>;
 }
 
 /**
@@ -129,5 +133,16 @@ export const useCvReport = (cv: CV | null, analysis: CVAnalysis | null): CvRepor
       });
   }, [dispatch, t]);
 
-  return { download, share };
+  const exportJson = useCallback(async () => {
+    if (cv === null) return;
+
+    const ok = await exportCvDocument(cv.id, cv.fileName);
+    dispatch(
+      ok
+        ? toastPushed({ severity: 'success', title: t('cv.exportJsonDone') })
+        : toastPushed({ severity: 'danger', title: t('cv.exportJsonFailed') }),
+    );
+  }, [cv, dispatch, t]);
+
+  return { download, share, exportJson };
 };
