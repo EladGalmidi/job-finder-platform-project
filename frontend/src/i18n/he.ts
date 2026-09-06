@@ -532,6 +532,7 @@ export const he: Catalog = {
 
   'cv.title': 'ניתוח קורות חיים',
   'cv.subtitle': 'מה קורות החיים שלכם אומרים עליכם, ומה כדאי לשנות.',
+  'cv.matchScore': 'ציון התאמה',
   'cv.overallScore': 'ציון כולל',
   'cv.outOf': 'מתוך 100',
   'cv.analysedAt': 'נותח {when}',

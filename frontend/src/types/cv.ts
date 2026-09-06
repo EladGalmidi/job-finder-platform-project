@@ -125,6 +125,19 @@ export interface CvDocument {
   };
 }
 
+/**
+ * What `GET /cv/:cvId/score` returns.
+ *
+ * An object, never a bare number, and read only through `score`. The scoring
+ * service behind this endpoint is still a stand-in; the real one is expected to
+ * answer at the same path with more fields alongside — a timestamp, a level, a
+ * breakdown of its own. Callers that take the value from `score` keep working
+ * when that happens, so nothing here should assume these are the only keys.
+ */
+export interface CvScore {
+  score: number;
+}
+
 export type AnalysisStepKey =
   | 'parsing'
   | 'extractingSkills'

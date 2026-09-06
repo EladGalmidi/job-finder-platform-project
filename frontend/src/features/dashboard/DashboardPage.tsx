@@ -16,7 +16,14 @@ import {
   selectIsJobMutating,
 } from '@/features/applications/applicationsSlice';
 import { selectCurrentUser } from '@/features/auth/authSlice';
-import { fetchActiveCv, fetchCvAnalysis, selectActiveAnalysis, selectActiveCv } from '@/features/cv/cvSlice';
+import {
+  fetchActiveCv,
+  fetchCvAnalysis,
+  fetchCvScore,
+  selectActiveAnalysis,
+  selectActiveCv,
+  selectActiveScore,
+} from '@/features/cv/cvSlice';
 import {
   dismissAlert,
   fetchActivity,
@@ -77,6 +84,7 @@ export const DashboardPage = (): React.JSX.Element => {
   const activity = useAppSelector(selectActivity);
   const activeCv = useAppSelector(selectActiveCv);
   const analysis = useAppSelector(selectActiveAnalysis);
+  const backendScore = useAppSelector(selectActiveScore);
   const refreshToken = useAppSelector(selectRefreshToken);
 
   const listKey = jobsQueryKey(TOP_MATCHES_QUERY);
@@ -96,6 +104,12 @@ export const DashboardPage = (): React.JSX.Element => {
     if (activeCv === null || analysis !== null) return;
     void dispatch(fetchCvAnalysis(activeCv.id));
   }, [dispatch, activeCv, analysis]);
+
+  // So is the score. A rejection needs no handling: both readers fall back.
+  useEffect(() => {
+    if (activeCv === null) return;
+    void dispatch(fetchCvScore(activeCv.id));
+  }, [dispatch, activeCv]);
 
   const topJobs = (list?.ids ?? []).slice(0, 5);
   const firstName = (user?.fullName ?? '').split(' ')[0] ?? '';
@@ -144,7 +158,9 @@ export const DashboardPage = (): React.JSX.Element => {
       <section className={styles.metrics} aria-label={t('dashboard.metricsLabel')}>
         <MetricCard
           label={t('dashboard.metricCvScore')}
-          value={metrics?.cvScore ?? null}
+          // The scoring service first; the dashboard's own metric stands in
+          // only until it has answered for this CV.
+          value={backendScore ?? metrics?.cvScore ?? null}
           placeholder={t('dashboard.metricNoCv')}
           glyph="▤"
           tone="primary"
@@ -288,10 +304,12 @@ export const DashboardPage = (): React.JSX.Element => {
             ) : (
               <>
                 <div className={styles.cvHead}>
-                  <MatchScore score={analysis.score} size={76} showLabel={false} />
+                  <MatchScore score={backendScore ?? analysis.score} size={76} showLabel={false} />
                   <span className={styles.cvHeadMeta}>
                     <span className={styles.cvScoreLabel}>{t('dashboard.metricCvScore')}</span>
-                    <span className={styles.cvScoreValue}>{analysis.score} / 100</span>
+                    <span className={styles.cvScoreValue}>
+                      {backendScore ?? analysis.score} / 100
+                    </span>
                   </span>
                 </div>
 

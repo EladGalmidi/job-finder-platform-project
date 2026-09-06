@@ -8,6 +8,7 @@ import type {
   CV,
   CVAnalysis,
   CvId,
+  CvScore,
   RequestStatus,
   SerializedApiError,
 } from '@/types';
@@ -16,6 +17,13 @@ interface CvState {
   activeCvId: CvId | null;
   cvs: Record<string, CV>;
   analysesByCvId: Record<string, CVAnalysis>;
+  /**
+   * Scores from the scoring service, by CV id.
+   *
+   * Absent until that service has answered for a CV. Absent is not zero: every
+   * reader falls back to what it already displayed rather than rendering a 0.
+   */
+  scoresByCvId: Record<string, number>;
   uploadStatus: RequestStatus;
   uploadError: SerializedApiError | null;
   analysisStatus: RequestStatus;
@@ -27,6 +35,7 @@ const initialState: CvState = {
   activeCvId: null,
   cvs: {},
   analysesByCvId: {},
+  scoresByCvId: {},
   uploadStatus: 'idle',
   uploadError: null,
   analysisStatus: 'idle',
@@ -99,6 +108,25 @@ export const fetchCvAnalysis = createAppAsyncThunk(
   },
 );
 
+/**
+ * Fetches a CV's score from the scoring service.
+ *
+ * The value is read out of the response object's `score` field rather than
+ * taken as the whole body, so extra fields the real service adds later travel
+ * harmlessly.
+ *
+ * A CV that has not been scored answers 404. That rejection is stored as
+ * nothing at all, which is what lets each reader keep its existing fallback.
+ */
+export const fetchCvScore = createAppAsyncThunk('cv/fetchScore', async (cvId: CvId, thunkApi) => {
+  try {
+    const result: CvScore = await cvApi.score(cvId, thunkApi.signal);
+    return { cvId, score: result.score };
+  } catch (error) {
+    return thunkApi.rejectWithValue(toRejectValue(error));
+  }
+});
+
 const cvSlice = createSlice({
   name: 'cv',
   initialState,
@@ -166,6 +194,12 @@ const cvSlice = createSlice({
     builder.addCase(fetchCvAnalysis.fulfilled, (state, action) => {
       state.analysesByCvId[action.payload.cvId] = action.payload;
     });
+
+    // Only the success case is recorded. A rejection leaves the entry absent,
+    // which every selector below reads as "fall back to what you had".
+    builder.addCase(fetchCvScore.fulfilled, (state, action) => {
+      state.scoresByCvId[action.payload.cvId] = action.payload.score;
+    });
   },
 });
 
@@ -194,6 +228,14 @@ export const selectAnalysisForCv = (state: CvSliceRoot, cvId: CvId | null): CVAn
 /** Looks a CV up by id, for the same reason selectAnalysisForCv exists. */
 export const selectCvById = (state: CvSliceRoot, cvId: CvId | null): CV | null =>
   cvId === null ? null : (state.cv.cvs[cvId] ?? null);
+
+/** The scoring service's score for a CV, or null if it has not answered yet. */
+export const selectScoreForCv = (state: CvSliceRoot, cvId: CvId | null): number | null =>
+  cvId === null ? null : (state.cv.scoresByCvId[cvId] ?? null);
+
+/** The same, for whichever CV is active. */
+export const selectActiveScore = (state: CvSliceRoot): number | null =>
+  state.cv.activeCvId === null ? null : (state.cv.scoresByCvId[state.cv.activeCvId] ?? null);
 
 export const selectAnalysisJob = (state: CvSliceRoot): AnalysisJob | null => state.cv.analysisJob;
 export const selectUploadStatus = (state: CvSliceRoot): RequestStatus => state.cv.uploadStatus;

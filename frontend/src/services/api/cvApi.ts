@@ -1,4 +1,12 @@
-import type { AnalysisJob, AnalysisJobId, CV, CVAnalysis, CvDocument, CvId } from '@/types';
+import type {
+  AnalysisJob,
+  AnalysisJobId,
+  CV,
+  CVAnalysis,
+  CvDocument,
+  CvId,
+  CvScore,
+} from '@/types';
 
 import { api } from '../http/client';
 
@@ -26,4 +34,13 @@ export const cvApi = {
 
   analysis: (cvId: CvId, signal?: AbortSignal): Promise<CVAnalysis> =>
     api.get<CVAnalysis>(`/cv/${cvId}/analysis`, signal === undefined ? undefined : { signal }),
+
+  /**
+   * The CV's score, from the scoring service.
+   *
+   * 404s until that service has answered for this CV, which is an ordinary
+   * state rather than an error — callers fall back to what they already show.
+   */
+  score: (cvId: CvId, signal?: AbortSignal): Promise<CvScore> =>
+    api.get<CvScore>(`/cv/${cvId}/score`, signal === undefined ? undefined : { signal }),
 };

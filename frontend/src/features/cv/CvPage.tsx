@@ -13,9 +13,11 @@ import { Skeleton } from '@/components/ui/Skeleton/Skeleton';
 import {
   fetchActiveCv,
   fetchCvAnalysis,
+  fetchCvScore,
   importCvFromLinkedin,
   selectActiveAnalysis,
   selectActiveCv,
+  selectActiveScore,
 } from '@/features/cv/cvSlice';
 import { selectRefreshToken, toastPushed } from '@/features/ui/uiSlice';
 import { useTranslation } from '@/i18n/useTranslation';
@@ -66,6 +68,7 @@ export const CvPage = (): React.JSX.Element => {
 
   const cv = useAppSelector(selectActiveCv);
   const analysis = useAppSelector(selectActiveAnalysis);
+  const backendScore = useAppSelector(selectActiveScore);
   const refreshToken = useAppSelector(selectRefreshToken);
 
   const [status, setStatus] = useState<RequestStatus>('loading');
@@ -86,6 +89,12 @@ export const CvPage = (): React.JSX.Element => {
     void dispatch(fetchCvAnalysis(cv.id));
   }, [dispatch, cv, analysis]);
 
+  // So does the score. A rejection needs no handling: the ring falls back.
+  useEffect(() => {
+    if (cv === null) return;
+    void dispatch(fetchCvScore(cv.id));
+  }, [dispatch, cv]);
+
   const onLinkedinImport = (): void => {
     setIsImporting(true);
     void dispatch(importCvFromLinkedin()).then((result) => {
@@ -98,7 +107,15 @@ export const CvPage = (): React.JSX.Element => {
     });
   };
 
-  const animatedScore = useCountUp(analysis?.score ?? 0);
+  /*
+   * The number the ring shows.
+   *
+   * The scoring service is the source of truth. The locally computed analysis
+   * score stands in only while that service has not answered for this CV — so
+   * the ring keeps a real number rather than blanking or dropping to zero.
+   */
+  const heroScore = backendScore ?? analysis?.score ?? 0;
+  const animatedScore = useCountUp(heroScore);
 
   return (
     <div className={styles.page}>
@@ -160,10 +177,10 @@ export const CvPage = (): React.JSX.Element => {
             <section className={styles.hero}>
               <div className={styles.heroScore}>
                 <ProgressRing
-                  value={analysis.score}
+                  value={heroScore}
                   size={132}
                   thickness={12}
-                  color={scoreBandCssVar(scoreBand(analysis.score))}
+                  color={scoreBandCssVar(scoreBand(heroScore))}
                   label={t('cv.overallScore')}
                 >
                   <span className={styles.heroValue}>{animatedScore}</span>
@@ -173,13 +190,24 @@ export const CvPage = (): React.JSX.Element => {
                   <span className={styles.heroMetaLabel}>{t('cv.overallScore')}</span>
                   <span className={styles.heroOutOf}>{t('cv.outOf')}</span>
                   {/* Band as text and colour, never colour alone. */}
-                  <Badge tone={BAND_TONE[scoreBand(analysis.score)]} icon={BAND_GLYPH[scoreBand(analysis.score)]}>
-                    {t(BAND_LABEL[scoreBand(analysis.score)])}
+                  <Badge tone={BAND_TONE[scoreBand(heroScore)]} icon={BAND_GLYPH[scoreBand(heroScore)]}>
+                    {t(BAND_LABEL[scoreBand(heroScore)])}
                   </Badge>
                 </div>
               </div>
 
               <div className={styles.heroMeta}>
+                {/* Shown only once the scoring service has answered. Omitting
+                    the row is the graceful case: a placeholder number here
+                    would be indistinguishable from a real score. */}
+                {backendScore === null ? null : (
+                  <div className={styles.heroMetaRow}>
+                    <span className={styles.heroMetaLabel}>{t('cv.matchScore')}</span>
+                    <span className={styles.heroMetaValue}>
+                      {formatPercent(locale, backendScore)}
+                    </span>
+                  </div>
+                )}
                 <div className={styles.heroMetaRow}>
                   <span className={styles.heroMetaLabel}>{t('cv.experienceYears')}</span>
                   <span className={styles.heroMetaValue}>

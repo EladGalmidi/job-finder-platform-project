@@ -541,6 +541,7 @@ export const en = {
 
   'cv.title': 'CV analysis',
   'cv.subtitle': 'What your CV says about you, and what to change.',
+  'cv.matchScore': 'Match score',
   'cv.overallScore': 'Overall score',
   'cv.outOf': 'out of 100',
   'cv.analysedAt': 'Analysed {when}',
