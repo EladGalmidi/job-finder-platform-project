@@ -1,13 +1,17 @@
 import { randomUUID } from 'node:crypto';
 import { count, desc, eq } from 'drizzle-orm';
-import type { FastifyInstance } from 'fastify';
+import type { FastifyBaseLogger, FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
 import { buildAnalysis, type SkillDemand } from '../cv/buildAnalysis.js';
 import { extractText } from '../cv/extractText.js';
 import { database } from '../db/client.js';
 import { analysisJobs, cvAnalyses, cvs, jobSkills, jobs, skills, users } from '../db/schema.js';
+import { GeminiCvError } from '../gemini/cvAnalysisContract.js';
+import { extractCvAnalysis } from '../gemini/extractCvAnalysis.js';
+import type { CvExtractionResult } from '../gemini/extractCvAnalysis.js';
 import { ApiError, notFound } from '../http/errors.js';
+import { scoringService } from '../scoring/mockScoringService.js';
 import { keyForUpload, putFile, getFile } from '../storage/files.js';
 
 /** Matches the frontend's MAX_CV_BYTES. */
@@ -31,6 +35,17 @@ const STEPS = [
   'matchingJobs',
   'buildingRecommendations',
 ] as const;
+
+/*
+ * Default for runAnalysis's logger parameter. The route always passes the
+ * request's own logger; this exists so a direct call in a test does not have to
+ * invent one, and so a missing argument cannot throw inside a catch block.
+ */
+const silentLog = {
+  info: () => undefined,
+  warn: () => undefined,
+  error: () => undefined,
+} as unknown as FastifyBaseLogger;
 
 const serializeCv = (row: typeof cvs.$inferSelect) => ({
   id: row.id,
@@ -144,7 +159,7 @@ export const registerCvRoutes = (app: FastifyInstance): void => {
      * does not lose the work and one slow OCR does not block the server. The
      * job row exists precisely so that move needs no API change.
      */
-    void runAnalysis(jobId, cvId).catch((error: unknown) => {
+    void runAnalysis(jobId, cvId, extractCvAnalysis, request.log).catch((error: unknown) => {
       request.log.error({ err: error, jobId }, 'analysis run failed outside its handler');
     });
 
@@ -181,6 +196,30 @@ export const registerCvRoutes = (app: FastifyInstance): void => {
     if (row?.userId !== user.id) throw notFound(`Analysis for ${cvId}`);
 
     return row.payload;
+  });
+
+  /**
+   * The match score for a CV, as returned by the scoring service.
+   *
+   * A 404 here means "not scored yet", which is an ordinary state: the score
+   * only exists once Gemini has read the CV and the document has been stored.
+   * The UI treats it as nothing to show rather than as a failure.
+   */
+  app.get('/cv/:cvId/score', async (request) => {
+    const user = request.requireUser();
+    const { cvId } = z.object({ cvId: z.string() }).parse(request.params);
+
+    const rows = await database().db.select().from(cvs).where(eq(cvs.id, cvId)).limit(1);
+    const cv = rows[0];
+
+    // Ownership before existence, as everywhere else here: otherwise the reply
+    // tells a stranger whether someone else's CV has been scored.
+    if (cv?.userId !== user.id) throw notFound(`CV ${cvId}`);
+
+    const result = await scoringService.scoreFor(cvId);
+    if (result === null) throw notFound(`Score for ${cvId}`);
+
+    return { score: result.score };
   });
 
   /** The CV as a machine-readable document, for export into another system. */
@@ -232,13 +271,66 @@ const advance = async (jobId: string, step: (typeof STEPS)[number]): Promise<voi
 };
 
 /**
+ * Reads a CV's text with Gemini and hands the result to the scoring service.
+ *
+ * Isolated from the rest of the run on purpose. Everything the CV page renders
+ * comes from buildAnalysis, which does not need this and must not be held
+ * hostage to it — an outage at Gemini, a missing credential or a document that
+ * fails validation costs the user a match score, not their whole analysis.
+ *
+ * Returns nothing. The only visible effect is that a score exists afterwards,
+ * or does not.
+ */
+const submitForScoring = async (
+  cvId: string,
+  userId: string,
+  text: string,
+  extract: CvExtractor,
+  log: FastifyBaseLogger,
+): Promise<void> => {
+  try {
+    // Throws unless the reply parsed as JSON and passed schema validation, so
+    // everything below this line has a document that meets the contract.
+    const { analysis } = await extract(text);
+
+    // Storing the document and creating the score are one call because they are
+    // one event for the service on the far side. It writes the document first;
+    // a foreign key stops a score existing without one.
+    await scoringService.submit({ cvId, userId, analysis });
+  } catch (error) {
+    if (error instanceof GeminiCvError) {
+      /*
+       * An absent credential is a deployment choosing not to run extraction,
+       * not a fault, so it is not logged as one. Everything else is worth
+       * seeing: a schema violation means the prompt has regressed.
+       */
+      const level = error.code === 'GEMINI_NOT_CONFIGURED' ? 'info' : 'warn';
+      log[level]({ cvId, code: error.code, details: error.details }, 'no score created');
+      return;
+    }
+
+    // A transport failure — Gemini answering 503, most often — arrives here
+    // uncoded, because the SDK throws its own error type.
+    log.warn({ cvId, err: error }, 'scoring submission failed');
+  }
+};
+
+/** The Gemini call, as a parameter, so tests can run this path without one. */
+export type CvExtractor = (text: string) => Promise<CvExtractionResult>;
+
+/**
  * Reads the CV, scores it, and records the result.
  *
  * Failures are written to the job row rather than thrown away: the frontend
  * polls this, and a run that simply stops leaves a progress ring spinning
  * forever with nothing to explain it.
  */
-const runAnalysis = async (jobId: string, cvId: string): Promise<void> => {
+export const runAnalysis = async (
+  jobId: string,
+  cvId: string,
+  extract: CvExtractor = extractCvAnalysis,
+  log: FastifyBaseLogger = silentLog,
+): Promise<void> => {
   const { db } = database();
 
   try {
@@ -281,6 +373,13 @@ const runAnalysis = async (jobId: string, cvId: string): Promise<void> => {
       .where(eq(cvs.id, cvId));
 
     await advance(jobId, 'scoringStructure');
+
+    /*
+     * Awaited rather than left running: the job must not report success while
+     * the score it implies is still being written, or a UI that fetches on
+     * completion races it and shows nothing.
+     */
+    await submitForScoring(cvId, cv.userId, extraction.text, extract, log);
 
     const catalogue = await db
       .select({ id: skills.id, name: skills.name, aliases: skills.aliases })

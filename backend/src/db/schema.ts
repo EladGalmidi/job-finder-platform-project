@@ -390,6 +390,61 @@ export const analysisJobs = pgTable(
   (table) => [index('analysis_jobs_cv_id_idx').on(table.cvId)],
 );
 
+/**
+ * Stand-in storage for the scoring service a colleague is building.
+ *
+ * These two tables are NOT part of this system's domain. They exist so the end
+ * to end path can be exercised before that service exists, and they are the
+ * first thing to delete once it does — at which point the mock adapter starts
+ * making HTTP calls instead and no other module changes.
+ *
+ * Split in two on purpose. Submitting the document and receiving a score are
+ * separate events for the real service too, and keeping them apart lets the
+ * foreign key below enforce the ordering rather than leaving it to convention.
+ */
+export const mockScoringSubmissions = pgTable(
+  'mock_scoring_submissions',
+  {
+    cvId: text('cv_id')
+      .primaryKey()
+      .references(() => cvs.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+
+    /** The contract document, exactly as it passed schema validation. */
+    document: jsonb('document').notNull(),
+
+    submittedAt: timestamp('submitted_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index('mock_scoring_submissions_user_id_idx').on(table.userId)],
+);
+
+/**
+ * What the mock service answered.
+ *
+ * The foreign key points at the submission, not at the CV. A score therefore
+ * cannot exist unless the document was stored first — the database refuses it
+ * rather than trusting the caller to check, which is the one rule this whole
+ * flow turns on.
+ */
+export const mockScoringResults = pgTable(
+  'mock_scoring_results',
+  {
+    cvId: text('cv_id')
+      .primaryKey()
+      .references(() => mockScoringSubmissions.cvId, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+
+    score: integer('score').notNull(),
+
+    scoredAt: timestamp('scored_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index('mock_scoring_results_user_id_idx').on(table.userId)],
+);
+
 export type CvRow = typeof cvs.$inferSelect;
 export type CvAnalysisRow = typeof cvAnalyses.$inferSelect;
 export type AnalysisJobRow = typeof analysisJobs.$inferSelect;

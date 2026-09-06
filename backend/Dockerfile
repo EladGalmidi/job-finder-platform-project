@@ -33,6 +33,10 @@ COPY --from=build /app/dist ./dist
 # was built and reviewed, not whatever happens to be on a branch.
 COPY drizzle ./drizzle
 COPY seed ./seed
+# The Gemini contract, read from disk at module load by cvAnalysisContract.ts.
+# Without it the container starts and then dies on the first import of that
+# module, which is every request path once extraction is wired in.
+COPY contracts ./contracts
 
 # Runs unprivileged. The node image provides this user; a process that never
 # needs root should never have it.
