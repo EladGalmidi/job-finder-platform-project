@@ -35,7 +35,7 @@ services:
       context: ./backend
     restart: unless-stopped
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       PORT: 3000
       # Not 127.0.0.1, which is what config/env.ts defaults to.
       #

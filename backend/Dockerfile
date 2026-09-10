@@ -40,6 +40,8 @@ COPY contracts ./contracts
 
 # Runs unprivileged. The node image provides this user; a process that never
 # needs root should never have it.
+RUN mkdir -p /app/uploads && chown -R node:node /app/uploads
+
 USER node
 
 EXPOSE 3000
