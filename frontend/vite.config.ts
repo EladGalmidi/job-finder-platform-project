@@ -47,6 +47,22 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: true,
+    /*
+     * Stands in for the nginx /api/ location that exists only in the frontend
+     * image. Without it the dev server treats /api/auth/me as a file request,
+     * finds nothing, and returns 404 — the backend never sees it.
+     *
+     * The rewrite strips the prefix exactly as the trailing slash on nginx's
+     * proxy_pass does, so the same relative paths work in both environments and
+     * the application code never needs to know which one it is running in.
+     */
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
   preview: {
     port: 4173,

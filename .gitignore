@@ -1,3 +1,4 @@
 .env
 backup-dev-db.sql
 backup-dev-db.sql
+frontend/.env.local
