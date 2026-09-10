@@ -67,6 +67,28 @@ services:
         # database is not yet accepting.
         condition: service_healthy
 
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Compiled into the bundle at build time, not read at runtime: Vite
+        # substitutes import.meta.env.VITE_* with literals during `vite build`,
+        # so these cannot be container environment variables. /api is relative,
+        # so the browser sends it to whatever origin served the page and nginx
+        # forwards it on — no absolute backend URL to get wrong.
+        VITE_API_MODE: live
+        VITE_API_BASE_URL: /api
+    restart: unless-stopped
+    environment:
+      # Substituted into nginx.conf.template at container start by the official
+      # image's envsubst step. `backend` is the service name on the compose
+      # network; 3000 is the container's own port, not the host mapping.
+      BACKEND_URL: http://backend:3000
+    ports:
+      - '8080:80'
+    depends_on:
+      - backend
+
 volumes:
   postgres-data:
   backend-uploads:
