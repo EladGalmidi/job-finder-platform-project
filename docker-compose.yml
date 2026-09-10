@@ -1,0 +1,72 @@
+# Local development stack. Not a production deployment.
+#
+# Versions are pinned to majors rather than left at `latest`, so a rebuild
+# months from now does not silently move Postgres underneath the data.
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      # 5433 on the host, not 5432.
+      #
+      # A natively installed PostgreSQL already listens on 5432 on this machine.
+      # Windows lets Docker's proxy bind the same port without error, and the
+      # native server then answers the connections — so the container looks
+      # healthy while every query goes somewhere else entirely. Publishing on a
+      # free port removes the ambiguity and leaves the existing install alone.
+      - '5433:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      # Migrations run as soon as the container is up; without this they race
+      # the database's own startup and fail on a cold machine.
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      # Not 127.0.0.1, which is what config/env.ts defaults to.
+      #
+      # Inside a container the loopback interface is the container's own; a
+      # server bound to it accepts nothing from the published port. The process
+      # starts, looks alive, and every request from the host is refused.
+      HOST: 0.0.0.0
+      # Port 5432, not the 5433 published above.
+      #
+      # This address is resolved on the compose network, where `postgres` is the
+      # service name and the container's own port is what answers. The host
+      # mapping is irrelevant here — it exists for psql on the desktop.
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      SESSION_SECRET: ${SESSION_SECRET}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      LOG_LEVEL: ${LOG_LEVEL}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+    ports:
+      - '3000:3000'
+    volumes:
+      # Uploaded CVs are written to uploads/ on local disk by storage/files.ts.
+      # A named volume keeps them across container rebuilds; without it every
+      # `compose up --build` starts from an empty directory.
+      - backend-uploads:/app/uploads
+    depends_on:
+      postgres:
+        # Waits for the healthcheck above rather than for the container to
+        # merely exist, so the first query does not open a connection the
+        # database is not yet accepting.
+        condition: service_healthy
+
+volumes:
+  postgres-data:
+  backend-uploads:
